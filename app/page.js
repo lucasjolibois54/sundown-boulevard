@@ -2,6 +2,7 @@ import Image from 'next/image'
 
 import Link from 'next/link'
 import Hero from './components/home/Hero'
+import Subhero from './components/home/Subhero'
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <div style={{ height: '150vh', background: 'lightgray', zIndex: 0 }}>
         Scroll down to see the image grow in width.
       </div>
+      <Subhero/>
     </main>
   )
 }
