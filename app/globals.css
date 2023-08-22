@@ -17,7 +17,7 @@ body{
 
 .item {
   flex-grow: 1;
-  height: 400px; /* Assuming 1rem = 16px and h-25 means height of 25px */
+  height: 400px; 
   position: relative;
   border: 1px solid transparent;
   transition: all 0.3s ease-in-out;
