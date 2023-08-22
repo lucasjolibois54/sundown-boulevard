@@ -1,5 +1,5 @@
 async function getData() {
-    const res = await fetch('https://www.themealdb.com/API/JSON/V1/1/RANDOM.PHP', {
+    const res = await fetch('https://www.themealdb.com/API/JSON/V1/1/RANDOM.PHP/', {
         next: {
             revalidate: 0,
         }
@@ -31,6 +31,9 @@ async function getData() {
                     <img src={meal.strMealThumb} alt={meal.strMeal} />
                 </div>
             ))}
+            {data.length === 0 && (
+<p className="text-center">There are no dishes available, damn!</p>
+)}
         </main>
     );
 }
