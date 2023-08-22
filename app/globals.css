@@ -2,9 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
+/* body{
   @apply bg-bgColorDark;
+} */
+
+body.dark-theme {
+  background-color: black;
+  color: white;
 }
+
+body.light-theme {
+  background-color: white;
+  color: black;
+}
+
 
 .container {
   margin: 0 auto;
