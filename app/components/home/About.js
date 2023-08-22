@@ -23,7 +23,7 @@ export default function About() {
 
             {/* <!-- Grid cell #2 --> */}
             <div className=" py-3 sm:px-6 md-lg:ml-0 xl:ml-0 md-lg:mt-10 xl:mt-10 rounded">
-              <h1 className=" sm:!leading-tight pt-7 sm:mt-5 text-6xl xsm:text-5xl sm:text-6xl md-lg:text-5xl lg:text-6xl font- stroke-title">
+              <h1 className=" sm:!leading-tight pt-4 sm:mt-5 text-6xl xsm:text-5xl sm:text-6xl md-lg:text-5xl lg:text-6xl font- stroke-title">
               Where Culinary Artistry Meets Timeless Tradition
               </h1>
               <p className="text-base md:text-lg text-dark-text py-5 lg:px-24 lg:pl-0 lg:pr-20 max-w-2xl font-light mt-2">
