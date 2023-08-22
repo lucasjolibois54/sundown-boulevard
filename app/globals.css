@@ -2,34 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
-/* body {
+body{
   @apply bg-bgColorDark;
 }
-h1, h2, a, p {
-  @apply font-bold text-cat-text text-lg;
-} */
 
-/*
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+.container {
+  margin: 0 auto;
+  height: 400px;
+  border: 1px solid transparent;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.item {
+  flex-grow: 1;
+  height: 400px; /* Assuming 1rem = 16px and h-25 means height of 25px */
+  position: relative;
+  border: 1px solid transparent;
+  transition: all 0.3s ease-in-out;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}*/
+.item:hover {
+  flex-grow: 4;
+}
+
+.item:before {
+  content: attr(data-order);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+}
