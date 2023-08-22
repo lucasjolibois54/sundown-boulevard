@@ -45,11 +45,11 @@ export default function Home() {
         <Hero />
         <div id="targetComponent" style={{ height: '150vh', zIndex: 0 }} />
       </main>
-      
+      <div className='max-w-6xl mx-auto px-6'>
       <Subhero />
       <div id="aboutComponent">
         <About />
-      </div>
+      </div></div>
     </>
   );
 }
