@@ -11,7 +11,7 @@ export default function About() {
           {/* <!-- Grid columns + some font styles for the children elements to inherit --> */}
           <div className="font-medium leading-7 space-y-2 sm:grid sm:grid-cols-2 lg:grid-cols-2 sm:gap-4 sm:space-y-0">
             {/* <!-- Grid cell #1 --> */}
-            <div className="py-3 pt-20 sm:pt-5 p-5 float-left rounded">
+            <div className="py-3 pt-20 sm:pt-5 sm:p-5 float-left rounded">
               <img
                 className="w-screen md:w-full  xl:w-6/6 sm:float-left"
                 src={
@@ -22,7 +22,7 @@ export default function About() {
             </div>
 
             {/* <!-- Grid cell #2 --> */}
-            <div className=" py-3 px-6 md-lg:ml-0 xl:ml-0 md-lg:mt-10 xl:mt-10 rounded">
+            <div className=" py-3 sm:px-6 md-lg:ml-0 xl:ml-0 md-lg:mt-10 xl:mt-10 rounded">
               <h1 className=" sm:!leading-tight pt-7 sm:mt-5 text-6xl xsm:text-5xl sm:text-6xl md-lg:text-5xl lg:text-6xl font- stroke-title">
               Where Culinary Artistry Meets Timeless Tradition
               </h1>
