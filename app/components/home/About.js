@@ -27,7 +27,7 @@ export default function About() {
               Where Culinary Artistry Meets Timeless Tradition
               </h1>
               <p className="text-base md:text-lg text-dark-text py-5 lg:px-24 lg:pl-0 lg:pr-20 max-w-2xl font-light mt-2">
-              At LeFain, we blend the charm of timeless traditions with the innovation of modern culinary artistry. Our dishes, crafted with passion and precision, speak to the heart of gourmet dining. Every ingredient is handpicked, ensuring that our guests savor nothing but the best. Experience a symphony of flavors, textures, and aromas with every visit. Ready for a gastronomic journey? Order now and let your palate be the judge.
+              At LeFaim, we blend the charm of timeless traditions with the innovation of modern culinary artistry. Our dishes, crafted with passion and precision, speak to the heart of gourmet dining. Every ingredient is handpicked, ensuring that our guests savor nothing but the best. Experience a symphony of flavors, textures, and aromas with every visit. Ready for a gastronomic journey? Order now and let your palate be the judge.
               </p>
 
               <div className="absolute  mt-0">
