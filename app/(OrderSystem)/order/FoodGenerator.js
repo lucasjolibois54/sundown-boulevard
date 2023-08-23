@@ -40,7 +40,7 @@ export default function FoodGenerator() {
                 email: email,
                 mealName: mealData[0].strMeal
             };
-            localStorage.setItem('savedEmail', email); // Store email separately for easy retrieval
+            localStorage.setItem('savedEmail', email); // Store email separately for easier retrieval
             localStorage.setItem(email, JSON.stringify(savedData));
         }
     };
