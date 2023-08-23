@@ -30,7 +30,7 @@ export default function Search() {
             {savedData.email && <p>Email: {savedData.email ? savedData.email : "Not available"}</p>}
             <p>Saved Meal: {savedData.mealName ? savedData.mealName : "Not available"}</p>
              <p>Date & Time: {savedData.date ? savedData.date.toString() : "Not available"}</p>
-            <p>Number of Customers: {savedData.count ? savedData.count : "Not available"}</p>
+            <p>Number of Customers: {savedData.customer ? savedData.customer : "Not available"}</p>
 
             {savedData.drinks && savedData.drinks.length > 0 && (
                 <div>
