@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Hero from './components/home/Hero';
 import Subhero from './components/home/Subhero';
 import About from './components/home/About';
+import Search from './components/main/Search';
 
 export default function Home() {
   const [theme, setTheme] = useState('dark-theme');
@@ -49,6 +50,7 @@ export default function Home() {
       <Subhero />
       <div id="aboutComponent">
         <About />
+        <Search/>
       </div></div>
     </>
   );
