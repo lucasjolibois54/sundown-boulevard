@@ -47,3 +47,9 @@ body.light-theme {
   transform: translate(-50%, -50%);
   color: white;
 }
+
+
+/*Search*/
+.input-search::placeholder{
+  font-weight: lighter;
+}
