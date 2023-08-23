@@ -29,7 +29,7 @@ export default function Drink() {
         }
     }, []);
 
-    const handleDrinkSelection = (drink) => {
+    const handleDrinkSelection = (drink) => { // argument
         setSelectedDrinks(prevDrinks => {
             if (prevDrinks.some(d => d.id === drink.id)) {
                 return prevDrinks.filter(d => d.id !== drink.id);
