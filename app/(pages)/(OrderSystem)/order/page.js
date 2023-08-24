@@ -3,7 +3,7 @@ import FoodGenerator from './FoodGenerator'
 
 export default function Order() {
   return (
-    <div>Food Generator
+    <div>
       <FoodGenerator/>
     </div>
   )
