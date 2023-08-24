@@ -53,3 +53,30 @@ body.light-theme {
 .input-search::placeholder{
   font-weight: lighter;
 }
+
+
+/* spinner */
+
+
+
+.checked-drink-body {
+  -webkit-font-smoothing: antialiased;
+  font-family: 'Helvetica', sans-serif;
+}
+
+#circle {
+  position: relative;
+  border-radius: 100%;
+  padding: 16px;
+  animation: rotate-animation 8s infinite linear;
+}
+
+#circle span {
+  position: absolute;
+  transform-origin: top left;
+}
+
+@keyframes rotate-animation {
+  from { transform: rotate(0); }
+  to { transform: rotate(-360deg); }
+}
