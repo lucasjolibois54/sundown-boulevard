@@ -74,14 +74,14 @@ export default function Drink() {
         {drinksData.map((drink, index) => (
           <div
             key={drink.id}
-            className="bg-white rounded-lg transition transform hover:scale-105"
+            className="bg-white rounded-lg transition transform hover:scale-105 h-96"
           >
             <img
               src={randomImages[index % randomImages.length]}
               alt={drink.tagline}
-              className="w-full h-96 object-cover"
+              className="w-full absolute h-96 object-cover"
             />
-            <div className="p-6">
+            <div className="p-6 !z-10 absolute text-white bottom-0">
               <h2 className="text-lg sm:text-xl font-semibold mb-2">
                 {drink.name}
               </h2>
