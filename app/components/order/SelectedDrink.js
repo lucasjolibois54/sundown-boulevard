@@ -10,7 +10,8 @@ const SelectedDrink = () => {
     };
 
     const radius = 80;
-    const diameter = radius * 2;
+    //const diameter = radius * 2;
+    const diameter = 100 * 2;
 
     const circle = circleRef.current;
     circle.style.width = `${diameter}px`;
