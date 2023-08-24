@@ -70,14 +70,14 @@ export default function Drink() {
 
   return (
     <main className="min-h-screen py-12 px-4 sm:px-8">
-      <h1 className="text-6xl font-semibold text-center my-10 pb-5">
+      <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-white/70">
         Choose Your Drinks
       </h1>
       <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {drinksData.map((drink, index) => (
           <div
             key={drink.id}
-            className="bg-white rounded-lg transition transform hover:scale-105 h-96 relative"
+            className=" rounded-lg transition transform hover:scale-105 h-96 relative"
           >
             <div className="w-full h-full relative">
               <label
