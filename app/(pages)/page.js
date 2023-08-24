@@ -5,7 +5,6 @@ import Link from "next/link";
 import Hero from "../components/home/Hero";
 import Subhero from "../components/home/Subhero";
 import About from "../components/home/About";
-import Search from "../components/main/Search";
 import TextLoop from "../components/home/TextLoop";
 
 export default function Home() {
@@ -52,7 +51,6 @@ export default function Home() {
         <Subhero />
         <div id="aboutComponent">
           <About />
-          {/*<Search/>*/}
         </div>
       </div>
       <TextLoop/>
