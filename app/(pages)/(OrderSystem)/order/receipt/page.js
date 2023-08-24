@@ -21,7 +21,7 @@ export default function Receipt() {
     }, []);
 
     return (
-        <main className="bg-gray-100 min-h-screen flex flex-col justify-center items-center py-8">
+        <main className="bg-gray-100 min-h-screen flex flex-col justify-center items-center py-8 max-w-6xl mx-auto">
             <h1 className="text-3xl font-semibold mb-4">Order Summary</h1>
 
             <div className="w-full max-w-xl bg-white rounded-lg shadow-lg p-6 space-y-4">
