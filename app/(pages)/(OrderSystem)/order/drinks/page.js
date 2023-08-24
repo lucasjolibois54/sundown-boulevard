@@ -32,7 +32,7 @@ export default function Drink() {
   const [isLoading, setIsLoading] = useState(true);
 
 
-  useEffect(() => {
+/*  useEffect(() => {
     (async () => {
       try {
         const drinks = await getDrinks();
@@ -48,7 +48,32 @@ export default function Drink() {
           const savedEmail = localStorage.getItem("savedEmail") || "";
           setEmail(savedEmail);
       }
-  }, []);
+  }, []);*/
+
+useEffect(() => {
+  let isMounted = true;  // This variable helps in ensuring the state is not set after the component is unmounted
+
+  (async () => {
+      const drinks = await getDrinks();
+
+      // Check if component is still mounted before setting state
+      if (isMounted) {
+          setDrinksData(drinks);
+
+          // After setting the drinks data, wait for 2 seconds before setting isLoading to false
+          setTimeout(() => {
+              setIsLoading(false);
+          }, 2000);
+      }
+  })();
+
+  // Clean up function for the useEffect
+  return () => {
+      isMounted = false;
+  };
+}, []);  // Empty dependency array ensures this useEffect runs only once after component mount
+
+
 
   const handleDrinkSelection = (drink) => {
       setSelectedDrinks((prevDrinks) => {
@@ -80,8 +105,9 @@ export default function Drink() {
     <main className="min-h-screen py-12 px-4 sm:px-8">
         <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-main-text">Choose Your Drinks</h1>
         <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {drinksData.length === 0 ? (
-                // Skeleton Loading for drinks
+            {/*{drinksData.length === 0 ? (*/}
+            {isLoading ? (
+                //Skeleton Loading for drinks
                 Array.from({ length: visibleDrinks }).map((_, index) => (
                     <motion.div key={index} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="rounded-lg transition transform hover:scale-105 h-96 relative bg-gray-200 animate-pulse">
                         {/* Skeleton for image */}
