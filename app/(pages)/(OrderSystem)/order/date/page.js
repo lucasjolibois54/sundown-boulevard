@@ -40,61 +40,65 @@ export default function TimePicker() {
   };
 
   return (
-    <main className="bg-gray-100 min-h-screen flex flex-col justify-center items-center py-8 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-semibold mb-4">Pick a Date and Time</h1>
+<main className="bg-gray-200 min-h-screen flex flex-col justify-center items-center py-12 max-w-6xl mx-auto">
+    <h1 className="text-3xl font-semibold mb-8 text-gray-800">Pick a Date and Time</h1>
 
-      <div className="my-4">
-        <label className="block mb-2">Date:</label>
-        <input
-          type="date"
-          value={selectedDate}
-          onChange={e => setSelectedDate(e.target.value)}
-          className="border rounded px-2 py-1 w-40 focus:outline-none focus:border-blue-400"
-        />
-      </div>
+    <div className="bg-white p-8 rounded-xl shadow-md space-y-8 w-full max-w-lg">
+        <div>
+            <label className="block text-gray-700 font-medium mb-2">Date:</label>
+            <input
+                type="date"
+                value={selectedDate}
+                onChange={e => setSelectedDate(e.target.value)}
+                className="border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 transition"
+            />
+        </div>
 
-      <div className="my-4">
-        <label className="block mb-2">Time:</label>
-        <input
-          type="time"
-          value={selectedTime}
-          onChange={e => setSelectedTime(e.target.value)}
-          className="border rounded px-2 py-1 w-40 focus:outline-none focus:border-blue-400"
-        />
-      </div>
+        <div>
+            <label className="block text-gray-700 font-medium mb-2">Time:</label>
+            <input
+                type="time"
+                value={selectedTime}
+                onChange={e => setSelectedTime(e.target.value)}
+                className="border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 transition"
+            />
+        </div>
 
-      <div className="my-4 flex items-center space-x-4">
-        <label className="block mb-2">Customer:</label>
+        <div className="flex items-center space-x-4">
+            <label className="text-gray-700 font-medium mb-2 mr-2">Customer:</label>
+            <button
+                onClick={decrementCustomer}
+                className="bg-gray-300 rounded px-3 py-2 hover:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring focus:ring-gray-200 transition"
+            >
+                -
+            </button>
+            <input
+                type="number"
+                value={customerCount}
+                readOnly
+                className="border rounded px-3 py-2 w-16 text-center"
+            />
+            <button
+                onClick={incrementCustomer}
+                className="bg-gray-300 rounded px-3 py-2 hover:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring focus:ring-gray-200 transition"
+            >
+                +
+            </button>
+        </div>
+
         <button
-          onClick={decrementCustomer}
-          className="bg-gray-300 rounded px-2 py-1 focus:outline-none"
+            onClick={handleSaveDateTime}
+            className="w-full bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-200 transition"
         >
-          -
+            Save Date & Time
         </button>
-        <input
-          type="number"
-          value={customerCount}
-          readOnly
-          className="border rounded px-2 py-1 w-16 text-center"
-        />
-        <button
-          onClick={incrementCustomer}
-          className="bg-gray-300 rounded px-2 py-1 focus:outline-none"
-        >
-          +
-        </button>
-      </div>
+    </div>
 
-      <button
-        onClick={handleSaveDateTime}
-        className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 focus:outline-none"
-      >
-        Save Date & Time
-      </button>
-      <Link className="text-blue-500 mt-2 hover:underline focus:outline-none" href="/order/receipt" passHref>
-      Receipt
-      </Link>
-    </main>
+    <Link className="text-blue-500 mt-4 hover:underline focus:outline-none" href="/order/receipt" passHref>
+        Receipt
+    </Link>
+</main>
+
   );
 }
 
