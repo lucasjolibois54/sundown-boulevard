@@ -40,7 +40,7 @@ export default function TimePicker() {
   };
 
   return (
-    <main className="bg-gray-100 min-h-screen flex flex-col justify-center items-center py-8">
+    <main className="bg-gray-100 min-h-screen flex flex-col justify-center items-center py-8 max-w-6xl mx-auto">
       <h1 className="text-3xl font-semibold mb-4">Pick a Date and Time</h1>
 
       <div className="my-4">
