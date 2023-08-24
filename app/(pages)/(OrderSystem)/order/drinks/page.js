@@ -71,29 +71,63 @@ export default function Drink() {
     <main className="min-h-screen py-12 px-4 sm:px-8">
         <h1 className="text-6xl font-semibold text-center my-10 pb-5">Choose Your Drinks</h1>
       <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {drinksData.map((drink, index) => (
-          <div
-            key={drink.id}
-            className="bg-white rounded-lg transition transform hover:scale-105 h-96"
-          >
-            <img
-              src={randomImages[index % randomImages.length]}
-              alt={drink.tagline}
-              className="w-full absolute h-96 object-cover"
-            />
-            <div className="p-6 !z-10 absolute text-white bottom-0">
-              <h2 className="text-lg sm:text-xl font-semibold mb-2">
-                {drink.name}
-              </h2>
-              <input
-                type="checkbox"
-                onChange={() => handleDrinkSelection(drink)}
-                className="mr-2"
-              />
-              Select
-            </div>
-          </div>
-        ))}
+      {drinksData.map((drink, index) => (
+  <div
+    key={drink.id}
+    className="bg-white rounded-lg transition transform hover:scale-105 h-96 relative"
+  >
+    <label htmlFor={`drink-checkbox-${drink.id}`} className="cursor-pointer w-full h-full absolute top-0 left-0">
+      <img
+        src={randomImages[index % randomImages.length]}
+        alt={drink.tagline}
+        className="w-full h-96 object-cover"
+      />
+    </label>
+    <p className="text-white z-10 top-0 right-0 absolute pr-2 pt-2">{drink.first_brewed}</p>
+    <div className="p-6 !z-10 absolute text-white bottom-0">
+      <h2 className="text-lg sm:text-xl font-semibold mb-2">
+        {drink.name.substring(0, 16)}
+      </h2>
+      <input
+        id={`drink-checkbox-${drink.id}`}
+        type="checkbox"
+        onChange={() => handleDrinkSelection(drink)}
+        className="mr-2"
+      />
+      Select
+    </div>
+  </div>
+))}
+
+{/*
+      {drinksData.map((drink, index) => (
+  <div
+    key={drink.id}
+    className="bg-white rounded-lg transition transform hover:scale-105 h-96 relative"
+  >
+    <label htmlFor={`drink-checkbox-${drink.id}`} className="cursor-pointer w-full h-full absolute top-0 left-0">
+      <img
+        src={randomImages[index % randomImages.length]}
+        alt={drink.tagline}
+        className="w-full h-96 object-cover"
+      />
+    </label>
+    <p className="text-white z-10 top-0 right-0 absolute pr-2 pt-2">{drink.first_brewed}</p>
+    <div className="p-6 !z-10 absolute text-white bottom-0">
+      <h2 className="text-lg sm:text-xl font-semibold mb-2">
+        {drink.name.substring(0, 16)}
+      </h2>
+      <input
+        id={`drink-checkbox-${drink.id}`}
+        type="checkbox"
+        onChange={() => handleDrinkSelection(drink)}
+        className="mr-2"
+      />
+      Select
+    </div>
+  </div>
+))} */}
+
       </div>
 
       {drinksData.length === 0 && (
