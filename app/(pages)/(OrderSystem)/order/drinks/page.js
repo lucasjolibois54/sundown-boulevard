@@ -70,7 +70,7 @@ export default function Drink() {
 
   return (
     <main className="min-h-screen py-12 px-4 sm:px-8">
-      <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-white/70">
+      <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-main-text">
         Choose Your Drinks
       </h1>
       <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
