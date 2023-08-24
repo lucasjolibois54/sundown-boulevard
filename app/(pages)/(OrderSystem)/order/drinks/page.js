@@ -95,7 +95,9 @@ export default function Drink() {
                             )}
 
                             <div className="p-6 !z-10 absolute text-white bottom-0">
-                                <h2 className="text-lg sm:text-xl font-semibold mb-2">{drink.name.substring(0, 16)}</h2>
+                                <h2 className="text-lg sm:text-xl font-semibold mb-0">{drink.name.substring(0, 16)}</h2>
+                                <p className="text-sm">{drink.ingredients?.yeast || "Unknown Yeast"}</p>
+
                             </div>
                         </label>
                         <input
