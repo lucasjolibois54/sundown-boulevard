@@ -37,7 +37,7 @@ export default function Search() {
 
   return (
     <>
-      <main className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-screen">
+      <main className="max-w-6xl mx-auto absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-screen">
         <div className="w-4/6 mx-auto">
           <div className="flex items-center border-b-2 border-gray-500">
             <input
