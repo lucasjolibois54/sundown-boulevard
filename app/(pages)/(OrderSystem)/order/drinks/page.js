@@ -89,6 +89,15 @@ export default function Drink() {
                   alt={drink.tagline}
                   className="w-full h-96 object-cover"
                 />
+                {selectedDrinks.some((d) => d.id === drink.id) && (
+                  <div
+                    style={{
+                      backgroundColor: "rgba(0, 0, 0, 0.4)",
+                      transition: "opacity 10.5s",
+                    }}
+                    className="absolute top-0 left-0 w-full h-full"
+                  ></div>
+                )}
                 <p className="text-white z-10 top-0 right-0 absolute pr-2 pt-2">
                   {drink.first_brewed}
                 </p>
