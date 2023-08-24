@@ -8,13 +8,13 @@
 
 /* Bg color change on scroll themes*/
 body.dark-theme {
-  background-color: black;
+  background-color: rgb(25, 23, 23);
   color: white;
 }
 
 body.light-theme {
   background-color: white;
-  color: black;
+  color: rgb(11, 11, 11);
 }
 
 /* Subhero (image info container)*/

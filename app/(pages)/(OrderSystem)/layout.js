@@ -1,4 +1,4 @@
-import Navbar from "../components/main/Navbar"
+import Navbar from "../../components/main/Navbar"
 
 export default function OrderLayout({ children }) {
     return <section className="max-w-6xl mx-auto">
