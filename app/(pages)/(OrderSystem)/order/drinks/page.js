@@ -15,14 +15,11 @@ const randomImages = [
   "https://media.discordapp.net/attachments/1068131427910168670/1144228625118408705/lucasjolibois54_a_beer_bottle_on_a_shelf_with_a_random_color_de_836ced99-4719-4dea-bfa0-b03dfb8f689d.png?width=936&height=936",
   "https://media.discordapp.net/attachments/1068131427910168670/1144228639643283476/lucasjolibois54_a_beer_bottle_on_a_shelf_with_a_random_color_de_0c274155-a9dd-44b2-9abe-ecd2060c3272.png?width=936&height=936",
 ];
-
 async function getDrinks() {
   const res = await fetch("https://api.punkapi.com/V2/BEERS");
-
   if (!res.ok) {
-    throw new Error("Failed to fetch data");
+      throw new Error("Failed to fetch data");
   }
-
   return res.json();
 }
 
@@ -30,123 +27,116 @@ export default function Drink() {
   const [drinksData, setDrinksData] = useState([]);
   const [selectedDrinks, setSelectedDrinks] = useState([]);
   const [email, setEmail] = useState("");
+  const [visibleDrinks, setVisibleDrinks] = useState(9); 
 
   useEffect(() => {
-    (async () => {
-      const drinks = await getDrinks();
-      setDrinksData(drinks);
-    })();
+      (async () => {
+          const drinks = await getDrinks();
+          setDrinksData(drinks);
+      })();
 
-    if (typeof window !== "undefined") {
-      const savedEmail = localStorage.getItem("savedEmail") || "";
-      setEmail(savedEmail);
-    }
+      if (typeof window !== "undefined") {
+          const savedEmail = localStorage.getItem("savedEmail") || "";
+          setEmail(savedEmail);
+      }
   }, []);
 
   const handleDrinkSelection = (drink) => {
-    setSelectedDrinks((prevDrinks) => {
-      if (prevDrinks.some((d) => d.id === drink.id)) {
-        return prevDrinks.filter((d) => d.id !== drink.id);
-      } else {
-        return [...prevDrinks, { id: drink.id, name: drink.name }];
-      }
-    });
+      setSelectedDrinks((prevDrinks) => {
+          if (prevDrinks.some((d) => d.id === drink.id)) {
+              return prevDrinks.filter((d) => d.id !== drink.id);
+          } else {
+              return [...prevDrinks, { id: drink.id, name: drink.name }];
+          }
+      });
   };
 
   const handleSaveToLocalStorage = () => {
-    if (typeof window !== "undefined") {
-      let savedData = localStorage.getItem(email)
-        ? JSON.parse(localStorage.getItem(email))
-        : {};
+      if (typeof window !== "undefined") {
+          let savedData = localStorage.getItem(email)
+              ? JSON.parse(localStorage.getItem(email))
+              : {};
 
-      savedData = {
-        ...savedData,
-        drinks: selectedDrinks,
-      };
+          savedData = {
+              ...savedData,
+              drinks: selectedDrinks,
+          };
 
-      localStorage.setItem(email, JSON.stringify(savedData));
-    }
+          localStorage.setItem(email, JSON.stringify(savedData));
+      }
   };
+
 
   return (
     <main className="min-h-screen py-12 px-4 sm:px-8">
-      <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-main-text">
-        Choose Your Drinks
-      </h1>
-      <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {drinksData.map((drink, index) => (
-          <div
-            key={drink.id}
-            className=" rounded-lg transition transform hover:scale-105 h-96 relative"
-          >
-            <div className="w-full h-full relative">
-              <label
-                htmlFor={`drink-checkbox-${drink.id}`}
-                className="cursor-pointer w-full h-full block"
-              >
-                <img
-                  src={randomImages[index % randomImages.length]}
-                  alt={drink.tagline}
-                  className="w-full h-96 object-cover"
-                />
-                {selectedDrinks.some((d) => d.id === drink.id) && (
-                  <div
-                    style={{
-                      backgroundColor: "rgba(0, 0, 0, 0.4)",
-                      transition: "opacity 10.5s",
-                    }}
-                    className="absolute top-0 left-0 w-full h-full"
-                  ></div>
-                )}
-                <p className="text-white z-10 top-0 right-0 absolute pr-2 pt-2">
-                  {drink.first_brewed}
-                </p>
+        <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-main-text">Choose Your Drinks</h1>
+        <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {drinksData.slice(0, visibleDrinks).map((drink, index) => (
+                <div key={drink.id} className="rounded-lg transition transform hover:scale-105 h-96 relative">
+                    <div className="w-full h-full relative">
+                        <label htmlFor={`drink-checkbox-${drink.id}`} className="cursor-pointer w-full h-full block">
+                            <img
+                                src={randomImages[index % randomImages.length]}
+                                alt={drink.tagline}
+                                className="w-full h-96 object-cover"
+                            />
+                            {selectedDrinks.some((d) => d.id === drink.id) && (
+                                <div
+                                    style={{ backgroundColor: "rgba(0, 0, 0, 0.4)", transition: "opacity 10.5s" }}
+                                    className="absolute top-0 left-0 w-full h-full"
+                                ></div>
+                            )}
+                            <p className="text-white z-10 top-0 right-0 absolute pr-2 pt-2">{drink.first_brewed}</p>
 
-                {/* Conditionally render SelectedDrink */}
-                {selectedDrinks.some((d) => d.id === drink.id) && (
-                  <div className="checked-drink-body absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <SelectedDrink />
-                  </div>
-                )}
+                            {selectedDrinks.some((d) => d.id === drink.id) && (
+                                <div className="checked-drink-body absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                    <SelectedDrink />
+                                </div>
+                            )}
 
-                <div className="p-6 !z-10 absolute text-white bottom-0">
-                  <h2 className="text-lg sm:text-xl font-semibold mb-2">
-                    {drink.name.substring(0, 16)}
-                  </h2>
+                            <div className="p-6 !z-10 absolute text-white bottom-0">
+                                <h2 className="text-lg sm:text-xl font-semibold mb-2">{drink.name.substring(0, 16)}</h2>
+                            </div>
+                        </label>
+                        <input
+                            id={`drink-checkbox-${drink.id}`}
+                            type="checkbox"
+                            onChange={() => handleDrinkSelection(drink)}
+                            className="mr-2 absolute bottom-10 left-5 z-20 hidden"
+                            checked={selectedDrinks.some((d) => d.id === drink.id)}
+                        />
+                    </div>
                 </div>
-              </label>
-              <input
-                id={`drink-checkbox-${drink.id}`}
-                type="checkbox"
-                onChange={() => handleDrinkSelection(drink)}
-                className="mr-2 absolute bottom-10 left-5 z-20 hidden"
-                checked={selectedDrinks.some((d) => d.id === drink.id)}
-              />
+            ))}
+        </div>
+
+        {drinksData.length > visibleDrinks && (
+            <div className="text-center mt-6">
+                <button onClick={() => setVisibleDrinks(prev => prev + 6)} className="bg-blue-500 text-white px-4 py-2 rounded">
+                    View More
+                </button>
             </div>
-          </div>
-        ))}
-      </div>
+        )}
 
-      {drinksData.length === 0 && (
-        <p className="text-center text-gray-600 font-semibold text-xl mt-6">
-          There are no drinks available.
-        </p>
-      )}
+        {drinksData.length === 0 && (
+            <p className="text-center text-gray-600 font-semibold text-xl mt-6">
+                There are no drinks available.
+            </p>
+        )}
 
-      <div className="text-center mt-6">
-        <Link href="/order/date">
-          <button
-            onClick={handleSaveToLocalStorage}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Choose Delivery Time
-          </button>
-        </Link>
-      </div>
+        <div className="text-center mt-6">
+            <Link href="/order/date">
+                <button
+                    onClick={handleSaveToLocalStorage}
+                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                >
+                    Choose Delivery Time
+                </button>
+            </Link>
+        </div>
     </main>
-  );
-}
-
+);
+        }
 {
   /*
 "use client";
