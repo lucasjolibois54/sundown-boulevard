@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 
 import SelectedDrink from "@/app/components/order/SelectedDrink";
@@ -28,12 +29,20 @@ export default function Drink() {
   const [selectedDrinks, setSelectedDrinks] = useState([]);
   const [email, setEmail] = useState("");
   const [visibleDrinks, setVisibleDrinks] = useState(9); 
+  const [isLoading, setIsLoading] = useState(true);
+
 
   useEffect(() => {
-      (async () => {
-          const drinks = await getDrinks();
-          setDrinksData(drinks);
-      })();
+    (async () => {
+      try {
+        const drinks = await getDrinks();
+        setDrinksData(drinks);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+        setIsLoading(false);
+      }
+    })();
 
       if (typeof window !== "undefined") {
           const savedEmail = localStorage.getItem("savedEmail") || "";
@@ -71,45 +80,57 @@ export default function Drink() {
     <main className="min-h-screen py-12 px-4 sm:px-8">
         <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-main-text">Choose Your Drinks</h1>
         <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {drinksData.slice(0, visibleDrinks).map((drink, index) => (
-                <div key={drink.id} className="rounded-lg transition transform hover:scale-105 h-96 relative">
-                    <div className="w-full h-full relative">
-                        <label htmlFor={`drink-checkbox-${drink.id}`} className="cursor-pointer w-full h-full block">
-                            <img
-                                src={randomImages[index % randomImages.length]}
-                                alt={drink.tagline}
-                                className="w-full h-96 object-cover"
-                            />
-                            {selectedDrinks.some((d) => d.id === drink.id) && (
-                                <div
-                                    style={{ backgroundColor: "rgba(0, 0, 0, 0.4)", transition: "opacity 10.5s" }}
-                                    className="absolute top-0 left-0 w-full h-full"
-                                ></div>
-                            )}
-                            <p className="text-white z-10 top-0 right-0 absolute pr-2 pt-2">{drink.first_brewed}</p>
+            {drinksData.length === 0 ? (
+                // Skeleton Loading for drinks
+                Array.from({ length: visibleDrinks }).map((_, index) => (
+                    <motion.div key={index} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="rounded-lg transition transform hover:scale-105 h-96 relative bg-gray-200 animate-pulse">
+                        {/* Skeleton for image */}
+                        <div className="w-full h-2/3 bg-gray-300 rounded-t-lg"></div>
+                        {/* Skeleton for text */}
+                        <div className="w-3/4 h-6 bg-gray-300 my-2 mx-auto"></div>
+                        <div className="w-1/2 h-4 bg-gray-300 mx-auto"></div>
+                    </motion.div>
+                ))
+            ) : (
+                drinksData.slice(0, visibleDrinks).map((drink, index) => (
+                    <div key={drink.id} className="rounded-lg transition transform hover:scale-105 h-96 relative">
+                        <div className="w-full h-full relative">
+                            <label htmlFor={`drink-checkbox-${drink.id}`} className="cursor-pointer w-full h-full block">
+                                <img
+                                    src={randomImages[index % randomImages.length]}
+                                    alt={drink.tagline}
+                                    className="w-full h-96 object-cover"
+                                />
+                                {selectedDrinks.some((d) => d.id === drink.id) && (
+                                    <div
+                                        style={{ backgroundColor: "rgba(0, 0, 0, 0.4)", transition: "opacity 10.5s" }}
+                                        className="absolute top-0 left-0 w-full h-full"
+                                    ></div>
+                                )}
+                                <p className="text-white z-10 top-0 right-0 absolute pr-2 pt-2">{drink.first_brewed}</p>
 
-                            {selectedDrinks.some((d) => d.id === drink.id) && (
-                                <div className="checked-drink-body absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                                    <SelectedDrink />
+                                {selectedDrinks.some((d) => d.id === drink.id) && (
+                                    <div className="checked-drink-body absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                        <SelectedDrink />
+                                    </div>
+                                )}
+
+                                <div className="p-6 !z-10 absolute text-white bottom-0">
+                                    <h2 className="text-lg sm:text-xl font-semibold mb-0">{drink.name.substring(0, 16)}</h2>
+                                    <p className="text-sm">{drink.ingredients?.yeast || "Unknown Yeast"}</p>
                                 </div>
-                            )}
-
-                            <div className="p-6 !z-10 absolute text-white bottom-0">
-                                <h2 className="text-lg sm:text-xl font-semibold mb-0">{drink.name.substring(0, 16)}</h2>
-                                <p className="text-sm">{drink.ingredients?.yeast || "Unknown Yeast"}</p>
-
-                            </div>
-                        </label>
-                        <input
-                            id={`drink-checkbox-${drink.id}`}
-                            type="checkbox"
-                            onChange={() => handleDrinkSelection(drink)}
-                            className="mr-2 absolute bottom-10 left-5 z-20 hidden"
-                            checked={selectedDrinks.some((d) => d.id === drink.id)}
-                        />
+                            </label>
+                            <input
+                                id={`drink-checkbox-${drink.id}`}
+                                type="checkbox"
+                                onChange={() => handleDrinkSelection(drink)}
+                                className="mr-2 absolute bottom-10 left-5 z-20 hidden"
+                                checked={selectedDrinks.some((d) => d.id === drink.id)}
+                            />
+                        </div>
                     </div>
-                </div>
-            ))}
+                ))
+            )}
         </div>
 
         {drinksData.length > visibleDrinks && (
@@ -120,7 +141,7 @@ export default function Drink() {
             </div>
         )}
 
-        {drinksData.length === 0 && (
+        {drinksData.length === 0 && !drinksData.loading && (
             <p className="text-center text-gray-600 font-semibold text-xl mt-6">
                 There are no drinks available.
             </p>
