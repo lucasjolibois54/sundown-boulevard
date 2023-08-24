@@ -107,12 +107,12 @@ export default function FoodGenerator() {
                     >
                       Generate New Meal
                     </button>
-                    <button
+                    <Link href="/order/drinks"><button
                       onClick={handleSaveData}
                       className="ml-2 -mb-1 px-4 py-2 bg-blue-300 text-black rounded decoration-8"
                     >
                       Choose Drinks
-                    </button>
+                    </button></Link>
                   </div>
                 </div>
                 <div className="border-b-2 border-gray-500 w-4/6 flex mt-5">
