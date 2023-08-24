@@ -50,29 +50,62 @@ export default function Drink() {
       }
   }, []);*/
 
+  /*
+  useEffect(() => {
+    (async () => {
+        const drinks = await getDrinks();
+        setDrinksData(drinks);
+    })();
+
+    if (typeof window !== "undefined") {
+        const savedEmail = localStorage.getItem("savedEmail") || "";
+        setEmail(savedEmail);
+    }
+
+    // Check if drinksData is populated
+    if (drinksData.length > 0) {
+        // Wait for 2 seconds before updating the isLoading state
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 2000);
+    }
+}, [drinksData]);*/
+
 useEffect(() => {
-  let isMounted = true;  // This variable helps in ensuring the state is not set after the component is unmounted
-
+  let isMounted = true; // This flag denotes the component mount status
+  
+  // Fetch drinks data
   (async () => {
+    try {
       const drinks = await getDrinks();
-
-      // Check if component is still mounted before setting state
+      
       if (isMounted) {
-          setDrinksData(drinks);
+        setDrinksData(drinks);
 
-          // After setting the drinks data, wait for 2 seconds before setting isLoading to false
-          setTimeout(() => {
-              setIsLoading(false);
-          }, 2000);
+        // After setting the drinks data, wait for 2 seconds before setting isLoading to false
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 2000);
       }
+    } catch (error) {
+      console.error(error);
+      if (isMounted) {
+        setIsLoading(false);
+      }
+    }
   })();
 
-  // Clean up function for the useEffect
-  return () => {
-      isMounted = false;
-  };
-}, []);  // Empty dependency array ensures this useEffect runs only once after component mount
+  // If in browser environment, retrieve saved email
+  if (typeof window !== "undefined") {
+    const savedEmail = localStorage.getItem("savedEmail") || "";
+    setEmail(savedEmail);
+  }
 
+  // Cleanup: When the component is unmounted, update the isMounted flag
+  return () => {
+    isMounted = false;
+  };
+}, []);
 
 
   const handleDrinkSelection = (drink) => {
