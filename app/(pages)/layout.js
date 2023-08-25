@@ -4,6 +4,9 @@ import { Inter } from 'next/font/google'
 import Navbar from '../components/main/Navbar'
 import Footer from '../components/main/Footer'
 
+import CursorComponent from '@/cursor/CursorComponent';
+import { CursorProvider } from '@/cursor/CursorContext';
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
@@ -13,12 +16,14 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+    <CursorProvider>
     <html lang="en">
       <body className={inter.className}>
         <Navbar/>
+        <CursorComponent />
         {children}
         {/* <Footer/> */}
         </body>
-    </html>
+    </html></CursorProvider>
   )
 }
