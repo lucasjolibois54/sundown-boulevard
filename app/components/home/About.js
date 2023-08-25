@@ -1,7 +1,12 @@
+'use client'
+
 import React from "react";
 import Link from "next/link";
 
+import { useCursor } from '@/cursor/CursorContext';
+
 export default function About() {
+  const { setCursorText, setCursorVariant } = useCursor();
 
   return (
     <>
@@ -32,7 +37,11 @@ export default function About() {
 
               <div className="absolute  mt-0">
                 <div className="flex sm:justify-center mt-5 gap-3">
-                  <Link href="/order">
+                  <Link 
+                          className="contact"
+                          onMouseEnter={() => { setCursorText("👋"); setCursorVariant("contact"); }}
+                          onMouseLeave={() => { setCursorText(""); setCursorVariant("default"); }}
+                           href="/order">
                     <div className="cursor-pointer bg-main-color inline-block transition-all duration-300 hover:text-white hover:border-white hover:bg-dark-bg text-bg-dark-bg border border-cat-text py-2 px-5 rounded-full">
                       <span className="flex">
                         <span className="mx-0.5">Order Now!</span>
