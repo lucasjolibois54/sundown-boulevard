@@ -123,6 +123,8 @@ export default function Drink() {
             ))
           : drinksData.slice(0, visibleDrinks).map((drink, index) => (
               <div
+              onMouseEnter={() => { setCursorText("Add"); setCursorVariant("addCart"); }}
+              onMouseLeave={() => { setCursorText(""); setCursorVariant("default"); }}
                 key={drink.id}
                 className="rounded-lg transition transform hover:scale-105 h-96 relative"
               >
@@ -182,7 +184,7 @@ export default function Drink() {
         </p>
       )}
 
-      <div className="flex gap-2 absolute left-1/2 transform -translate-x-1/2 mt-10 pb-20">
+      <div className="flex gap-3 absolute left-1/2 transform -translate-x-1/2 mt-10 pb-20">
 
       {drinksData.length > visibleDrinks && (
         <div className="text-center mt-6">
