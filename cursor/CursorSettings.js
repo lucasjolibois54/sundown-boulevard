@@ -41,7 +41,7 @@ const spring = {
       y: mouseYPosition - 48,
       transition: spring
     },
-    time: {
+    time: { 
         opacity: 1,
         backgroundColor: "#fff",
         color: "#000",
