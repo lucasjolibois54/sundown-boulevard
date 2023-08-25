@@ -43,7 +43,7 @@ const spring = {
     },
     time: { 
         opacity: 1,
-        backgroundColor: "#fff",
+        backgroundColor: "transparent",
         color: "#000",
         height: 64,
         width: 64,
