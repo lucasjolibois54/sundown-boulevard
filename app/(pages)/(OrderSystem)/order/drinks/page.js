@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
+import { useCursor } from '@/cursor/CursorContext';
+
 import SelectedDrink from "@/app/components/order/SelectedDrink";
 
 const randomImages = [
@@ -25,50 +27,14 @@ async function getDrinks() {
 }
 
 export default function Drink() {
+  const { setCursorText, setCursorVariant } = useCursor();
   const [drinksData, setDrinksData] = useState([]);
   const [selectedDrinks, setSelectedDrinks] = useState([]);
   const [email, setEmail] = useState("");
   const [visibleDrinks, setVisibleDrinks] = useState(9);
   const [isLoading, setIsLoading] = useState(true);
 
-  /*  useEffect(() => {
-    (async () => {
-      try {
-        const drinks = await getDrinks();
-        setDrinksData(drinks);
-        setIsLoading(false);
-      } catch (error) {
-        console.error(error);
-        setIsLoading(false);
-      }
-    })();
 
-      if (typeof window !== "undefined") {
-          const savedEmail = localStorage.getItem("savedEmail") || "";
-          setEmail(savedEmail);
-      }
-  }, []);*/
-
-  /*
-  useEffect(() => {
-    (async () => {
-        const drinks = await getDrinks();
-        setDrinksData(drinks);
-    })();
-
-    if (typeof window !== "undefined") {
-        const savedEmail = localStorage.getItem("savedEmail") || "";
-        setEmail(savedEmail);
-    }
-
-    // Check if drinksData is populated
-    if (drinksData.length > 0) {
-        // Wait for 2 seconds before updating the isLoading state
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 2000);
-    }
-}, [drinksData]);*/
 
   useEffect(() => {
     let isMounted = true; // This flag denotes the component mount status
@@ -227,6 +193,8 @@ export default function Drink() {
             View More
           </button> */}
                   <button
+                                  onMouseEnter={() => { setCursorText("🍺"); setCursorVariant("time"); }}
+                                  onMouseLeave={() => { setCursorText(""); setCursorVariant("default"); }}
           onClick={() => setVisibleDrinks((prev) => prev + 6)}
           class="relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-transparent border-gray-400 border-2 hover:border-bgColorDark rounded-lg group"
         >
@@ -247,6 +215,8 @@ export default function Drink() {
                 </button>
             </Link> */}
         <Link
+                onMouseEnter={() => { setCursorText("📆"); setCursorVariant("time"); }}
+                onMouseLeave={() => { setCursorText(""); setCursorVariant("default"); }}
           href="/order/date"
           onClick={handleSaveToLocalStorage}
           class="relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
