@@ -2,9 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
+
+
 /* body{
   @apply bg-bgColorDark;
 } */
+
+body{
+  background-color: #121212
+}
+
+.fontordre{
+  background-image: "https://media.discordapp.net/attachments/1068131427910168670/1144387451993997322/vector-crumbled-paper-texture.png?width=724&height=1038";
+}
+
 
 /* Bg color change on scroll themes*/
 body.dark-theme {
