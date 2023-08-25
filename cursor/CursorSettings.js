@@ -51,6 +51,17 @@ const spring = {
         x: mouseXPosition - 48,
         y: mouseYPosition - 48,
         transition: spring
+      },
+      addCart: { 
+        opacity: 1,
+        backgroundColor: "#fff",
+        color: "#000",
+        height: 64,
+        width: 64,
+        fontSize: "18px",
+        x: mouseXPosition - 48,
+        y: mouseYPosition - 48,
+        transition: spring
       }
   });
   
