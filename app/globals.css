@@ -161,6 +161,10 @@ body.light-theme {
   transition: 150ms ease;
 }
 
+.add {
+  transition: 150ms ease;
+}
+
 .contact:hover {
   color: #1e91d6;
   cursor: pointer;
