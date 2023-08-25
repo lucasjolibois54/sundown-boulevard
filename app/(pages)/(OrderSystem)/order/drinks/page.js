@@ -19,7 +19,7 @@ const randomImages = [
 async function getDrinks() {
   const res = await fetch("https://api.punkapi.com/V2/BEERS");
   if (!res.ok) {
-      throw new Error("Failed to fetch data");
+    throw new Error("Failed to fetch data");
   }
   return res.json();
 }
@@ -28,11 +28,10 @@ export default function Drink() {
   const [drinksData, setDrinksData] = useState([]);
   const [selectedDrinks, setSelectedDrinks] = useState([]);
   const [email, setEmail] = useState("");
-  const [visibleDrinks, setVisibleDrinks] = useState(9); 
+  const [visibleDrinks, setVisibleDrinks] = useState(9);
   const [isLoading, setIsLoading] = useState(true);
 
-
-/*  useEffect(() => {
+  /*  useEffect(() => {
     (async () => {
       try {
         const drinks = await getDrinks();
@@ -71,154 +70,195 @@ export default function Drink() {
     }
 }, [drinksData]);*/
 
-useEffect(() => {
-  let isMounted = true; // This flag denotes the component mount status
-  
-  // Fetch drinks data
-  (async () => {
-    try {
-      const drinks = await getDrinks();
-      
-      if (isMounted) {
-        setDrinksData(drinks);
+  useEffect(() => {
+    let isMounted = true; // This flag denotes the component mount status
 
-        // After setting the drinks data, wait for 2 seconds before setting isLoading to false
-        setTimeout(() => {
+    // Fetch drinks data
+    (async () => {
+      try {
+        const drinks = await getDrinks();
+
+        if (isMounted) {
+          setDrinksData(drinks);
+
+          // After setting the drinks data, wait for 2 seconds before setting isLoading to false
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 2000);
+        }
+      } catch (error) {
+        console.error(error);
+        if (isMounted) {
           setIsLoading(false);
-        }, 2000);
+        }
       }
-    } catch (error) {
-      console.error(error);
-      if (isMounted) {
-        setIsLoading(false);
-      }
+    })();
+
+    // If in browser environment, retrieve saved email
+    if (typeof window !== "undefined") {
+      const savedEmail = localStorage.getItem("savedEmail") || "";
+      setEmail(savedEmail);
     }
-  })();
 
-  // If in browser environment, retrieve saved email
-  if (typeof window !== "undefined") {
-    const savedEmail = localStorage.getItem("savedEmail") || "";
-    setEmail(savedEmail);
-  }
-
-  // Cleanup: When the component is unmounted, update the isMounted flag
-  return () => {
-    isMounted = false;
-  };
-}, []);
-
+    // Cleanup: When the component is unmounted, update the isMounted flag
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleDrinkSelection = (drink) => {
-      setSelectedDrinks((prevDrinks) => {
-          if (prevDrinks.some((d) => d.id === drink.id)) {
-              return prevDrinks.filter((d) => d.id !== drink.id);
-          } else {
-              return [...prevDrinks, { id: drink.id, name: drink.name }];
-          }
-      });
+    setSelectedDrinks((prevDrinks) => {
+      if (prevDrinks.some((d) => d.id === drink.id)) {
+        return prevDrinks.filter((d) => d.id !== drink.id);
+      } else {
+        return [...prevDrinks, { id: drink.id, name: drink.name }];
+      }
+    });
   };
 
   const handleSaveToLocalStorage = () => {
-      if (typeof window !== "undefined") {
-          let savedData = localStorage.getItem(email)
-              ? JSON.parse(localStorage.getItem(email))
-              : {};
+    if (typeof window !== "undefined") {
+      let savedData = localStorage.getItem(email)
+        ? JSON.parse(localStorage.getItem(email))
+        : {};
 
-          savedData = {
-              ...savedData,
-              drinks: selectedDrinks,
-          };
+      savedData = {
+        ...savedData,
+        drinks: selectedDrinks,
+      };
 
-          localStorage.setItem(email, JSON.stringify(savedData));
-      }
+      localStorage.setItem(email, JSON.stringify(savedData));
+    }
   };
-
 
   return (
     <main className="min-h-screen py-12 px-4 sm:px-8">
-        <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-main-text">Choose Your Drinks</h1>
-        <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/*{drinksData.length === 0 ? (*/}
-            {isLoading ? (
-                //Skeleton Loading for drinks
-                Array.from({ length: visibleDrinks }).map((_, index) => (
-                    <motion.div key={index} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="rounded-lg transition transform hover:scale-105 h-96 relative bg-gray-200 animate-pulse">
-                        {/* Skeleton for image */}
-                        <div className="w-full h-2/3 bg-gray-300 rounded-t-lg"></div>
-                        {/* Skeleton for text */}
-                        <div className="w-3/4 h-6 bg-gray-300 my-2 mx-auto"></div>
-                        <div className="w-1/2 h-4 bg-gray-300 mx-auto"></div>
-                    </motion.div>
-                ))
-            ) : (
-                drinksData.slice(0, visibleDrinks).map((drink, index) => (
-                    <div key={drink.id} className="rounded-lg transition transform hover:scale-105 h-96 relative">
-                        <div className="w-full h-full relative">
-                            <label htmlFor={`drink-checkbox-${drink.id}`} className="cursor-pointer w-full h-full block">
-                                <img
-                                    src={randomImages[index % randomImages.length]}
-                                    alt={drink.tagline}
-                                    className="w-full h-96 object-cover"
-                                />
-                                {selectedDrinks.some((d) => d.id === drink.id) && (
-                                    <div
-                                        style={{ backgroundColor: "rgba(0, 0, 0, 0.4)", transition: "opacity 10.5s" }}
-                                        className="absolute top-0 left-0 w-full h-full"
-                                    ></div>
-                                )}
-                                <p className="text-white z-10 top-0 right-0 absolute pr-2 pt-2">{drink.first_brewed}</p>
+      <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-main-text">
+        Choose Your Drinks
+      </h1>
+      <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/*{drinksData.length === 0 ? (*/}
+        {isLoading
+          ? //Skeleton Loading for drinks
+            Array.from({ length: visibleDrinks }).map((_, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="rounded-lg transition transform hover:scale-105 h-96 relative bg-gray-200 animate-pulse"
+              >
+                {/* Skeleton for image */}
+                <div className="w-full h-2/3 bg-gray-300 rounded-t-lg"></div>
+                {/* Skeleton for text */}
+                <div className="w-3/4 h-6 bg-gray-300 my-2 mx-auto"></div>
+                <div className="w-1/2 h-4 bg-gray-300 mx-auto"></div>
+              </motion.div>
+            ))
+          : drinksData.slice(0, visibleDrinks).map((drink, index) => (
+              <div
+                key={drink.id}
+                className="rounded-lg transition transform hover:scale-105 h-96 relative"
+              >
+                <div className="w-full h-full relative">
+                  <label
+                    htmlFor={`drink-checkbox-${drink.id}`}
+                    className="cursor-pointer w-full h-full block"
+                  >
+                    <img
+                      src={randomImages[index % randomImages.length]}
+                      alt={drink.tagline}
+                      className="w-full h-96 object-cover"
+                    />
+                    {selectedDrinks.some((d) => d.id === drink.id) && (
+                      <div
+                        style={{
+                          backgroundColor: "rgba(0, 0, 0, 0.4)",
+                          transition: "opacity 10.5s",
+                        }}
+                        className="absolute top-0 left-0 w-full h-full"
+                      ></div>
+                    )}
+                    <p className="text-white z-10 top-0 right-0 absolute pr-2 pt-2">
+                      {drink.first_brewed}
+                    </p>
 
-                                {selectedDrinks.some((d) => d.id === drink.id) && (
-                                    <div className="checked-drink-body absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                                        <SelectedDrink />
-                                    </div>
-                                )}
+                    {selectedDrinks.some((d) => d.id === drink.id) && (
+                      <div className="checked-drink-body absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <SelectedDrink />
+                      </div>
+                    )}
 
-                                <div className="p-6 !z-10 absolute text-white bottom-0">
-                                    <h2 className="text-lg sm:text-xl font-semibold mb-0">{drink.name.substring(0, 16)}</h2>
-                                    <p className="text-sm">{drink.ingredients?.yeast || "Unknown Yeast"}</p>
-                                </div>
-                            </label>
-                            <input
-                                id={`drink-checkbox-${drink.id}`}
-                                type="checkbox"
-                                onChange={() => handleDrinkSelection(drink)}
-                                className="mr-2 absolute bottom-10 left-5 z-20 hidden"
-                                checked={selectedDrinks.some((d) => d.id === drink.id)}
-                            />
-                        </div>
+                    <div className="p-6 !z-10 absolute text-white bottom-0">
+                      <h2 className="text-lg sm:text-xl font-semibold mb-0">
+                        {drink.name.substring(0, 16)}
+                      </h2>
+                      <p className="text-sm">
+                        {drink.ingredients?.yeast || "Unknown Yeast"}
+                      </p>
                     </div>
-                ))
-            )}
-        </div>
+                  </label>
+                  <input
+                    id={`drink-checkbox-${drink.id}`}
+                    type="checkbox"
+                    onChange={() => handleDrinkSelection(drink)}
+                    className="mr-2 absolute bottom-10 left-5 z-20 hidden"
+                    checked={selectedDrinks.some((d) => d.id === drink.id)}
+                  />
+                </div>
+              </div>
+            ))}
+      </div>
 
-        {drinksData.length > visibleDrinks && (
-            <div className="text-center mt-6">
-                <button onClick={() => setVisibleDrinks(prev => prev + 6)} className="bg-blue-500 text-white px-4 py-2 rounded">
-                    View More
-                </button>
-            </div>
-        )}
+      {drinksData.length === 0 && !drinksData.loading && (
+        <p className="text-center text-gray-600 font-semibold text-xl mt-6">
+          There are no drinks available.
+        </p>
+      )}
 
-        {drinksData.length === 0 && !drinksData.loading && (
-            <p className="text-center text-gray-600 font-semibold text-xl mt-6">
-                There are no drinks available.
-            </p>
-        )}
+      <div className="flex gap-2 absolute left-1/2 transform -translate-x-1/2 mt-10 pb-20">
 
+      {drinksData.length > visibleDrinks && (
         <div className="text-center mt-6">
-            <Link href="/order/date">
+          {/* <button
+            onClick={() => setVisibleDrinks((prev) => prev + 6)}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            View More
+          </button> */}
+                  <button
+          onClick={() => setVisibleDrinks((prev) => prev + 6)}
+          class="relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-transparent border-gray-400 border-2 hover:border-bgColorDark rounded-lg group"
+        >
+          <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-gray-500 rounded-full group-hover:w-72 group-hover:h-72"></span>
+          <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+          <span class="relative">View More</span>
+        </button>
+        </div>
+      )}
+
+      <div className="text-center mt-6">
+        {/* <Link href="/order/date">
                 <button
                     onClick={handleSaveToLocalStorage}
                     className="bg-blue-500 text-white px-4 py-2 rounded"
                 >
                     Choose Delivery Time
                 </button>
-            </Link>
-        </div>
+            </Link> */}
+        <Link
+          href="/order/date"
+          onClick={handleSaveToLocalStorage}
+          class="relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
+        >
+          <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
+          <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+          <span class="relative">Choose Delivery Time</span>
+        </Link>
+      </div></div>
     </main>
-);
-        }
+  );
+}
 {
   /*
 "use client";
