@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-import { useCursor } from '@/cursor/CursorContext';
+import { useCursor } from "@/cursor/CursorContext";
 
 import SelectedDrink from "@/app/components/order/SelectedDrink";
 
@@ -33,8 +33,6 @@ export default function Drink() {
   const [email, setEmail] = useState("");
   const [visibleDrinks, setVisibleDrinks] = useState(9);
   const [isLoading, setIsLoading] = useState(true);
-
-
 
   useEffect(() => {
     let isMounted = true; // This flag denotes the component mount status
@@ -123,8 +121,14 @@ export default function Drink() {
             ))
           : drinksData.slice(0, visibleDrinks).map((drink, index) => (
               <div
-              onMouseEnter={() => { setCursorText("Add"); setCursorVariant("addCart"); }}
-              onMouseLeave={() => { setCursorText(""); setCursorVariant("default"); }}
+                onMouseEnter={() => {
+                  setCursorText("Add");
+                  setCursorVariant("addCart");
+                }}
+                onMouseLeave={() => {
+                  setCursorText("");
+                  setCursorVariant("default");
+                }}
                 key={drink.id}
                 className="rounded-lg transition transform hover:scale-105 h-96 relative"
               >
@@ -185,30 +189,35 @@ export default function Drink() {
       )}
 
       <div className="flex gap-3 absolute left-1/2 transform -translate-x-1/2 mt-10 pb-20">
-
-      {drinksData.length > visibleDrinks && (
-        <div className="text-center mt-6">
-          {/* <button
+        {drinksData.length > visibleDrinks && (
+          <div className="text-center mt-6">
+            {/* <button
             onClick={() => setVisibleDrinks((prev) => prev + 6)}
             className="bg-blue-500 text-white px-4 py-2 rounded"
           >
             View More
           </button> */}
-                  <button
-                                  onMouseEnter={() => { setCursorText(""); setCursorVariant("time"); }}
-                                  onMouseLeave={() => { setCursorText(""); setCursorVariant("default"); }}
-          onClick={() => setVisibleDrinks((prev) => prev + 6)}
-          class="hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-transparent border-gray-400 border-2 hover:border-bgColorDark rounded-lg group"
-        >
-          <span class="absolute w-0 h-0 transition-all duration-1000 ease-out bg-gray-500 rounded-full group-hover:w-72 group-hover:h-72"></span>
-          <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-          <span class="relative">View More</span>
-        </button>
-        </div>
-      )}
+            <button
+              onMouseEnter={() => {
+                setCursorText("");
+                setCursorVariant("time");
+              }}
+              onMouseLeave={() => {
+                setCursorText("");
+                setCursorVariant("default");
+              }}
+              onClick={() => setVisibleDrinks((prev) => prev + 6)}
+              class="hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-transparent border-gray-400 border-2 hover:border-bgColorDark rounded-lg group"
+            >
+              <span class="absolute w-0 h-0 transition-all duration-1000 ease-out bg-gray-500 rounded-full group-hover:w-72 group-hover:h-72"></span>
+              <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+              <span class="relative">View More</span>
+            </button>
+          </div>
+        )}
 
-      <div className="text-center mt-6">
-        {/* <Link href="/order/date">
+        <div className="text-center mt-6">
+          {/* <Link href="/order/date">
                 <button
                     onClick={handleSaveToLocalStorage}
                     className="bg-blue-500 text-white px-4 py-2 rounded"
@@ -216,18 +225,25 @@ export default function Drink() {
                     Choose Delivery Time
                 </button>
             </Link> */}
-        <Link
-                onMouseEnter={() => { setCursorText(""); setCursorVariant("time"); }}
-                onMouseLeave={() => { setCursorText(""); setCursorVariant("default"); }}
-          href="/order/date"
-          onClick={handleSaveToLocalStorage}
-          class="hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
-        >
-          <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
-          <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-          <span class="relative">Choose Delivery Time</span>
-        </Link>
-      </div></div>
+          <Link
+            onMouseEnter={() => {
+              setCursorText("");
+              setCursorVariant("time");
+            }}
+            onMouseLeave={() => {
+              setCursorText("");
+              setCursorVariant("default");
+            }}
+            href="/order/date"
+            onClick={handleSaveToLocalStorage}
+            class="hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
+          >
+            <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
+            <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+            <span class="relative">Choose Delivery Time</span>
+          </Link>
+        </div>
+      </div>
     </main>
   );
 }
