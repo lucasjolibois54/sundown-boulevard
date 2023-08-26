@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
 
-const SelectedDrink = () => {
+const SelectedDrink = ({ text = "- PRODUCT IS CHOSEN" }) => {
   const circleRef = useRef(null);
 
   useEffect(() => {
@@ -10,16 +10,13 @@ const SelectedDrink = () => {
     };
 
     const radius = 80;
-    //const diameter = radius * 2;
     const diameter = 100 * 2;
 
     const circle = circleRef.current;
     circle.style.width = `${diameter}px`;
     circle.style.height = `${diameter}px`;
 
-    const text = circle.dataset.text;
     const characters = text.split("");
-
     const deltaAngle = 360 / characters.length;
     const characterOffsetAngle = 8;
     let currentAngle = -90;
@@ -38,10 +35,10 @@ const SelectedDrink = () => {
       circle.appendChild(span);
     });
 
-  }, []);
+  }, [text]);
 
   return (
-    <div id="circle" className='text-white' ref={circleRef} data-text="BEER CHOSEN - BEER CHOSEN -"></div>
+    <div id="circle" className='text-white' ref={circleRef} data-text={text}></div>
   );
 }
 
