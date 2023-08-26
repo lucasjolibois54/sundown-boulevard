@@ -157,7 +157,7 @@ export default function Drink() {
 
                     {selectedDrinks.some((d) => d.id === drink.id) && (
                       <div className="checked-drink-body absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                        <SelectedDrink />
+                        <SelectedDrink text="BEER CHOSEN - BEER CHOSEN -"/>
                       </div>
                     )}
 
