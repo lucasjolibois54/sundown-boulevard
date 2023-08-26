@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 
 async function getData() {
@@ -19,11 +20,14 @@ export default function FoodGenerator() {
   const [mealData, setMealData] = useState([]);
   const [selectedMeal, setSelectedMeal] = useState(null);
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
+      setIsLoading(true);
       const data = await getData();
       setMealData(data);
+      setIsLoading(false);
     })();
   }, []);
 
@@ -41,13 +45,27 @@ export default function FoodGenerator() {
   return (
     <>
       <main className="min-h-screen py-12 px-4 sm:px-8">
-      <h1 className="text-6xl font-semibold text-center my-0 pb-5 text-main-text">
+      <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-main-text">
         Choose Your Meal
-      </h1>
-        <div className="pt-28 sm:pt-10 flex flex-col w-full lg:flex-row mb-4">
-          <div className="max-w-6xl mx-auto lg:px-0 sm:px-6 sm:py-8">
-            <div className="font-medium leading-7 space-y-2 sm:grid sm:grid-cols-3 sm:gap-8 sm:space-y-0">
-                {mealData.map((meal) => (
+      </h1>        <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+              {isLoading 
+                ? Array(9).fill().map((_, idx) => (
+                  <motion.div
+                  key={idx}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="rounded-lg transition transform hover:scale-105 h-96 relative bg-gray-200 animate-pulse"
+                >
+                  {/* Skeleton for image */}
+                  <div className="w-full h-2/3 bg-gray-300 rounded-t-lg"></div>
+                  {/* Skeleton for text */}
+                  <div className="w-3/4 h-6 bg-gray-300 my-2 mx-auto"></div>
+                  <div className="w-1/2 h-4 bg-gray-300 mx-auto"></div>
+                </motion.div>
+                  ))
+                : mealData.map((meal) => (
                   <div
                     key={meal.idMeal}
                     className={`rounded-lg transition transform hover:scale-105 h-96 relative ${selectedMeal && selectedMeal.idMeal === meal.idMeal ? 'border-2 border-blue-300' : ''}`}
@@ -58,18 +76,18 @@ export default function FoodGenerator() {
                       alt={meal.strMeal}
                       className="w-full h-96 object-cover rounded-md"
                     />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
-
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
                     <div className="p-6 !z-10 absolute text-white bottom-0">
-                    <h2 className="text-lg sm:text-xl font-semibold mb-0">
-                        {meal.strMeal.substring(0, 25)}
-                    </h2>
-                    <p className="text-sm">
-                        {meal.strInstructions.substring(0, 30)}...
-                    </p>
+                      <h2 className="text-lg sm:text-xl font-semibold mb-0">
+                          {meal.strMeal.substring(0, 25)}
+                      </h2>
+                      <p className="text-sm">
+                          {meal.strInstructions.substring(0, 30)}...
+                      </p>
                     </div>
                   </div>
-                ))}
+                ))
+              }
             </div>
             <div className="mt-5">
               <div className="flex">
@@ -98,12 +116,10 @@ export default function FoodGenerator() {
                 />
               </div>
             </div>
-          </div>
-        </div>
         <div className="relative flex py-5 px-10 max-w-6xl mx-auto items-center">
           <div className="flex-grow border-t h-6 border-gray-400"></div>
         </div>
       </main>
     </>
-);
+  );
 }
