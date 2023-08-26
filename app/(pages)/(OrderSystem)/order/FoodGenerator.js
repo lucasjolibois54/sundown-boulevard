@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 
 import { useCursor } from "@/cursor/CursorContext";
+import SelectedDrink from "@/app/components/order/SelectedDrink";
 
 async function getData() {
   const meals = [];
@@ -164,13 +165,24 @@ export default function FoodGenerator() {
                   </motion.div>
                 ))
             : mealData.map((meal) => (
-                <div
+                /*<div
                   key={meal.idMeal}
                   className={`rounded-lg transition transform hover:scale-105 h-96 relative ${
                     selectedMeal && selectedMeal.idMeal === meal.idMeal
                       ? "border-2 border-blue-300"
                       : ""
-                  }`}
+                  }`}*/
+                <div
+                onMouseEnter={() => {
+                  setCursorText("Add");
+                  setCursorVariant("addCart");
+                }}
+                onMouseLeave={() => {
+                  setCursorText("");
+                  setCursorVariant("default");
+                }}
+                  key={meal.idMeal}
+                  className={`rounded-lg transition transform hover:scale-105 h-96 relative cursor-pointer`}
                   onClick={() =>
                     setSelectedMeal(
                       selectedMeal && selectedMeal.idMeal === meal.idMeal
@@ -184,15 +196,30 @@ export default function FoodGenerator() {
                     alt={meal.strMeal}
                     className="w-full h-96 object-cover rounded-md"
                   />
+                  {selectedMeal && selectedMeal.idMeal === meal.idMeal && (
+                    <div
+                      style={{
+                        backgroundColor: "rgba(0, 0, 0, 0.4)",
+                        transition: "opacity 10.5s",
+                      }}
+                      className="absolute top-0 left-0 w-full h-full"
+                    ></div>
+                  )}
+
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
                   <div className="p-6 !z-10 absolute text-white bottom-0">
                     <h2 className="text-lg sm:text-xl font-semibold mb-0">
-                      {meal.strMeal.substring(0, 25)}
+                      {meal.strMeal.substring(0, 22)}
                     </h2>
                     <p className="text-sm">
                       {meal.strInstructions.substring(0, 30)}...
                     </p>
                   </div>
+                  {selectedMeal && selectedMeal.idMeal === meal.idMeal && (
+                    <div className="checked-drink-body absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                      <SelectedDrink text="MEAL CHOSEN - MEAL CHOSEN -"/>
+                    </div>
+                  )}
                 </div>
               ))}
         </div>
