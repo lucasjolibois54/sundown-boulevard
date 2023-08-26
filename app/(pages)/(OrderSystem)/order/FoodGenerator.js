@@ -40,27 +40,34 @@ export default function FoodGenerator() {
 
   return (
     <>
-      <main className="min-h-screen">
-        <div className="pt-28 sm:pt-20 flex flex-col w-full lg:flex-row mb-4">
+      <main className="min-h-screen py-12 px-4 sm:px-8">
+      <h1 className="text-6xl font-semibold text-center my-0 pb-5 text-main-text">
+        Choose Your Meal
+      </h1>
+        <div className="pt-28 sm:pt-10 flex flex-col w-full lg:flex-row mb-4">
           <div className="max-w-6xl mx-auto lg:px-0 sm:px-6 sm:py-8">
-            <div className="font-medium leading-7 space-y-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0">
+            <div className="font-medium leading-7 space-y-2 sm:grid sm:grid-cols-3 sm:gap-8 sm:space-y-0">
                 {mealData.map((meal) => (
                   <div
                     key={meal.idMeal}
-                    className={`bg-white rounded-lg p-4 relative ${selectedMeal && selectedMeal.idMeal === meal.idMeal ? 'border-2 border-blue-300' : ''}`}
+                    className={`rounded-lg transition transform hover:scale-105 h-96 relative ${selectedMeal && selectedMeal.idMeal === meal.idMeal ? 'border-2 border-blue-300' : ''}`}
                     onClick={() => setSelectedMeal(meal)}
                   >
                     <img
                       src={meal.strMealThumb}
                       alt={meal.strMeal}
-                      className="w-screen !h-[100%] object-cover rounded"
+                      className="w-full h-96 object-cover rounded-md"
                     />
-                    <h2 className="text-lg mt-2">
-                        {meal.strMeal.substring(0, 12)}...
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
+
+                    <div className="p-6 !z-10 absolute text-white bottom-0">
+                    <h2 className="text-lg sm:text-xl font-semibold mb-0">
+                        {meal.strMeal.substring(0, 25)}
                     </h2>
-                    <p className="text-sm mt-2">
-                        {meal.strInstructions.substring(0, 100)}...
+                    <p className="text-sm">
+                        {meal.strInstructions.substring(0, 30)}...
                     </p>
+                    </div>
                   </div>
                 ))}
             </div>
