@@ -22,14 +22,45 @@ export default function FoodGenerator() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
+/*  useEffect(() => {
     (async () => {
       setIsLoading(true);
       const data = await getData();
       setMealData(data);
       setIsLoading(false);
     })();
+  }, []);*/
+
+  useEffect(() => {
+    let isMounted = true;  // This flag denotes the component mount status
+
+    // Fetch meal data
+    (async () => {
+      try {
+        const meals = await getData();
+
+        if (isMounted) {
+          setMealData(meals);
+
+          // After setting the meals data, wait for 2 seconds before setting isLoading to false
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 2000);
+        }
+      } catch (error) {
+        console.error(error);
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    })();
+
+    // Clean up function to set the isMounted to false when the component unmounts
+    return () => {
+      isMounted = false;
+    };
   }, []);
+
 
   const handleSaveData = () => {
     if (selectedMeal && email) {
