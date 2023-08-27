@@ -70,6 +70,7 @@ module.exports = {
         
         'main-color': '#007DDB',
         'dark-bg': '#151515',
+        'time-color': '#373633',
 
         'main-text': '#F6F6F6',
         'sec-light-text': '#D2D6D7',
