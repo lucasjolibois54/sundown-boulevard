@@ -40,12 +40,13 @@ export default function TimePicker() {
   };
 
   return (
-<main className="bg-gray-200 min-h-screen flex flex-col justify-center items-center py-12 max-w-6xl mx-auto">
-    <h1 className="text-3xl font-semibold mb-8 text-gray-800">Pick a Date and Time</h1>
-
-    <div className="bg-white p-8 rounded-xl shadow-md space-y-8 w-full max-w-lg">
+<main className=" min-h-screen flex flex-col  items-center py-12 max-w-6xl mx-auto"> {/* justify-center */}
+<h1 className="text-6xl font-semibold text-center my-10 pb-5 text-main-text">
+        Choose Your Drinks
+      </h1>
+    <div className="bg-time-color/40 p-8 rounded-xl shadow-md space-y-8 w-full max-w-lg">
         <div>
-            <label className="block text-gray-700 font-medium mb-2">Date:</label>
+            <label className="block text-gray-300 font-medium mb-2">Date:</label>
             <input
                 type="date"
                 value={selectedDate}
@@ -55,7 +56,7 @@ export default function TimePicker() {
         </div>
 
         <div>
-            <label className="block text-gray-700 font-medium mb-2">Time:</label>
+            <label className="block text-gray-300 font-medium mb-2">Time:</label>
             <input
                 type="time"
                 value={selectedTime}
@@ -65,7 +66,7 @@ export default function TimePicker() {
         </div>
 
         <div className="flex items-center space-x-4">
-            <label className="text-gray-700 font-medium mb-2 mr-2">Customer:</label>
+            <label className="text-gray-300 font-medium mb-2 mr-2">Customer:</label>
             <button
                 onClick={decrementCustomer}
                 className="bg-gray-300 rounded px-3 py-2 hover:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring focus:ring-gray-200 transition"
@@ -101,46 +102,3 @@ export default function TimePicker() {
 
   );
 }
-
-
-
-/*'use client';
-import React, { useState, useEffect } from 'react';
-import Customers from '@/app/components/order/Customers';
-import DatePicker from '@/app/components/order/DatePicker';
-import SaveButton from '@/app/components/order/SaveButton';
-
-export default function Order() {
-    const [email, setEmail] = useState('');
-    const [count, setCount] = useState(1);
-    const [date, setDate] = useState(new Date());
-
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const savedEmail = localStorage.getItem('savedEmail') || '';
-            setEmail(savedEmail);
-        }
-    }, []);
-
-    const handleSaveAll = () => {
-        if (typeof window !== 'undefined') {
-            const savedData = {
-                meals: JSON.parse(localStorage.getItem(email)).meals || [], // Retrieve saved drinks data
-                drinks: JSON.parse(localStorage.getItem(email)).drinks || [], // Retrieve saved drinks data
-                customers: count,
-                date: date
-            };
-            localStorage.setItem(email, JSON.stringify(savedData));
-        }
-    };
-
-    return (
-        <main className="bg-gray-100 min-h-screen py-12 px-4 sm:px-8">
-            <div className="max-w-5xl mx-auto">
-                <Customers count={count} setCount={setCount} />
-                <DatePicker date={date} setDate={setDate} />
-                <SaveButton onSave={handleSaveAll} />
-            </div>
-        </main>
-    );
-}*/
