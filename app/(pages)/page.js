@@ -7,6 +7,7 @@ import Subhero from "../components/home/Subhero";
 import About from "../components/home/About";
 import TextLoop from "../components/home/TextLoop";
 import ExampleComponent from "../components/cursor-examples/ExampleComponent";
+import SecondHero from "../components/home/SecondHero";
 
 export default function Home() {
   const [theme, setTheme] = useState("dark-theme");
@@ -45,8 +46,9 @@ export default function Home() {
   return (
     <>
       <main id="home-page" className="pb-56">
-        <Hero />
-        <div id="targetComponent" style={{ height: "150vh", zIndex: 0 }} />
+        {/* <Hero /> */}
+        <SecondHero />
+        {/* <div id="targetComponent" style={{ height: "150vh", zIndex: 0 }} /> */}
       </main>
       <div className="max-w-6xl mx-auto px-6">
         <Subhero />
