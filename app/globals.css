@@ -217,3 +217,111 @@ body.light-theme {
 .rbc-off-range-bg {
   background: #54534E !important;
 }
+
+
+/* Date */
+
+/* Overriding default styles */
+.rbc-calendar {
+  font-family: 'Arial', sans-serif;
+}
+
+.rbc-btn-group {
+  /*margin-left: 0.5rem;*/
+  margin-right: 0.5rem;
+}
+
+.rbc-toolbar {
+  padding: 0.5rem;
+  color: white !important;
+}
+
+.rbc-event {
+  background-color: #3498db;
+  color: white !important;
+  border-radius: 0.25rem;
+  padding: 0.2rem;
+  font-size: 0.8rem;
+}
+
+.rbc-today {
+  background-color: #f2f2f2;
+}
+
+.rbc-month-view .rbc-date-cell {
+  padding: 0.5rem;
+  vertical-align: top;
+}
+
+.rbc-header {
+  padding: 0.5rem;
+  font-weight: 600;
+  color: white !important;
+}
+
+.rbc-today {
+background-color: #3498db !important;
+}
+
+
+.rbc-off-range-bg {
+background: #54534E !important;
+color: red !important;
+}
+
+.rbc-button-link {
+color: white;
+}
+
+/* Make day names white */
+.rbc-header {
+color: white !important;
+}
+
+/* Make dates of the current month white */
+.rbc-row > .rbc-date-cell {
+color: white !important;
+}
+
+/* Make dates of other months gray */
+.rbc-off-range .rbc-day-bg {
+background-color: transparent !important; 
+}
+.rbc-off-range .rbc-date-cell {
+color: gray !important;
+}
+
+/* Change the color of the Today button */
+.rbc-toolbar .rbc-btn-group > button:first-child {
+color: white !important; /* If you need to change text color */
+}
+
+/* Change the color of the Back (previous) button */
+.rbc-toolbar .rbc-btn-group > button:nth-child(2) {
+color: white !important; /* If you need to change text color */
+}
+
+/* Change the color of the Next button */
+.rbc-toolbar .rbc-btn-group > button:nth-child(3) {
+color: white !important; /* If you need to change text color */
+}
+
+/* Change the color of the Today button on hover */
+.rbc-toolbar .rbc-btn-group > button:first-child:hover {
+color: black !important;
+}
+
+/* Change the color of the Back (previous) button on hover */
+.rbc-toolbar .rbc-btn-group > button:nth-child(2):hover {
+color: black !important;
+}
+
+/* Change the color of the Next button on hover */
+.rbc-toolbar .rbc-btn-group > button:nth-child(3):hover {
+color: black !important;
+}
+
+.rbc-toolbar .rbc-btn-group > button:focus {
+background-color: whitesmoke !important;
+color: black !important;
+}
