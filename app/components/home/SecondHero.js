@@ -20,14 +20,14 @@ export default function SubHero() {
         setCursorText("");
         setCursorVariant("default");
       }} className="relative w-full h-[calc(100vh-60px)]" onMouseMove={handleMouseMove}>
-      <img src="https://plus.unsplash.com/premium_photo-1688385848467-781c5394c017?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgeljfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2944&q=80" alt="Hero" className="w-full h-full object-cover" />
+      <img src="https://res.cloudinary.com/debkwdctz/image/upload/v1693229110/lucasjolibois54_a_bar_restaurant_random_color_design_in_the_sty_5f35697c-299e-42a9-bdab-16dcb98babbf-transformed_1_lfh1dd.png" alt="Hero" className="w-full h-full object-cover" />
 
       <motion.div
         className="absolute inset-0 bg-black opacity-100"
         initial={false}
         animate={{
-          maskImage: `radial-gradient(circle 150px at ${cursorPosition.x}px ${cursorPosition.y}px, transparent 0%, black 100%)`,
-          WebkitMaskImage: `radial-gradient(circle 150px at ${cursorPosition.x}px ${cursorPosition.y}px, transparent 0%, black 100%)`
+          maskImage: `radial-gradient(circle 200px at ${cursorPosition.x}px ${cursorPosition.y}px, transparent 0%, black 100%)`,
+          WebkitMaskImage: `radial-gradient(circle 200px at ${cursorPosition.x}px ${cursorPosition.y}px, transparent 0%, black 100%)`
         }}
       ></motion.div>
     </div>
