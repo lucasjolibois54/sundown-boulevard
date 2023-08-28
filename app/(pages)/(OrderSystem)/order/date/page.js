@@ -30,18 +30,17 @@ export default function TimePicker() {
   const modalVariants = {
     hidden: {
       opacity: 0,
-      scale: 0.95
+      scale: 0.95,
     },
     visible: {
       opacity: 1,
-      scale: 1
+      scale: 1,
     },
     exit: {
       opacity: 0,
-      scale: 0.9
-    }
+      scale: 0.9,
+    },
   };
-  
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -197,30 +196,32 @@ export default function TimePicker() {
 
         {/* Modal for time slot selection */}
         {showTimeModal && (
-  <motion.div
-    initial="hidden"
-    animate="visible"
-    exit="exit"
-    variants={modalVariants}
-    transition={{ type: 'spring', stiffness: 120 }}
-    className="fixed z-10 inset-0 overflow-y-auto bg-black bg-opacity-50 backdrop-blur-md flex items-center justify-center"
-  >
-    <div className="bg-gray-800 rounded-lg p-4 space-y-4 w-1/3">
-      <h2 className="text-xl text-white font-semibold mb-2">Select a time slot:</h2>
-      {timeSlots.map((time, index) => (
-
-                                <button key={index} onClick={() => handleTimeSelect(time)}
-                                class="hover:cursor-none relative w-full inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:border-bgColorDark rounded-lg group"
-                              >
-                                <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-full group-hover:h-72"></span>
-                                <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-                                <span class="relative">{time}</span>
-                              </button>
-      ))}
-    </div>
-  </motion.div>
-)}
-
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={modalVariants}
+            transition={{ type: "spring", stiffness: 120 }}
+            className="fixed z-10 inset-0 overflow-y-auto bg-black bg-opacity-50 backdrop-blur-md flex items-center justify-center"
+          >
+            <div className="bg-gray-800 rounded-lg p-4 space-y-4 w-1/3">
+              <h2 className="text-xl text-white font-semibold mb-2">
+                Select a time slot:
+              </h2>
+              {timeSlots.map((time, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleTimeSelect(time)}
+                  class="hover:cursor-none relative w-full inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:border-bgColorDark rounded-lg group"
+                >
+                  <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-full group-hover:h-72"></span>
+                  <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+                  <span class="relative">{time}</span>
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
 
         {/* <div className="flex items-center space-x-4 hidden">
           <label className="text-gray-300 font-medium mb-2 mr-2">Customer:</label>
