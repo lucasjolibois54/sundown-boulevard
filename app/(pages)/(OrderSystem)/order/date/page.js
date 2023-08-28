@@ -176,7 +176,7 @@ export default function TimePicker() {
           </div>
         )}
 
-        <div className="flex items-center space-x-4 hidden">
+        {/* <div className="flex items-center space-x-4 hidden">
           <label className="text-gray-300 font-medium mb-2 mr-2">Customer:</label>
           <button
             onClick={() => setCustomerCount(prev => prev - 1)}
@@ -196,14 +196,14 @@ export default function TimePicker() {
           >
             +
           </button>
-        </div>
+        </div> */}
         
-        <button
+        {/* <button
           onClick={handleSaveDateTime}
           className=" w-full mt-4 bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-200 transition-shadow shadow-md"
         >
           Save Date & Time
-        </button>
+        </button> */}
         
         <div className="mt-6 text-white">
           <p><strong>Selected Date:</strong> {selectedDate?.toDateString()}</p>
