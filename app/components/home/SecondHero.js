@@ -4,9 +4,10 @@ import { motion } from 'framer-motion';
 import { useCursor } from '@/cursor/CursorContext';
 
 export default function SubHero() {
-  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });   // State to track cursor position
   const { setCursorText, setCursorVariant } = useCursor();
 
+     // Update cursor position on mouse move
   const handleMouseMove = (e) => {
     setCursorPosition({ x: e.pageX, y: e.pageY });
   };

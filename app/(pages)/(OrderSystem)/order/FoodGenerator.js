@@ -8,6 +8,7 @@ import SelectedDrink from "@/app/components/order/SelectedDrink";
 
 async function getData() {
   const meals = [];
+  // Fetch data (loop) as long as there are less than 9
   for (let i = 0; i < 9; i++) {
     const res = await fetch(
       "https://www.themealdb.com/API/JSON/V1/1/RANDOM.PHP/"
@@ -16,7 +17,7 @@ async function getData() {
       throw new Error("Failed to fetch data");
     }
     const data = await res.json();
-    meals.push(data.meals[0]);
+    meals.push(data.meals[0]); // Push the first meal data from API into 'meals' array
   }
   return meals;
 }
@@ -28,16 +29,18 @@ export default function FoodGenerator() {
   const [isLoading, setIsLoading] = useState(true);
   const { setCursorText, setCursorVariant } = useCursor();
 
+  // Function to fetch meals data and handle loading state
   const fetchMeals = async () => {
     let isMounted = true;
 
-    setIsLoading(true);
+    setIsLoading(true); 
     try {
-      const meals = await getData();
+      const meals = await getData(); // Fetch meal data
 
       if (isMounted) {
-        setMealData(meals);
+        setMealData(meals); // Update meal data state
 
+        // Delay loading
         setTimeout(() => {
           setIsLoading(false);
         }, 2000);
@@ -50,17 +53,20 @@ export default function FoodGenerator() {
     }
   };
 
+  // useEffect to fetch meals data on component mount
   useEffect(() => {
-    let isMounted = true; // This flag denotes the component mount status
+    let isMounted = true;
 
+    // Function to fetch meals data and update state
     const fetchMeals = async () => {
-      setIsLoading(true);
+      setIsLoading(true); 
       try {
-        const meals = await getData();
+        const meals = await getData(); // Fetch meal data
 
         if (isMounted) {
-          setMealData(meals);
+          setMealData(meals); // Update meal data state
 
+          
           setTimeout(() => {
             setIsLoading(false);
           }, 2000);
@@ -68,19 +74,21 @@ export default function FoodGenerator() {
       } catch (error) {
         console.error(error);
         if (isMounted) {
-          setIsLoading(false);
+          setIsLoading(false); 
         }
       }
     };
 
+    // Initialize meal data
     fetchMeals();
 
-    // Clean up function to set the isMounted to false when the component unmounts
+    // Clean up function (set isMounted to false when unmounts)
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, []); // Empty array (useEffect runs only on mount)
 
+  // Save selected meal to localStorage
   const handleSaveData = () => {
     if (selectedMeal && email) {
       const savedData = {
@@ -173,14 +181,14 @@ export default function FoodGenerator() {
                       : ""
                   }`}*/
                 <div
-                onMouseEnter={() => {
-                  setCursorText("Add");
-                  setCursorVariant("addCart");
-                }}
-                onMouseLeave={() => {
-                  setCursorText("");
-                  setCursorVariant("default");
-                }}
+                  onMouseEnter={() => {
+                    setCursorText("Add");
+                    setCursorVariant("addCart");
+                  }}
+                  onMouseLeave={() => {
+                    setCursorText("");
+                    setCursorVariant("default");
+                  }}
                   key={meal.idMeal}
                   className={`rounded-lg transition transform hover:scale-105 h-96 relative cursor-pointer`}
                   onClick={() =>
@@ -217,7 +225,7 @@ export default function FoodGenerator() {
                   </div>
                   {selectedMeal && selectedMeal.idMeal === meal.idMeal && (
                     <div className="checked-drink-body absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                      <SelectedDrink text="MEAL CHOSEN - MEAL CHOSEN -"/>
+                      <SelectedDrink text="MEAL CHOSEN - MEAL CHOSEN -" />
                     </div>
                   )}
                 </div>

@@ -12,7 +12,7 @@ export default function Receipt() {
     customer: 0,
   });
 
-  const [confettiCount, setConfettiCount] = useState(300);  // Start with a high number
+  const [confettiCount, setConfettiCount] = useState(300); // 300 pieces of confetti
   
   useEffect(() => {
     const timer = setTimeout(() => {

@@ -7,6 +7,7 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Moment.js settings
 const localizer = momentLocalizer(moment);
 
 export default function TimePicker() {
@@ -42,6 +43,7 @@ export default function TimePicker() {
     },
   };
 
+  // Load saved email on component mount
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedEmail = localStorage.getItem("savedEmail") || "";
@@ -49,19 +51,23 @@ export default function TimePicker() {
     }
   }, []);
 
+  // Handle date selection from the calendar
   const handleDateSelect = ({ start }) => {
     setSelectedDate(start);
-    setShowTimeModal(true);
+    setShowTimeModal(true); //open modal
   };
 
+  // Handle time selection from the modal
   const handleTimeSelect = (time) => {
     const dateTime = moment(
-      `${selectedDate.toISOString().split("T")[0]} ${time}`
+      //Moment.js object
+      `${selectedDate.toISOString().split("T")[0]} ${time}` //presentation
     );
     setSelectedTime(dateTime);
-    setShowTimeModal(false);
+    setShowTimeModal(false); //close modal
   };
 
+  // Save selected date, time, and customer count to local storage
   const handleSaveDateTime = () => {
     if (selectedDate && selectedTime) {
       let savedData = localStorage.getItem(email)
@@ -79,18 +85,6 @@ export default function TimePicker() {
     }
   };
 
-  /* const handleSaveDateTime = () => {
-    if (selectedDate && selectedTime) {
-      let savedData = {
-        date: selectedDate.toISOString().split('T')[0],  // Saves the date in 'YYYY-MM-DD' format
-        time: selectedTime.format('HH:mm'),
-        customer: customerCount,
-      };
-
-      localStorage.setItem(email, JSON.stringify(savedData));
-    }
-  };*/
-
   return (
     <main className="min-h-screen flex flex-col items-center py-12 max-w-6xl mx-auto">
       <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-white">
@@ -99,25 +93,6 @@ export default function TimePicker() {
 
       <div className="p-8 rounded-xl shadow-2xl space-y-8 w-full bg-white bg-opacity-10 backdrop-blur-md">
         <div className="react-calendar shadow-lg rounded-lg overflow-hidden">
-          {/* <Calendar
-            localizer={localizer}
-            defaultDate={new Date()}
-            defaultView="month"
-            views={['month']}
-            events={[]}
-            style={{ height: "700px" }}
-            onSelectSlot={handleDateSelect}
-            selectable={true}
-            dayPropGetter={(date) => {
-              if (selectedDate && moment(date).isSame(selectedDate, 'day')) {
-                return {
-                  style: {
-                    backgroundColor: '#007DDB',
-                  },
-                };
-              }
-            }}
-          /> */}
           <Calendar
             localizer={localizer}
             defaultDate={new Date()}

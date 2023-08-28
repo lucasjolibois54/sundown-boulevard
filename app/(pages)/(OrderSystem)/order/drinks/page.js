@@ -35,7 +35,7 @@ export default function Drink() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    let isMounted = true; // This flag denotes the component mount status
+    let isMounted = true;
 
     // Fetch drinks data
     (async () => {
