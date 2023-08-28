@@ -39,8 +39,6 @@ export default function About() {
                 <div className="flex sm:justify-center mt-5 gap-3">
                   <Link 
                           className="contact"
-                          onMouseEnter={() => { setCursorText("👋"); setCursorVariant("contact"); }}
-                          onMouseLeave={() => { setCursorText(""); setCursorVariant("default"); }}
                            href="/order">
                     <div className="cursor-pointer bg-main-color inline-block transition-all duration-300 hover:text-white hover:border-white hover:bg-dark-bg text-bg-dark-bg border border-cat-text py-2 px-5 rounded-full">
                       <span className="flex">
