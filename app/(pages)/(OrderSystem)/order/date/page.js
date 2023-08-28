@@ -158,11 +158,19 @@ export default function TimePicker() {
                             Customer:
                           </label>
                           <button
-                            onClick={() => setCustomerCount((prev) => prev - 1)}
-                            className="!bg-gray-700 !text-white !rounded !px-3 !py-2 !hover:bg-gray-600 !active:bg-gray-800 !focus:outline-none !focus:ring !focus:ring-gray-200 !transition-shadow !shadow-md"
+                            onClick={() =>
+                              customerCount > 1 &&
+                              setCustomerCount((prev) => prev - 1)
+                            }
+                            className={`!text-white !rounded !px-3 !py-2 !hover:bg-gray-600 !active:bg-gray-800 !focus:outline-none !focus:ring !focus:ring-gray-200 !transition-shadow !shadow-md ${
+                              customerCount <= 1
+                                ? "!bg-gray-900 cursor-not-allowed !border-black"
+                                : "!bg-gray-700"
+                            }`}
                           >
                             -
                           </button>
+
                           <input
                             type="number"
                             value={customerCount}
@@ -170,8 +178,15 @@ export default function TimePicker() {
                             className="border rounded px-3 py-1 pr-2 w-16 text-center shadow-md bg-transparent text-white"
                           />
                           <button
-                            onClick={() => setCustomerCount((prev) => prev + 1)}
-                            className="!bg-gray-700 !text-white !rounded !px-3 !py-2 !hover:bg-gray-600 !active:bg-gray-800 !focus:outline-none !focus:ring !focus:ring-gray-200 !transition-shadow !shadow-md"
+                            onClick={() =>
+                              customerCount < 10 &&
+                              setCustomerCount((prev) => prev + 1)
+                            }
+                            className={`!text-white !rounded !px-3 !py-2 !hover:bg-gray-600 !active:bg-gray-800 !focus:outline-none !focus:ring !focus:ring-gray-200 !transition-shadow !shadow-md ${
+                              customerCount >= 10
+                                ? "!bg-gray-900 cursor-not-allowed !border-black"
+                                : "!bg-gray-700"
+                            }`}
                           >
                             +
                           </button>
