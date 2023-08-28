@@ -120,7 +120,7 @@ export default function TimePicker() {
           <span className="rbc-toolbar-label">{toolbarProps.label}</span>
           <span className="rbc-btn-group !text-gray-900 text-center">
             <div className='flex gap-3'>
-          <div className="flex items-center space-x-4 border-2 border-none border-2 px-2 py-1 rounded-lg ">
+          <div className="flex items-center space-x-4 border-2 border-none px-2 py-1 rounded-lg ">
           <label className="text-gray-300 font-medium mt-1 mr-2">Customer:</label>
           <button
             onClick={() => setCustomerCount(prev => prev - 1)}
