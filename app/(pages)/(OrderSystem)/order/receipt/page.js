@@ -21,9 +21,11 @@ export default function Receipt() {
   }, []);
 
   return (
-    <main className="bg-bgColorDark min-h-screen flex flex-col justify-center items-center py-8">
+    <main className="bg-bgColorDark min-h-screen flex flex-col items-center py-12"> {/* justify-center */}
         <div className="max-w-6xl mx-auto">
-        <h1 className="text-6xl font-semibold text-center mt-10 pb-5 text-main-text">Order Summary</h1>
+        <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-white">
+        Order Summary
+      </h1>
         <div className="fontordre w-full max-w-xs sm:max-w-md sm:w-96 mx-auto p-6 mt-12 shadow-md" 
      style={{ backgroundImage: "url('https://media.discordapp.net/attachments/1068131427910168670/1144387451993997322/vector-crumbled-paper-texture.png?width=724&height=1038')", backgroundSize: 'cover' }}>
     <div className="pb-10 border-b border-black text-center">
