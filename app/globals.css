@@ -20,7 +20,7 @@ body{
 
 /* Bg color change on scroll themes*/
 body.dark-theme {
-  background-color: rgb(25, 23, 23);
+  background-color: #121212;
   color: white;
 }
 
