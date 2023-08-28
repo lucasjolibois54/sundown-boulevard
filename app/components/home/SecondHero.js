@@ -26,8 +26,8 @@ export default function SubHero() {
         className="absolute inset-0 bg-black opacity-100"
         initial={false}
         animate={{
-          maskImage: `radial-gradient(circle 100px at ${cursorPosition.x}px ${cursorPosition.y}px, transparent 0%, black 100%)`,
-          WebkitMaskImage: `radial-gradient(circle 100px at ${cursorPosition.x}px ${cursorPosition.y}px, transparent 0%, black 100%)`
+          maskImage: `radial-gradient(circle 150px at ${cursorPosition.x}px ${cursorPosition.y}px, transparent 0%, black 100%)`,
+          WebkitMaskImage: `radial-gradient(circle 150px at ${cursorPosition.x}px ${cursorPosition.y}px, transparent 0%, black 100%)`
         }}
       ></motion.div>
     </div>
