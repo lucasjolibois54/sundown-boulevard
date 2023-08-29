@@ -9,7 +9,7 @@ export default function Footer() {
   const { setCursorText, setCursorVariant } = useCursor();
   return (
     <>
-<div className="w-full py-10flex items-center justify-center bg-black sm:rounded-t-full">
+<div className="w-full py-10 flex items-center justify-center bg-black sm:rounded-t-3xl mt-20  md:mt-0 2xl:rounded-t-full">
   <div className='max-w-6xl mx-auto '>
         <div className=" w-full px-4 text-white flex flex-col">
             <div className="w-full text-7xl font-bold">
