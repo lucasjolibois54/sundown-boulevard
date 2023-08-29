@@ -10,7 +10,7 @@ export default function About() {
 
   return (
     <>
-      <div className="pt-28 sm:pt-20 flex flex-col w-full lg:flex-row mb-4">
+      <div className="pt-10 sm:pt-20 flex flex-col w-full lg:flex-row mb-4">
         {/* Max width container, center aligned, with some padding */}
         <div id="about" className="max-w-6xl mx-auto lg:px-0 sm:px-6 sm:py-8">
           {/* <!-- Grid columns + some font styles for the children elements to inherit --> */}
