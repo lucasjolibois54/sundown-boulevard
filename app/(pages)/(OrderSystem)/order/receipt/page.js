@@ -85,7 +85,7 @@ export default function Receipt() {
                     <tr>
                         <td className="pt-4">Customers</td>
                         <td></td>
-                        <td className="pt-4 text-right">x {savedData.customer}</td>
+                        <td className="pt-4 text-right">x{savedData.customer}</td>
                     </tr>
                     <tr>
                         <td className="pt-4">{""}</td>
