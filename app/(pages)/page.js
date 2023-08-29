@@ -8,6 +8,7 @@ import About from "../components/home/About";
 import TextLoop from "../components/home/TextLoop";
 import ExampleComponent from "../components/cursor-examples/ExampleComponent";
 import SecondHero from "../components/home/SecondHero";
+import Footer from "../components/main/Footer";
 
 export default function Home() {
   const [theme, setTheme] = useState("dark-theme");
@@ -56,7 +57,7 @@ export default function Home() {
           <About />
         </div>
       </div>
-      <TextLoop/>
+      <Footer/>
       {/* <ExampleComponent/> */}
     </>
   );
