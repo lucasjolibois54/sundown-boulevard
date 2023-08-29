@@ -69,7 +69,7 @@ export default function About() {
         </div>
       </div>
       <div className="relative flex py-5 px-10 max-w-6xl mx-auto items-center">
-        <div className="flex-grow border-t h-6 border-gray-400"></div>
+        {/* <div className="hidden md:flex-grow border-t h-6 border-gray-400"></div> */}
       </div>
     </>
   );
