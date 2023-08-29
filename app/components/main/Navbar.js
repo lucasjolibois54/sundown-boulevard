@@ -90,9 +90,9 @@ function Navbar() {
                 </Link>
               </div>
               <div className="md:hidden md:p-4 mt-0 mr-1 py-0 block cursor-pointer">
-                <Link href="/updates">
+                <Link href="/order">
                   <div className="bg-cat-btn text-sm inline-block transition-all duration-500 hover:text-white hover:border-white hover:bg-dark-bg text-cat-text border border-cat-text py-2 px-5 rounded-full">
-                    <span className="flex">Restaurants</span>
+                    <span className="flex">Order Now!</span>
                   </div>
                 </Link>
               </div>
@@ -110,30 +110,30 @@ function Navbar() {
               md:justify-between"
                 >
                   <li>
-                    <Link href="/restaurants">
+                    <Link href="/">
                       <p className="md:p-4 py-2 block hover:text-blue-hover cursor-pointer">
-                        Restaurants
+                        Home
                       </p>
                     </Link>
                   </li>
                   <li>
-                    <Link href="/search">
+                    <Link href="/#about">
+                      <p className="md:p-4 py-2 block hover:text-blue-hover cursor-pointer">
+                        About
+                      </p>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/Search">
                       <p className="md:p-4 py-2 block hover:text-blue-hover cursor-pointer">
                         Search
                       </p>
                     </Link>
                   </li>
                   <li>
-                    <Link href="/products">
+                    <Link href="/orders">
                       <p className="md:p-4 py-2 block hover:text-blue-hover cursor-pointer">
-                        Products
-                      </p>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/newsletters">
-                      <p className="md:p-4 py-2 block hover:text-blue-hover cursor-pointer">
-                        Newsletter
+                        Productss
                       </p>
                     </Link>
                   </li>
