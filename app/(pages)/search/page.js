@@ -46,11 +46,11 @@ export default function Search() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="border-none outline-none flex-grow p-2 text-6xl font-semibold input-search italic"
+              className="border-none outline-none flex-grow p-2  text-lg md:text-6xl font-semibold input-search italic"
             />
             <button
               onClick={handleClearData}
-              className="ml-2 -mb-1 px-4 py-2 bg-red-500 text-white rounded decoration-8"
+              className="ml-2 -mb-1 px-4 py-2 hidden sm:block bg-red-500 text-white rounded decoration-8"
             >
               Clear
             </button>
