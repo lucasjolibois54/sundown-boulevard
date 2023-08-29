@@ -13,7 +13,7 @@ export default function Subhero() {
 
     return (
         <>
-        <h2 className=' text-center font-bold text-4xl !-mt-36'>Gallery From The Bar</h2>
+        <h2 className=' text-center font- text-4xl md:text-6xl !-mt-36'>Gallery From The Bar</h2>
         <div className=" mt-10 flex items-center justify-center">
           <div className="border-gray-700 border container mx-auto w-screen h-400 flex items-center">
             {items.map((item, index) => (
