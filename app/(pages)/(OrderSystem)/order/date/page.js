@@ -128,7 +128,7 @@ export default function TimePicker() {
                     </span>
                     <span className="rbc-btn-group !text-gray-900 text-center">
                       <div className="flex gap-3">
-                        <div className="flex items-center space-x-4 border-2 border-none px-2 py-1 rounded-lg ">
+                        <div className="hidden sm:flex items-center space-x-4 border-2 border-none px-2 py-1 rounded-lg ">
                           <label className="text-gray-300 font-medium mt-1 mr-2">
                             Customer:
                           </label>
@@ -169,7 +169,7 @@ export default function TimePicker() {
                         <Link
                           href="/order/receipt"
                           onClick={handleSaveDateTime}
-                          class="hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
+                          class="hidden hover:cursor-none relative sm:inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
                         >
                           <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
                           <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
@@ -213,10 +213,12 @@ export default function TimePicker() {
           </motion.div>
         )}
 
-        {/* <div className="flex items-center space-x-4 hidden">
-          <label className="text-gray-300 font-medium mb-2 mr-2">Customer:</label>
+        <div className="flex sm:hidden items-center space-x-4">
+          <label className="text-gray-300 font-medium mb-2 mr-2">
+            Customer:
+          </label>
           <button
-            onClick={() => setCustomerCount(prev => prev - 1)}
+            onClick={() => setCustomerCount((prev) => prev - 1)}
             className="bg-gray-700 text-white rounded px-3 py-2 hover:bg-gray-600 active:bg-gray-800 focus:outline-none focus:ring focus:ring-gray-200 transition-shadow shadow-md"
           >
             -
@@ -228,12 +230,22 @@ export default function TimePicker() {
             className="border rounded px-3 py-2 w-16 text-center shadow-md"
           />
           <button
-            onClick={() => setCustomerCount(prev => prev + 1)}
+            onClick={() => setCustomerCount((prev) => prev + 1)}
             className="bg-gray-700 text-white rounded px-3 py-2 hover:bg-gray-600 active:bg-gray-800 focus:outline-none focus:ring focus:ring-gray-200 transition-shadow shadow-md"
           >
             +
           </button>
-        </div> */}
+        </div>
+
+        <Link
+          href="/order/receipt"
+          onClick={handleSaveDateTime}
+          class="sm:hidden hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
+        >
+          <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
+          <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+          <span class="relative">Complete Order</span>
+        </Link>
 
         {/* <button
           onClick={handleSaveDateTime}
