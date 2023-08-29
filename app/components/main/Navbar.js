@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useCursor } from "@/cursor/CursorContext";
 
 import Image from "next/image";
 
@@ -12,6 +13,8 @@ import Logo from "./full-logo.svg";
 function Navbar() {
   const [showNav, setShowNav] = useState(true);
   const [scrollPos, setScrollPos] = useState(0);
+  const { setCursorText, setCursorVariant } = useCursor();
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -135,7 +138,7 @@ function Navbar() {
                     </Link>
                   </li>
                   <li className="pl-2 ml-2 py-2">
-                    <Link href="/contact">
+                    {/* <Link href="/contact">
                       <div className="bg-main-color text-dark-bg py-2 px-5 rounded-full flex">
                         <span className="mr-6">Let&apos;s Talk!</span>
                         <img
@@ -144,7 +147,23 @@ function Navbar() {
                           src="https://res.cloudinary.com/debkwdctz/image/upload/v1692688849/mail_owk7er.png"
                         />
                       </div>
-                    </Link>
+                    </Link> */}
+                                    <Link
+            onMouseEnter={() => {
+              setCursorText("");
+              setCursorVariant("time");
+            }}
+            onMouseLeave={() => {
+              setCursorText("");
+              setCursorVariant("default");
+            }}
+            href="/order"
+            class="hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
+          >
+            <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
+            <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+            <span class="relative">Order Now!</span>
+          </Link> 
                   </li>
                 </ul>
               </div>
