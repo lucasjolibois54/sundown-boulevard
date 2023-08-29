@@ -6,6 +6,9 @@ import Link from "next/link";
 import { useCursor } from "@/cursor/CursorContext";
 import SelectedDrink from "@/app/components/order/SelectedDrink";
 
+const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+
 async function getData() {
   const meals = [];
   // Fetch data (loop) as long as there are less than 9
@@ -163,7 +166,14 @@ export default function FoodGenerator() {
                   setCursorVariant("default");
                 }}
                 href="/order/drinks"
-                onClick={handleSaveData}
+                onClick={(e) => {
+                  if (!emailRegex.test(email)) {
+                    e.preventDefault();
+                    alert("Please enter a valid email address.");
+                  } else {
+                    handleSaveData();
+                  }
+                }}
                 class="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
               >
                 <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
