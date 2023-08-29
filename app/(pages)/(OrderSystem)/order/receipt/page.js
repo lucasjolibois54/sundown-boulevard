@@ -59,20 +59,20 @@ export default function Receipt() {
                     <tr>
                         <th className="text-left">QTY</th>
                         <th className="text-left">ITEM</th>
-                        <th className="text-right">AMT</th>
+                        <th className="text-right">{""}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td className="pt-4">x 1</td>
                         <td className="pt-4">{savedData.mealName}</td>
-                        <td className="pt-4 text-right">NaN</td>
+                        <td className="pt-4 text-right">{""}</td>
                     </tr>
                     {savedData.drinks.map((drink, idx) => (
                         <tr key={idx}>
                             <td className="pt-4">x 1</td>
                             <td className="pt-4">{drink.name}</td>
-                            <td className="pt-4 text-right">NaN</td>
+                            <td className="pt-4 text-right">{""}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -80,17 +80,17 @@ export default function Receipt() {
                     <tr>
                         <td className="pt-4 font-bold text-lg">Total</td>
                         <td></td>
-                        <td className="pt-4 text-right font-bold text-lg">32.1</td>
+                        <td className="pt-4 text-right font-bold text-lg">{""}</td>
                     </tr>
                     <tr>
-                        <td className="pt-4">Cash</td>
+                        <td className="pt-4">Customers</td>
                         <td></td>
-                        <td className="pt-4 text-right">32.1</td>
+                        <td className="pt-4 text-right">x {savedData.customer}</td>
                     </tr>
                     <tr>
-                        <td className="pt-4">Change</td>
+                        <td className="pt-4">{""}</td>
                         <td></td>
-                        <td className="pt-4 text-right">32.1</td>
+                        <td className="pt-4 text-right">{""}</td>
                     </tr>
                 </tfoot>
             </table>
