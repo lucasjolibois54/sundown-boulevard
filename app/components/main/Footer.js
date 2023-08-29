@@ -43,10 +43,10 @@ export default function Footer() {
                   <Image src={Logo} alt="Logo" />
                 </Link>  
                     </div>
-                    <a className="hidden md:block cursor-pointer text-gray-600 hover:text-white uppercase">About</a>
-                    <a className="hidden md:block cursor-pointer text-gray-600 hover:text-white uppercase">Services</a>
-                    <a className="hidden md:block cursor-pointer text-gray-600 hover:text-white uppercase">Why us</a>
-                    <a className="hidden md:block cursor-pointer text-gray-600 hover:text-white uppercase">Contact</a>
+                    <Link href="/" className="hidden md:block cursor-pointer text-gray-600 hover:text-white uppercase">Home</Link>
+                    <Link href="/#about" className="hidden md:block cursor-pointer text-gray-600 hover:text-white uppercase">About</Link>
+                    <Link href="/search" className="hidden md:block cursor-pointer text-gray-600 hover:text-white uppercase">Search</Link>
+                    <Link href="/order" className="hidden md:block cursor-pointer text-gray-600 hover:text-white uppercase">Producs</Link>
                     <div className="flex flex-row space-x-8 items-center justify-between">
                         <a>
                             <svg width="6" height="12" viewBox="0 0 6 12" fill="none" xmlns="http://www.w3.org/2000/svg">
