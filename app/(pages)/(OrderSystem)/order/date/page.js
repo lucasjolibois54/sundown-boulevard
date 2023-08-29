@@ -51,11 +51,16 @@ export default function TimePicker() {
     }
   }, []);
 
-  // Handle date selection from the calendar
+
+  // Prevent selection of Saturdays and Sundays
   const handleDateSelect = ({ start }) => {
-    setSelectedDate(start);
-    setShowTimeModal(true); //open modal
+    const dayOfWeek = moment(start).day();
+    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+      setSelectedDate(start);
+      setShowTimeModal(true); // Open modal only if it's not a weekend
+    }
   };
+  
 
   // Handle time selection from the modal
   const handleTimeSelect = (time) => {
@@ -98,11 +103,19 @@ export default function TimePicker() {
             defaultDate={new Date()}
             defaultView="month"
             views={["month"]}
-            events={[]}
             style={{ height: "700px" }}
             onSelectSlot={handleDateSelect}
             selectable={true}
             dayPropGetter={(date) => {
+              const dayOfWeek = moment(date).day();
+
+              if (dayOfWeek === 6 || dayOfWeek === 0) {
+                return {
+                  style: {
+                    backgroundColor: "#B33F40",
+                  },
+                };
+              }
               if (selectedDate && moment(date).isSame(selectedDate, "day")) {
                 return {
                   style: {
