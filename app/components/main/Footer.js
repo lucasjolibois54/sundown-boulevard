@@ -7,6 +7,9 @@ import { useCursor } from '@/cursor/CursorContext';
 
 export default function Footer() {
   const { setCursorText, setCursorVariant } = useCursor();
+
+  const currentYear = new Date().getFullYear();
+
   return (
     <>
 <div className="w-full py-10 flex items-center justify-center bg-black sm:rounded-t-3xl mt-20  md:mt-0 2xl:rounded-t-full">
@@ -68,7 +71,7 @@ export default function Footer() {
                     </div>
                 </div>
                 <hr className="border-gray-600"/>
-                <p className="w-full text-center my-12 text-gray-600">Copyright © 2023 LeFaim</p>
+                <p className="w-full text-center my-12 text-gray-600">Copyright © {currentYear} LeFaim</p>
             </div>
         </div>
         </div>
