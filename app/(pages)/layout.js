@@ -20,7 +20,8 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <Navbar/>
-        <CursorComponent />
+        <div className='none hidden md:block'>
+        <CursorComponent /></div>
         {children}
         {/* <Footer/> */}
         </body>

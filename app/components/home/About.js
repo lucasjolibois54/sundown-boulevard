@@ -14,11 +14,11 @@ export default function About() {
         {/* Max width container, center aligned, with some padding */}
         <div className="max-w-6xl mx-auto lg:px-0 sm:px-6 sm:py-8">
           {/* <!-- Grid columns + some font styles for the children elements to inherit --> */}
-          <div className="font-medium leading-7 space-y-2 sm:grid sm:grid-cols-2 lg:grid-cols-2 sm:gap-4 sm:space-y-0">
+          <div className="font-medium leading-7 space-y-2 sm:grid md:grid-cols-2 grid-rows-2 lg:grid-cols-2 sm:gap-4 sm:space-y-0">
             {/* <!-- Grid cell #1 --> */}
             <div className="py-3 pt-20 sm:pt-5 sm:p-5 float-left rounded">
               <img
-                className="w-screen md:w-full  xl:w-6/6 sm:float-left"
+                className="w-screen md:w-full  xl:w-6/6 sm:float-left mb-5 sm:mb-0"
                 src={
                   "https://res.cloudinary.com/debkwdctz/image/upload/v1692702894/image_101_q1dkdg.png"
                 }
