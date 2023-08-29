@@ -30,12 +30,11 @@ export default function FoodGenerator() {
   const { setCursorText, setCursorVariant } = useCursor();
   const [isEmailSaved, setIsEmailSaved] = useState(false);
 
-
   // Function to fetch meals data and handle loading state
   const fetchMeals = async () => {
     let isMounted = true;
 
-    setIsLoading(true); 
+    setIsLoading(true);
     try {
       const meals = await getData(); // Fetch meal data
 
@@ -61,14 +60,13 @@ export default function FoodGenerator() {
 
     // Function to fetch meals data and update state
     const fetchMeals = async () => {
-      setIsLoading(true); 
+      setIsLoading(true);
       try {
         const meals = await getData(); // Fetch meal data
 
         if (isMounted) {
           setMealData(meals); // Update meal data state
 
-          
           setTimeout(() => {
             setIsLoading(false);
           }, 2000);
@@ -76,7 +74,7 @@ export default function FoodGenerator() {
       } catch (error) {
         console.error(error);
         if (isMounted) {
-          setIsLoading(false); 
+          setIsLoading(false);
         }
       }
     };
@@ -91,14 +89,14 @@ export default function FoodGenerator() {
   }, []); // Empty array (useEffect runs only on mount)
 
   // useEffect to update the email saved status
-useEffect(() => {
-  const savedEmail = localStorage.getItem('savedEmail');
-  if (savedEmail && savedEmail === email) {
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("savedEmail");
+    if (savedEmail && savedEmail === email) {
       setIsEmailSaved(true);
-  } else {
+    } else {
       setIsEmailSaved(false);
-  }
-}, [email]);  // This effect runs whenever the email state changes
+    }
+  }, [email]); // This effect runs whenever the email state changes
 
   // Save selected meal to localStorage
   const handleSaveData = () => {
@@ -161,7 +159,9 @@ useEffect(() => {
               >
                 <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
                 <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-                <span class="relative">{isEmailSaved ? "Update Order" : "Choose Drinks"}</span>
+                <span class="relative">
+                  {isEmailSaved ? "Update Order" : "Choose Drinks"}
+                </span>
               </Link>
             </div>
           </div>
