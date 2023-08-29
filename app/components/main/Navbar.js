@@ -133,7 +133,7 @@ function Navbar() {
                   <li>
                     <Link href="/order">
                       <p className="md:p-4 py-2 block hover:text-blue-hover cursor-pointer">
-                        Productss
+                        Products
                       </p>
                     </Link>
                   </li>
