@@ -37,7 +37,7 @@ export default function About() {
 
               <div className="absolute  mt-0">
                 <div className="flex sm:justify-center mt-5 gap-3">
-                  <Link 
+                  {/* <Link 
                           className="contact"
                            href="/order">
                     <div className="cursor-pointer bg-main-color inline-block transition-all duration-300 hover:text-white hover:border-white hover:bg-dark-bg text-bg-dark-bg border border-cat-text py-2 px-5 rounded-full">
@@ -45,7 +45,23 @@ export default function About() {
                         <span className="mx-0.5">Order Now!</span>
                       </span>
                     </div>
-                  </Link>
+                  </Link> */}
+                            <Link
+            onMouseEnter={() => {
+              setCursorText("");
+              setCursorVariant("time");
+            }}
+            onMouseLeave={() => {
+              setCursorText("");
+              setCursorVariant("default");
+            }}
+            href="/order"
+            class="hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
+          >
+            <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
+            <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+            <span class="relative">Order Now!</span>
+          </Link>
                 </div>
               </div>
             </div>
