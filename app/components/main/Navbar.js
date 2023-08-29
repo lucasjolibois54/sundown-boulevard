@@ -124,14 +124,14 @@ function Navbar() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/Search">
+                    <Link href="/search">
                       <p className="md:p-4 py-2 block hover:text-blue-hover cursor-pointer">
                         Search
                       </p>
                     </Link>
                   </li>
                   <li>
-                    <Link href="/orders">
+                    <Link href="/order">
                       <p className="md:p-4 py-2 block hover:text-blue-hover cursor-pointer">
                         Productss
                       </p>
