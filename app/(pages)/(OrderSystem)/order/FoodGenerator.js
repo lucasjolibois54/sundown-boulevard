@@ -112,7 +112,16 @@ export default function FoodGenerator() {
 
   return (
     <>
-      <main className="min-h-screen py-12 px-4 sm:px-8 max-w-5xl mx-auto">
+      <main
+      onMouseEnter={() => {
+        setCursorText("");
+        setCursorVariant("default");
+      }}
+      onMouseLeave={() => {
+        setCursorText("");
+        setCursorVariant("default");
+      }}
+       className="min-h-screen py-12 px-4 sm:px-8 max-w-5xl mx-auto">
         <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-main-text">
           Choose Your Meal
         </h1>
