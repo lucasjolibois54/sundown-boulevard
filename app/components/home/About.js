@@ -14,7 +14,7 @@ export default function About() {
         {/* Max width container, center aligned, with some padding */}
         <div className="max-w-6xl mx-auto lg:px-0 sm:px-6 sm:py-8">
           {/* <!-- Grid columns + some font styles for the children elements to inherit --> */}
-          <div className="font-medium leading-7 space-y-2 sm:grid md:grid-cols-2 grid-rows-2 lg:grid-cols-2 sm:gap-4 sm:space-y-0">
+          <div className="font-medium leading-7 space-y-2 sm:grid md:grid-cols-2 md:grid-rows-1 grid-rows-2 lg:grid-cols-2 sm:gap-4 sm:space-y-0">
             {/* <!-- Grid cell #1 --> */}
             <div className="py-3 pt-20 sm:pt-5 sm:p-5 float-left rounded">
               <img
