@@ -55,14 +55,20 @@ export default function TimePicker() {
   }, []);
 
 
-  // Prevent selection of Saturdays and Sundays
+  // NO Saturdays and Sundays
   const handleDateSelect = ({ start }) => {
+    const currentDate = moment();
+    if (moment(start).isBefore(currentDate, 'day')) {
+      return; // Exit the function if it's a past date
+    }
+  
     const dayOfWeek = moment(start).day();
     if (dayOfWeek !== 0 && dayOfWeek !== 6) {
       setSelectedDate(start);
-      setShowTimeModal(true); // Open modal only if it's not a weekend
+      setShowTimeModal(true); // Open modal if not a weekend
     }
   };
+  
   
 
   // Handle time selection from the modal
@@ -110,23 +116,37 @@ export default function TimePicker() {
             onSelectSlot={handleDateSelect}
             selectable={true}
             dayPropGetter={(date) => {
+              const currentDate = moment();
               const dayOfWeek = moment(date).day();
-
-              if (dayOfWeek === 6 || dayOfWeek === 0) {
+            
+              // If the date is before the current date
+              if (moment(date).isBefore(currentDate, 'day')) {
                 return {
                   style: {
-                    backgroundColor: "#B33F40",
-                  },
+                    backgroundColor: '#FF0000', 
+                    opacity: 0.5,
+                    pointerEvents: 'none'  // make it unselectable
+                  }
                 };
               }
-              if (selectedDate && moment(date).isSame(selectedDate, "day")) {
+              // If the date is a weekend
+              else if (dayOfWeek === 6 || dayOfWeek === 0) {
+                return {
+                  style: {
+                    backgroundColor: '#B33F40',
+                  }
+                };
+              }
+              // If the date is the selected date
+              else if (selectedDate && moment(date).isSame(selectedDate, "day")) {
                 return {
                   style: {
                     backgroundColor: "#007DDB",
-                  },
+                  }
                 };
               }
             }}
+            
             components={{
               toolbar: (toolbarProps) => {
                 return (
