@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 import { useCursor } from "@/cursor/CursorContext";
 
@@ -35,6 +37,8 @@ export default function Drink() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    Aos.init({ duration: 1000 });
+
     let isMounted = true;
 
     // Fetch drinks data
@@ -96,7 +100,7 @@ export default function Drink() {
   };
 
   return (
-    <main className="min-h-screen py-12 px-4 sm:px-8">
+    <main  data-aos="fade-up" data-aos-delay="250" data-aos-duration="500" className="min-h-screen py-12 px-4 sm:px-8">
       <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-main-text">
         Choose Your Drinks
       </h1>
