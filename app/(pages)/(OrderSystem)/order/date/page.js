@@ -6,6 +6,8 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { motion, AnimatePresence } from "framer-motion";
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 // Moment.js settings
 const localizer = momentLocalizer(moment);
@@ -45,6 +47,7 @@ export default function TimePicker() {
 
   // Load saved email on component mount
   useEffect(() => {
+    Aos.init({ duration: 1000 });
     if (typeof window !== "undefined") {
       const savedEmail = localStorage.getItem("savedEmail") || "";
       setEmail(savedEmail);
@@ -91,7 +94,7 @@ export default function TimePicker() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center py-12 max-w-6xl mx-auto">
+    <main  data-aos="fade-up" data-aos-delay="250" data-aos-duration="500" className="min-h-screen flex flex-col items-center py-12 max-w-6xl mx-auto">
       <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-white">
         Delivery Informations
       </h1>
