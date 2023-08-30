@@ -42,8 +42,11 @@ export default function FoodGenerator() {
     const savedMeal = fetchSavedMeal(newEmail);
     if (savedMeal) {
       setMealData((prevMeals) => [savedMeal, ...prevMeals.slice(0, 8)]);
+      setSelectedMeal(savedMeal); 
+    } else {
+      setSelectedMeal(null); // Clear the selected meal if no meal is associated with the email
     }
-  };
+};
 
   // Function to fetch saved meal data from localStorage
   const fetchSavedMeal = (email) => {
