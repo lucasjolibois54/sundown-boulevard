@@ -45,42 +45,38 @@ export default function TimePicker() {
     },
   };
 
-// Load email and data on mount
-useEffect(() => {
-  Aos.init({ duration: 1000 });
-  if (typeof window !== "undefined") {
+  // Load email and data on mount
+  useEffect(() => {
+    Aos.init({ duration: 1000 });
+    if (typeof window !== "undefined") {
       const savedEmail = localStorage.getItem("savedEmail") || "";
       setEmail(savedEmail);
 
       // Take the saved data with email
-      const savedData = JSON.parse(localStorage.getItem(savedEmail) || '{}');
+      const savedData = JSON.parse(localStorage.getItem(savedEmail) || "{}");
       if (savedData.date) {
-          setSelectedDate(new Date(savedData.date)); // Convert string to Date object
+        setSelectedDate(new Date(savedData.date)); // Convert string to Date object
       }
 
       if (savedData.customer) {
-          setCustomerCount(savedData.customer); // Set the customer count
+        setCustomerCount(savedData.customer); // Set the customer count
       }
-  }
-}, []);
-
-
+    }
+  }, []);
 
   // NO Saturdays and Sundays
   const handleDateSelect = ({ start }) => {
     const currentDate = moment();
-    if (moment(start).isBefore(currentDate, 'day')) {
+    if (moment(start).isBefore(currentDate, "day")) {
       return; // Exit the function if it's a past date
     }
-  
+
     const dayOfWeek = moment(start).day();
     if (dayOfWeek !== 0 && dayOfWeek !== 6) {
       setSelectedDate(start);
       setShowTimeModal(true); // Open modal if not a weekend
     }
   };
-  
-  
 
   // Handle time selection from the modal
   const handleTimeSelect = (time) => {
@@ -111,7 +107,12 @@ useEffect(() => {
   };
 
   return (
-    <main  data-aos="fade-up" data-aos-delay="250" data-aos-duration="500" className="min-h-screen flex flex-col items-center py-12 max-w-6xl mx-auto">
+    <main
+      data-aos="fade-up"
+      data-aos-delay="250"
+      data-aos-duration="500"
+      className="min-h-screen flex flex-col items-center py-12 max-w-6xl mx-auto"
+    >
       <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-white">
         Delivery Informations
       </h1>
@@ -129,36 +130,38 @@ useEffect(() => {
             dayPropGetter={(date) => {
               const currentDate = moment();
               const dayOfWeek = moment(date).day();
-            
+
               // If the date is before the current date
-              if (moment(date).isBefore(currentDate, 'day')) {
+              if (moment(date).isBefore(currentDate, "day")) {
                 return {
                   style: {
-                    backgroundColor: '#FF0000', 
+                    backgroundColor: "#FF0000",
                     opacity: 0.5,
-                    pointerEvents: 'none'  // make it unselectable
-                  }
+                    pointerEvents: "none", // make it unselectable
+                  },
                 };
               }
               // If the date is a weekend
               else if (dayOfWeek === 6 || dayOfWeek === 0) {
                 return {
                   style: {
-                    backgroundColor: '#FF0000',
+                    backgroundColor: "#FF0000",
                     opacity: 0.5,
-                  }
+                  },
                 };
               }
               // If the date is the selected date
-              else if (selectedDate && moment(date).isSame(selectedDate, "day")) {
+              else if (
+                selectedDate &&
+                moment(date).isSame(selectedDate, "day")
+              ) {
                 return {
                   style: {
                     backgroundColor: "#007DDB",
-                  }
+                  },
                 };
               }
             }}
-            
             components={{
               toolbar: (toolbarProps) => {
                 return (
