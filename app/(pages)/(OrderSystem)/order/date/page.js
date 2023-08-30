@@ -49,10 +49,16 @@ export default function TimePicker() {
   useEffect(() => {
     Aos.init({ duration: 1000 });
     if (typeof window !== "undefined") {
-      const savedEmail = localStorage.getItem("savedEmail") || "";
-      setEmail(savedEmail);
+        const savedEmail = localStorage.getItem("savedEmail") || "";
+        setEmail(savedEmail);
+
+        // Retrieve the saved data associated with the email
+        const savedData = JSON.parse(localStorage.getItem(savedEmail) || '{}');
+        if (savedData.date) {
+            setSelectedDate(new Date(savedData.date)); // Convert string to Date object
+        }
     }
-  }, []);
+}, []);
 
 
   // NO Saturdays and Sundays
