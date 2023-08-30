@@ -38,15 +38,15 @@ export default function FoodGenerator() {
     const newEmail = e.target.value;
     setEmail(newEmail);
     localStorage.setItem("savedEmail", newEmail);
-  
+
     const savedMeal = fetchSavedMeal(newEmail);
     if (savedMeal) {
       setMealData((prevMeals) => [savedMeal, ...prevMeals.slice(0, 8)]);
-      setSelectedMeal(savedMeal); 
+      setSelectedMeal(savedMeal);
     } else {
       setSelectedMeal(null); // Clear the selected meal if no meal is associated with the email
     }
-};
+  };
 
   // Function to fetch saved meal data from localStorage
   const fetchSavedMeal = (email) => {
@@ -56,7 +56,7 @@ export default function FoodGenerator() {
         idMeal: savedData.mealId,
         strMeal: savedData.mealName,
         strMealThumb: savedData.strMealThumb || "",
-        strInstructions: savedData.strInstructions || "" 
+        strInstructions: savedData.strInstructions || "",
       };
     }
     return null;
@@ -133,49 +133,26 @@ export default function FoodGenerator() {
   }, [email]);
 
   // Save selected meal to localStorage
-// Save selected meal to localStorage
-const handleSaveData = () => {
-  if (selectedMeal && email) {
-    // Fetch existing data
-    const existingData = JSON.parse(localStorage.getItem(email) || "{}");
-
-    // Update only the relevant fields (meal data)
-    const updatedData = {
-      ...existingData,
-      email: email,
-      mealId: selectedMeal.idMeal,
-      mealName: selectedMeal.strMeal,
-      strMealThumb: selectedMeal.strMealThumb, 
-      strInstructions: selectedMeal.strInstructions 
-    };
-
-    localStorage.setItem("savedEmail", email);
-    localStorage.setItem(email, JSON.stringify(updatedData));
-  }
-};
-
-
   // Save selected meal to localStorage
-  /*const handleSaveData = () => {
-  if (selectedMeal && email) {
-    // Update "savedEmail" to the currently entered email
-    const savedEmail = email;
-    localStorage.setItem("savedEmail", savedEmail);
+  const handleSaveData = () => {
+    if (selectedMeal && email) {
+      // Fetch existing data
+      const existingData = JSON.parse(localStorage.getItem(email) || "{}");
 
-    // Fetch existing data
-    const existingData = JSON.parse(localStorage.getItem(savedEmail) || '{}');
+      // Update only the relevant fields (meal data)
+      const updatedData = {
+        ...existingData,
+        email: email,
+        mealId: selectedMeal.idMeal,
+        mealName: selectedMeal.strMeal,
+        strMealThumb: selectedMeal.strMealThumb,
+        strInstructions: selectedMeal.strInstructions,
+      };
 
-    // Update only the relevant fields (meal data)
-    const updatedData = {
-      ...existingData,
-      email: savedEmail,
-      mealId: selectedMeal.idMeal,
-      mealName: selectedMeal.strMeal,
-    };
-
-    localStorage.setItem(savedEmail, JSON.stringify(updatedData));
-  }
-};*/
+      localStorage.setItem("savedEmail", email);
+      localStorage.setItem(email, JSON.stringify(updatedData));
+    }
+  };
 
   return (
     <>
@@ -272,13 +249,6 @@ const handleSaveData = () => {
                   </motion.div>
                 ))
             : mealData.map((meal) => (
-                /*<div
-                  key={meal.idMeal}
-                  className={`rounded-lg transition transform hover:scale-105 h-96 relative ${
-                    selectedMeal && selectedMeal.idMeal === meal.idMeal
-                      ? "border-2 border-blue-300"
-                      : ""
-                  }`}*/
                 <div
                   onMouseEnter={() => {
                     setCursorText("Add");
@@ -348,14 +318,6 @@ const handleSaveData = () => {
               <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
               <span className="relative">Generate New Meals</span>
             </button>
-            {/* <Link href="/order/drinks">
-              <button
-                onClick={handleSaveData}
-                className="ml-2 -mb-1 px-4 py-2 bg-blue-300 text-black rounded decoration-8"
-              >
-                Choose Drinks
-              </button>
-            </Link> */}
             <Link
               onMouseEnter={() => {
                 setCursorText("");
