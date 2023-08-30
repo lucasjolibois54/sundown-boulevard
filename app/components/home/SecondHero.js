@@ -2,10 +2,17 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useCursor } from '@/cursor/CursorContext';
+import Aos from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from 'react';
 
 export default function SubHero() {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });   // State to track cursor position
   const { setCursorText, setCursorVariant } = useCursor();
+
+  useEffect(() => {
+    Aos.init({ duration: 1000 });
+}, []);
 
      // Update cursor position on mouse move
   const handleMouseMove = (e) => {
@@ -13,7 +20,7 @@ export default function SubHero() {
   };
 
   return (
-    <div onMouseEnter={() => {
+    <div data-aos="fade-up" data-aos-delay="250" data-aos-duration="500"  onMouseEnter={() => {
         setCursorText("");
         setCursorVariant("time");
       }}
