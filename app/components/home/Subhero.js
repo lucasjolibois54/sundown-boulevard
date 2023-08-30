@@ -27,7 +27,7 @@ export default function Subhero() {
               onClick={handleResetMouse}
               
               onMouseEnter={() => {
-                setCursorText("View");
+                setCursorText("Order");
                 setCursorVariant("viewContent");
               }}
               onMouseLeave={() => {
