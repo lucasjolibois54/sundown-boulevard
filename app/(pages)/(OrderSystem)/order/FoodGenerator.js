@@ -38,6 +38,25 @@ export default function FoodGenerator() {
     const newEmail = e.target.value;
     setEmail(newEmail);
     localStorage.setItem("savedEmail", newEmail);
+  
+    const savedMeal = fetchSavedMeal(newEmail);
+    if (savedMeal) {
+      setMealData((prevMeals) => [savedMeal, ...prevMeals.slice(0, 8)]);
+    }
+  };
+
+  // Function to fetch saved meal data from localStorage
+  const fetchSavedMeal = (email) => {
+    const savedData = JSON.parse(localStorage.getItem(email));
+    if (savedData && savedData.mealId) {
+      return {
+        idMeal: savedData.mealId,
+        strMeal: savedData.mealName,
+        strMealThumb: savedData.strMealThumb || "",
+        strInstructions: savedData.strInstructions || "" 
+      };
+    }
+    return null;
   };
 
   // Function to fetch meals data and handle loading state
@@ -111,23 +130,27 @@ export default function FoodGenerator() {
   }, [email]);
 
   // Save selected meal to localStorage
-  const handleSaveData = () => {
-    if (selectedMeal && email) {
-      // Fetch existing data
-      const existingData = JSON.parse(localStorage.getItem(email) || "{}");
+// Save selected meal to localStorage
+const handleSaveData = () => {
+  if (selectedMeal && email) {
+    // Fetch existing data
+    const existingData = JSON.parse(localStorage.getItem(email) || "{}");
 
-      // Update only the relevant fields (meal data)
-      const updatedData = {
-        ...existingData,
-        email: email,
-        mealId: selectedMeal.idMeal,
-        mealName: selectedMeal.strMeal,
-      };
+    // Update only the relevant fields (meal data)
+    const updatedData = {
+      ...existingData,
+      email: email,
+      mealId: selectedMeal.idMeal,
+      mealName: selectedMeal.strMeal,
+      strMealThumb: selectedMeal.strMealThumb, 
+      strInstructions: selectedMeal.strInstructions 
+    };
 
-      localStorage.setItem("savedEmail", email);
-      localStorage.setItem(email, JSON.stringify(updatedData));
-    }
-  };
+    localStorage.setItem("savedEmail", email);
+    localStorage.setItem(email, JSON.stringify(updatedData));
+  }
+};
+
 
   // Save selected meal to localStorage
   /*const handleSaveData = () => {
