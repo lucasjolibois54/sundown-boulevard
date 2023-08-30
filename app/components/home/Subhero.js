@@ -5,6 +5,11 @@ import Link from 'next/link';
 export default function Subhero() {
   const { setCursorText, setCursorVariant } = useCursor();
 
+  const handleResetMouse = (e) => {
+    setCursorText("");
+    setCursorVariant("default");
+  };
+
     const items = [
         { title: '', imageUrl: 'https://media.discordapp.net/attachments/1068131427910168670/1146054717051523082/lucasjolibois54_a_beer_bottle_on_a_shelf_with_a_random_color_de_5efd3154-ce34-4c38-80d6-edbe288115bc.png?width=1034&height=1034' },
         { title: '', imageUrl: 'https://media.discordapp.net/attachments/1068131427910168670/1146054941539053668/lucasjolibois54_a_bar_restaurant_random_color_design_in_the_sty_8bb530de-61e2-40c0-80f3-998826c65aad.png?width=1034&height=1034' },
@@ -18,7 +23,9 @@ export default function Subhero() {
           <div className="border-gray-700 border container mx-auto w-screen h-400 flex items-center">
             {items.map((item, index) => (
                <div key={index} className=" item relative flex-grow flex items-center justify-center" data-order={index + 1}>
-                               <Link href="/order"
+              <Link href="/order"
+              onClick={handleResetMouse}
+              
               onMouseEnter={() => {
                 setCursorText("View");
                 setCursorVariant("viewContent");
