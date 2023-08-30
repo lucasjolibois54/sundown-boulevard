@@ -133,7 +133,8 @@ export default function TimePicker() {
               else if (dayOfWeek === 6 || dayOfWeek === 0) {
                 return {
                   style: {
-                    backgroundColor: '#B33F40',
+                    backgroundColor: '#FF0000',
+                    opacity: 0.5,
                   }
                 };
               }
