@@ -110,6 +110,7 @@ export default function FoodGenerator() {
     if (selectedMeal && email) {
       const savedData = {
         email: email,
+        mealId: selectedMeal.idMeal, 
         mealName: selectedMeal.strMeal,
       };
       localStorage.setItem("savedEmail", email);
