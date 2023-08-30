@@ -35,6 +35,12 @@ export default function FoodGenerator() {
   const { setCursorText, setCursorVariant } = useCursor();
   const [isEmailSaved, setIsEmailSaved] = useState(false);
 
+  const handleEmailChange = (e) => {
+    const newEmail = e.target.value;
+    setEmail(newEmail);
+    localStorage.setItem("savedEmail", newEmail);
+  };
+
   // Function to fetch meals data and handle loading state
   const fetchMeals = async () => {
     let isMounted = true;
@@ -105,25 +111,50 @@ export default function FoodGenerator() {
     }
   }, [email]);
 
-  // Save selected meal to localStorage
-  const handleSaveData = () => {
-    if (selectedMeal && email) {
-      // Fetch existing data
-      const existingData = JSON.parse(localStorage.getItem(email) || '{}');
-  
-      // Update only the relevant fields (meal data)
-      const updatedData = {
-        ...existingData, 
-        email: email, 
-        mealId: selectedMeal.idMeal,
-        mealName: selectedMeal.strMeal,
-      };
-  
-      
-      localStorage.setItem("savedEmail", email);
-      localStorage.setItem(email, JSON.stringify(updatedData));
-    }
-  };
+
+    // Save selected meal to localStorage
+    const handleSaveData = () => {
+      if (selectedMeal && email) {
+        // Fetch existing data
+        const existingData = JSON.parse(localStorage.getItem(email) || '{}');
+    
+        // Update only the relevant fields (meal data)
+        const updatedData = {
+          ...existingData, 
+          email: email, 
+          mealId: selectedMeal.idMeal,
+          mealName: selectedMeal.strMeal,
+        };
+    
+        
+        localStorage.setItem("savedEmail", email);
+        localStorage.setItem(email, JSON.stringify(updatedData));
+      }
+    };
+
+    
+// Save selected meal to localStorage
+/*const handleSaveData = () => {
+  if (selectedMeal && email) {
+    // Update "savedEmail" to the currently entered email
+    const savedEmail = email;
+    localStorage.setItem("savedEmail", savedEmail);
+
+    // Fetch existing data
+    const existingData = JSON.parse(localStorage.getItem(savedEmail) || '{}');
+
+    // Update only the relevant fields (meal data)
+    const updatedData = {
+      ...existingData,
+      email: savedEmail,
+      mealId: selectedMeal.idMeal,
+      mealName: selectedMeal.strMeal,
+    };
+
+    localStorage.setItem(savedEmail, JSON.stringify(updatedData));
+  }
+};*/
+
   
 
   return (
@@ -143,13 +174,13 @@ export default function FoodGenerator() {
         </h1>
         <div className="flex flex-col md:flex-row items-center justify-between mb-5">
           <div className="border-b-2 border-gray-500 flex-grow mb-5 md:mb-0 md:mr-5">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter order email"
-              className="border-none outline-none bg-transparent text-gray-300 flex-grow p-2 text-xl font-semibold input-search italic"
-            />
+          <input
+            type="email"
+            value={email}
+            onChange={handleEmailChange} // Use the new handler
+            placeholder="Enter order email"
+            className="border-none outline-none bg-transparent text-gray-300 flex-grow p-2 text-xl font-semibold input-search italic"
+          />
           </div>
           <div>
             <div className="flex space-x-2">
