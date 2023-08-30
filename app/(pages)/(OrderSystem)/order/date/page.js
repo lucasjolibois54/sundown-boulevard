@@ -45,20 +45,25 @@ export default function TimePicker() {
     },
   };
 
-  // Load saved email on component mount
-  useEffect(() => {
-    Aos.init({ duration: 1000 });
-    if (typeof window !== "undefined") {
-        const savedEmail = localStorage.getItem("savedEmail") || "";
-        setEmail(savedEmail);
+// Load email and data on mount
+useEffect(() => {
+  Aos.init({ duration: 1000 });
+  if (typeof window !== "undefined") {
+      const savedEmail = localStorage.getItem("savedEmail") || "";
+      setEmail(savedEmail);
 
-        // Retrieve the saved data associated with the email
-        const savedData = JSON.parse(localStorage.getItem(savedEmail) || '{}');
-        if (savedData.date) {
-            setSelectedDate(new Date(savedData.date)); // Convert string to Date object
-        }
-    }
+      // Take the saved data with email
+      const savedData = JSON.parse(localStorage.getItem(savedEmail) || '{}');
+      if (savedData.date) {
+          setSelectedDate(new Date(savedData.date)); // Convert string to Date object
+      }
+
+      if (savedData.customer) {
+          setCustomerCount(savedData.customer); // Set the customer count
+      }
+  }
 }, []);
+
 
 
   // NO Saturdays and Sundays
