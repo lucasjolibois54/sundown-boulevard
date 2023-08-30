@@ -105,7 +105,15 @@ export default function Search() {
                   variants={listItemVariants}
                   custom={2}
                 >
-                  {savedData.date ? <p> Date & Time: {savedData.date.toString()}</p> : ""}
+                  {savedData.date ? <p> Date {savedData.date.toString()}</p> : ""}
+                </motion.p>
+                <motion.p
+                  initial="hidden"
+                  animate="visible"
+                  variants={listItemVariants}
+                  custom={2}
+                >
+                  {savedData.date ? <p> Time: {savedData.time}</p> : ""}
                 </motion.p>
                 <motion.p
                   initial="hidden"
