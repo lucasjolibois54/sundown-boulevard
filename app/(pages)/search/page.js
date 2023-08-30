@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 export default function Search() {
   const [email, setEmail] = useState("");
@@ -35,9 +37,14 @@ export default function Search() {
     }),
   };
 
+  useEffect(() => {
+    Aos.init({ duration: 1000 });
+}, []);
+
+
   return (
     <>
-    <main className="!bg-white h-screen w-screen">
+    <main data-aos="fade-up" data-aos-delay="250" data-aos-duration="500" className="!bg-white h-screen w-screen">
       <div className="max-w-6xl mx-auto absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-screen">
         <div className="w-4/6 mx-auto">
           <div className="flex items-center border-b-2 border-gray-500">
