@@ -62,20 +62,21 @@ export default function Drink() {
       }
     })();
 
- // If in localstorage, retrieve saved email and selected drinks
- if (typeof window !== "undefined") {
-  const savedEmail = localStorage.getItem("savedEmail") || "";
-  setEmail(savedEmail);
-  
-  // Check for saved drinks for the email and set them to the selectedDrinks state
-  const savedDrinks = JSON.parse(localStorage.getItem(savedEmail))?.drinks || [];
-  setSelectedDrinks(savedDrinks);
-}
+    // If in localstorage, retrieve saved email and selected drinks
+    if (typeof window !== "undefined") {
+      const savedEmail = localStorage.getItem("savedEmail") || "";
+      setEmail(savedEmail);
 
-return () => {
-  isMounted = false;
-};
-}, []);
+      // Check for saved drinks for the email and set them to the selectedDrinks state
+      const savedDrinks =
+        JSON.parse(localStorage.getItem(savedEmail))?.drinks || [];
+      setSelectedDrinks(savedDrinks);
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleDrinkSelection = (drink) => {
     setSelectedDrinks((prevDrinks) => {
@@ -103,7 +104,12 @@ return () => {
   };
 
   return (
-    <main  data-aos="fade-up" data-aos-delay="250" data-aos-duration="500" className="min-h-screen py-12 px-4 sm:px-8">
+    <main
+      data-aos="fade-up"
+      data-aos-delay="250"
+      data-aos-duration="500"
+      className="min-h-screen py-12 px-4 sm:px-8"
+    >
       <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-main-text">
         Choose Your Drinks
       </h1>
@@ -164,7 +170,7 @@ return () => {
 
                     {selectedDrinks.some((d) => d.id === drink.id) && (
                       <div className="checked-drink-body absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                        <SelectedDrink text="BEER CHOSEN - BEER CHOSEN -"/>
+                        <SelectedDrink text="BEER CHOSEN - BEER CHOSEN -" />
                       </div>
                     )}
 
