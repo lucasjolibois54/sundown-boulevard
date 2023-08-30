@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import Confetti from "react-confetti";
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 export default function Receipt() {
   const [email, setEmail] = useState("");
@@ -15,11 +17,15 @@ export default function Receipt() {
   const [confettiCount, setConfettiCount] = useState(300); // 300 pieces of confetti
   
   useEffect(() => {
+    Aos.init({ duration: 1000 });
+    
     const timer = setTimeout(() => {
       setConfettiCount(0); // After 2 seconds, set to 0
     }, 2000);
     
     return () => clearTimeout(timer);
+
+
   }, []);
 
   useEffect(() => {
@@ -32,7 +38,7 @@ export default function Receipt() {
   }, []);
 
   return (
-    <main className="bg-bgColorDark min-h-screen flex flex-col items-center py-12"> {/* justify-center */}
+    <main  data-aos="fade-up" data-aos-delay="250" data-aos-duration="500" className="bg-bgColorDark min-h-screen flex flex-col items-center py-12"> {/* justify-center */}
     <Confetti numberOfPieces={confettiCount} />
         <div className="max-w-6xl mx-auto">
         <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-white">
