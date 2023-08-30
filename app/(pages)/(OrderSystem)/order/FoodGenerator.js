@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 import { useCursor } from "@/cursor/CursorContext";
 import SelectedDrink from "@/app/components/order/SelectedDrink";
@@ -59,6 +61,8 @@ export default function FoodGenerator() {
 
   // useEffect to fetch meals data on component mount
   useEffect(() => {
+    Aos.init({ duration: 1000 });
+    
     let isMounted = true;
 
     // Function to fetch meals data and update state
@@ -115,7 +119,7 @@ export default function FoodGenerator() {
 
   return (
     <>
-      <main
+      <main data-aos="fade-up" data-aos-delay="250" data-aos-duration="500"
       onMouseEnter={() => {
         setCursorText("");
         setCursorVariant("default");
