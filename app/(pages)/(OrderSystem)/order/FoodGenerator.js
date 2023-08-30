@@ -10,7 +10,6 @@ import SelectedDrink from "@/app/components/order/SelectedDrink";
 
 const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
-
 async function getData() {
   const meals = [];
   // Fetch data (loop) as long as there are less than 9
@@ -68,7 +67,7 @@ export default function FoodGenerator() {
   // useEffect to fetch meals data on component mount
   useEffect(() => {
     Aos.init({ duration: 1000 });
-    
+
     let isMounted = true;
 
     // Function to fetch meals data and update state
@@ -111,30 +110,27 @@ export default function FoodGenerator() {
     }
   }, [email]);
 
+  // Save selected meal to localStorage
+  const handleSaveData = () => {
+    if (selectedMeal && email) {
+      // Fetch existing data
+      const existingData = JSON.parse(localStorage.getItem(email) || "{}");
 
-    // Save selected meal to localStorage
-    const handleSaveData = () => {
-      if (selectedMeal && email) {
-        // Fetch existing data
-        const existingData = JSON.parse(localStorage.getItem(email) || '{}');
-    
-        // Update only the relevant fields (meal data)
-        const updatedData = {
-          ...existingData, 
-          email: email, 
-          mealId: selectedMeal.idMeal,
-          mealName: selectedMeal.strMeal,
-        };
-    
-        
-        localStorage.setItem("savedEmail", email);
-        localStorage.setItem(email, JSON.stringify(updatedData));
-      }
-    };
+      // Update only the relevant fields (meal data)
+      const updatedData = {
+        ...existingData,
+        email: email,
+        mealId: selectedMeal.idMeal,
+        mealName: selectedMeal.strMeal,
+      };
 
-    
-// Save selected meal to localStorage
-/*const handleSaveData = () => {
+      localStorage.setItem("savedEmail", email);
+      localStorage.setItem(email, JSON.stringify(updatedData));
+    }
+  };
+
+  // Save selected meal to localStorage
+  /*const handleSaveData = () => {
   if (selectedMeal && email) {
     // Update "savedEmail" to the currently entered email
     const savedEmail = email;
@@ -155,32 +151,34 @@ export default function FoodGenerator() {
   }
 };*/
 
-  
-
   return (
     <>
-      <main data-aos="fade-up" data-aos-delay="250" data-aos-duration="500"
-      onMouseEnter={() => {
-        setCursorText("");
-        setCursorVariant("default");
-      }}
-      onMouseLeave={() => {
-        setCursorText("");
-        setCursorVariant("default");
-      }}
-       className="min-h-screen py-12 px-4 sm:px-8 max-w-5xl mx-auto">
+      <main
+        data-aos="fade-up"
+        data-aos-delay="250"
+        data-aos-duration="500"
+        onMouseEnter={() => {
+          setCursorText("");
+          setCursorVariant("default");
+        }}
+        onMouseLeave={() => {
+          setCursorText("");
+          setCursorVariant("default");
+        }}
+        className="min-h-screen py-12 px-4 sm:px-8 max-w-5xl mx-auto"
+      >
         <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-main-text">
           Choose Your Meal
         </h1>
         <div className="flex flex-col md:flex-row items-center justify-between mb-5">
           <div className="border-b-2 border-gray-500 flex-grow mb-5 md:mb-0 md:mr-5">
-          <input
-            type="email"
-            value={email}
-            onChange={handleEmailChange} // Use the new handler
-            placeholder="Enter order email"
-            className="border-none outline-none bg-transparent text-gray-300 flex-grow p-2 text-xl font-semibold input-search italic"
-          />
+            <input
+              type="email"
+              value={email}
+              onChange={handleEmailChange} // Use the new handler
+              placeholder="Enter order email"
+              className="border-none outline-none bg-transparent text-gray-300 flex-grow p-2 text-xl font-semibold input-search italic"
+            />
           </div>
           <div>
             <div className="flex space-x-2">
