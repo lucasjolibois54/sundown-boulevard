@@ -62,17 +62,20 @@ export default function Drink() {
       }
     })();
 
-    // If in browser environment, retrieve saved email
-    if (typeof window !== "undefined") {
-      const savedEmail = localStorage.getItem("savedEmail") || "";
-      setEmail(savedEmail);
-    }
+ // If in localstorage, retrieve saved email and selected drinks
+ if (typeof window !== "undefined") {
+  const savedEmail = localStorage.getItem("savedEmail") || "";
+  setEmail(savedEmail);
+  
+  // Check for saved drinks for the email and set them to the selectedDrinks state
+  const savedDrinks = JSON.parse(localStorage.getItem(savedEmail))?.drinks || [];
+  setSelectedDrinks(savedDrinks);
+}
 
-    // Cleanup: When the component is unmounted, update the isMounted flag
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+return () => {
+  isMounted = false;
+};
+}, []);
 
   const handleDrinkSelection = (drink) => {
     setSelectedDrinks((prevDrinks) => {
