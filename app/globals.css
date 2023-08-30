@@ -266,8 +266,8 @@ background-color: #3498db !important;
 
 
 .rbc-off-range-bg {
-background: #54534E !important;
-color: red !important;
+background: #FF0000 !important;
+opacity: 0.5;
 }
 
 .rbc-button-link {
