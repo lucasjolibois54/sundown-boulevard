@@ -103,20 +103,28 @@ export default function FoodGenerator() {
     } else {
       setIsEmailSaved(false);
     }
-  }, [email]); // This effect runs whenever the email state changes
+  }, [email]);
 
   // Save selected meal to localStorage
   const handleSaveData = () => {
     if (selectedMeal && email) {
-      const savedData = {
-        email: email,
-        mealId: selectedMeal.idMeal, 
+      // Fetch existing data
+      const existingData = JSON.parse(localStorage.getItem(email) || '{}');
+  
+      // Update only the relevant fields (meal data)
+      const updatedData = {
+        ...existingData, 
+        email: email, 
+        mealId: selectedMeal.idMeal,
         mealName: selectedMeal.strMeal,
       };
+  
+      
       localStorage.setItem("savedEmail", email);
-      localStorage.setItem(email, JSON.stringify(savedData));
+      localStorage.setItem(email, JSON.stringify(updatedData));
     }
   };
+  
 
   return (
     <>
