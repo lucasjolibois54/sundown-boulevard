@@ -21,7 +21,7 @@ async function getData() {
       throw new Error("Failed to fetch data");
     }
     const data = await res.json();
-    meals.push(data.meals[0]); // Push the first meal data from API into 'meals' array
+    meals.push(data.meals[0]); // take first meal from api and store in meals array
   }
   return meals;
 }
