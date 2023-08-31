@@ -173,7 +173,7 @@ export default function FoodGenerator() {
             <input
               type="email"
               value={email}
-              onChange={handleEmailChange} // Use the new handler
+              onChange={handleEmailChange}
               placeholder="Enter order email"
               className="border-none outline-none bg-transparent text-gray-300 flex-grow p-2 text-xl font-semibold input-search italic"
             />
