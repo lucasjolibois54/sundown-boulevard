@@ -133,7 +133,6 @@ export default function FoodGenerator() {
   }, [email]);
 
   // Save selected meal to localStorage
-  // Save selected meal to localStorage
   const handleSaveData = () => {
     if (selectedMeal && email) {
       // Fetch existing data
