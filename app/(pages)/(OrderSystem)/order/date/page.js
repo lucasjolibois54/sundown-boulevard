@@ -88,23 +88,28 @@ export default function TimePicker() {
     setShowTimeModal(false); //close modal
   };
 
-  // Save selected date, time, and customer count to local storage
-  const handleSaveDateTime = () => {
-    if (selectedDate && selectedTime) {
-      let savedData = localStorage.getItem(email)
-        ? JSON.parse(localStorage.getItem(email))
-        : {};
 
-      savedData = {
-        ...savedData,
-        date: moment(selectedDate).format("YYYY-MM-DD"),
-        time: selectedTime.format("HH:mm"),
-        customer: customerCount,
-      };
+// Save selected date, time, and customer count to local storage
+const handleSaveDateTime = () => {
+  if (selectedDate && selectedTime) {
+    // Fetch the saved data (if any) associated with the email
+    let savedData = localStorage.getItem(email)
+      ? JSON.parse(localStorage.getItem(email))
+      : {};
 
-      localStorage.setItem(email, JSON.stringify(savedData));
-    }
-  };
+    // Overwrite previous values (or set new ones)
+    savedData = {
+      ...savedData,
+      date: moment(selectedDate).format("YYYY-MM-DD"),
+      time: selectedTime.format("HH:mm"),
+      customer: customerCount,  
+    };
+
+    // Save the updated data back to local storage
+    localStorage.setItem(email, JSON.stringify(savedData));
+  }
+};
+
 
   return (
     <main
