@@ -10,6 +10,16 @@ import SelectedDrink from "@/app/components/order/SelectedDrink";
 
 const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
+const getNextId = () => {
+  // Fetch the last used ID from localStorage
+  const lastId = parseInt(localStorage.getItem("lastMealId") || "0", 10);
+  // Increment the ID
+  const nextId = lastId + 1;
+  // Save the new ID to localStorage for future use
+  localStorage.setItem("lastMealId", nextId.toString());
+  return nextId;
+};
+
 async function getData() {
   const meals = [];
   // Fetch data (loop) as long as there are less than 9
@@ -29,12 +39,13 @@ async function getData() {
 export default function FoodGenerator() {
   const [mealData, setMealData] = useState([]);
   const [selectedMeal, setSelectedMeal] = useState(null);
-  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const { setCursorText, setCursorVariant } = useCursor();
   const [isEmailSaved, setIsEmailSaved] = useState(false);
+  const [generatedId, setGeneratedId] = useState(null);
 
- /* const handleResetMouse = (e) => {
+
+  /* const handleResetMouse = (e) => {
     setCursorText("");
     setCursorVariant("default");
   };*/
@@ -51,12 +62,11 @@ export default function FoodGenerator() {
     } else {
       setSelectedMeal(null); // Clear the selected meal if no meal is associated with the email
     }
-};
-
+  };
 
   // Function to fetch saved meal data from localStorage
-  const fetchSavedMeal = (email) => {
-    const savedData = JSON.parse(localStorage.getItem(email));
+  const fetchSavedMeal = (id) => {
+    const savedData = JSON.parse(localStorage.getItem(id));
     if (savedData && savedData.mealId) {
       return {
         idMeal: savedData.mealId,
@@ -129,31 +139,26 @@ export default function FoodGenerator() {
   }, []); // Empty array (useEffect runs only on mount)
 
   // useEffect to update the email saved status
-  useEffect(() => {
+  /*useEffect(() => {
     const savedData = JSON.parse(localStorage.getItem(email));
     setIsEmailSaved(savedData ? true : false);
-}, [email]);
+}, [email]);*/
 
   // Save selected meal to localStorage
   const handleSaveData = () => {
-    if (selectedMeal && email) {
-      // Fetch existing data
-      const existingData = JSON.parse(localStorage.getItem(email) || "{}");
-
-      // Update relevant fields (meal data)
-      const updatedData = {
-        ...existingData,
-        email: email,
-        mealId: selectedMeal.idMeal,
-        mealName: selectedMeal.strMeal,
-        strMealThumb: selectedMeal.strMealThumb,
-        strInstructions: selectedMeal.strInstructions,
-      };
-
-      localStorage.setItem("savedEmail", email);
-      localStorage.setItem(email, JSON.stringify(updatedData));
+    if (selectedMeal) {
+        const id = getNextId().toString(); // Get a new unique ID
+        const updatedData = {
+            mealId: selectedMeal.idMeal,
+            mealName: selectedMeal.strMeal,
+            strMealThumb: selectedMeal.strMealThumb,
+            strInstructions: selectedMeal.strInstructions,
+        };
+        localStorage.setItem(id, JSON.stringify(updatedData));
+        setGeneratedId(id);
     }
-  };
+};
+
 
   return (
     <>
@@ -175,7 +180,7 @@ export default function FoodGenerator() {
           Choose Your Meal
         </h1>
         <div className="flex flex-col md:flex-row items-center justify-between mb-5">
-          <div className="border-b-2 border-gray-500 flex-grow mb-5 md:mb-0 md:mr-5">
+          {/* <div className="border-b-2 border-gray-500 flex-grow mb-5 md:mb-0 md:mr-5">
             <input
               type="email"
               value={email}
@@ -183,8 +188,8 @@ export default function FoodGenerator() {
               placeholder="Enter order email"
               className="border-none outline-none bg-transparent text-gray-300 flex-grow p-2 text-xl font-semibold input-search italic"
             />
-          </div>
-          <div>
+          </div> */}
+          {/* <div className="right-0 absolute py-5 pb-20">
             <div className="flex space-x-2">
               <button
                 onMouseEnter={() => {
@@ -212,14 +217,7 @@ export default function FoodGenerator() {
                   setCursorVariant("default");
                 }}
                 href="/order/drinks"
-                onClick={(e) => {
-                  if (!emailRegex.test(email)) {
-                    e.preventDefault();
-                    alert("Please enter a valid email address.");
-                  } else {
-                    handleSaveData();
-                  }
-                }}
+                onClick={handleSaveData}
                 className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
               >
                 <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
@@ -229,7 +227,7 @@ export default function FoodGenerator() {
                 </span>
               </Link>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -320,22 +318,24 @@ export default function FoodGenerator() {
               <span className="relative">Generate New Meals</span>
             </button>
             <Link
-              onMouseEnter={() => {
-                setCursorText("");
-                setCursorVariant("time");
-              }}
-              onMouseLeave={() => {
-                setCursorText("");
-                setCursorVariant("default");
-              }}
-              href="/order/drinks"
-              onClick={handleSaveData}
-              className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
-            >
-              <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
-              <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-              <span className="relative">Choose Drinks</span>
-            </Link>
+                onMouseEnter={() => {
+                  setCursorText("");
+                  setCursorVariant("time");
+                }}
+                onMouseLeave={() => {
+                  setCursorText("");
+                  setCursorVariant("default");
+                }}
+                href="/order/drinks"
+                onClick={handleSaveData}
+                className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
+              >
+                <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
+                <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+                <span className="relative">
+                  {isEmailSaved ? "Update Order" : "Choose Drinks"}
+                </span>
+              </Link>
           </div>
         </div>
       </main>
