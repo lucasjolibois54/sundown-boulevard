@@ -37,7 +37,6 @@ export default function FoodGenerator() {
   const handleEmailChange = (e) => {
     const newEmail = e.target.value;
     setEmail(newEmail);
-    localStorage.setItem("savedEmail", newEmail);
 
     const savedMeal = fetchSavedMeal(newEmail);
     if (savedMeal) {
@@ -46,7 +45,8 @@ export default function FoodGenerator() {
     } else {
       setSelectedMeal(null); // Clear the selected meal if no meal is associated with the email
     }
-  };
+};
+
 
   // Function to fetch saved meal data from localStorage
   const fetchSavedMeal = (email) => {
@@ -116,7 +116,7 @@ export default function FoodGenerator() {
     // Initialize meal data
     fetchMeals();
 
-    // Clean up function (set isMounted to false when unmounts)
+    // Clean up function
     return () => {
       isMounted = false;
     };
@@ -124,13 +124,9 @@ export default function FoodGenerator() {
 
   // useEffect to update the email saved status
   useEffect(() => {
-    const savedEmail = localStorage.getItem("savedEmail");
-    if (savedEmail && savedEmail === email) {
-      setIsEmailSaved(true);
-    } else {
-      setIsEmailSaved(false);
-    }
-  }, [email]);
+    const savedData = JSON.parse(localStorage.getItem(email));
+    setIsEmailSaved(savedData ? true : false);
+}, [email]);
 
   // Save selected meal to localStorage
   const handleSaveData = () => {
@@ -138,7 +134,7 @@ export default function FoodGenerator() {
       // Fetch existing data
       const existingData = JSON.parse(localStorage.getItem(email) || "{}");
 
-      // Update only the relevant fields (meal data)
+      // Update relevant fields (meal data)
       const updatedData = {
         ...existingData,
         email: email,
