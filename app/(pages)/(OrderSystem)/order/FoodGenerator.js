@@ -34,6 +34,7 @@ export default function FoodGenerator() {
   const { setCursorText, setCursorVariant } = useCursor();
   const [isEmailSaved, setIsEmailSaved] = useState(false);
 
+  //if email fetch meal
   const handleEmailChange = (e) => {
     const newEmail = e.target.value;
     setEmail(newEmail);
