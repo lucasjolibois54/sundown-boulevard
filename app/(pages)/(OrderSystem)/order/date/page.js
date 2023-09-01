@@ -49,11 +49,11 @@ export default function TimePicker() {
   useEffect(() => {
     Aos.init({ duration: 1000 });
     if (typeof window !== "undefined") {
-      const savedEmail = localStorage.getItem("savedEmail") || "";
-      setEmail(savedEmail);
+      const lastMealId = localStorage.getItem("lastMealId") || "";
+      setEmail(lastMealId);
 
       // Take the saved data with email
-      const savedData = JSON.parse(localStorage.getItem(savedEmail) || "{}");
+      const savedData = JSON.parse(localStorage.getItem(lastMealId) || "{}");
       if (savedData.date) {
         setSelectedDate(new Date(savedData.date)); // Convert string to Date object
       }
