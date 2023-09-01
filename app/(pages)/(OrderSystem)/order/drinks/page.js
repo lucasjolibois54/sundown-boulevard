@@ -64,12 +64,12 @@ export default function Drink() {
 
     // If in localstorage, retrieve saved email and selected drinks
     if (typeof window !== "undefined") {
-      const savedEmail = localStorage.getItem("savedEmail") || "";
-      setEmail(savedEmail);
+      const lastMealId = localStorage.getItem("lastMealId") || "";
+      setEmail(lastMealId);
 
       // Check for saved drinks for the email and set them to the selectedDrinks state
       const savedDrinks =
-        JSON.parse(localStorage.getItem(savedEmail))?.drinks || [];
+        JSON.parse(localStorage.getItem(lastMealId))?.drinks || [];
       setSelectedDrinks(savedDrinks);
     }
 
@@ -288,8 +288,8 @@ export default function Drink() {
     })();
 
     if (typeof window !== "undefined") {
-      const savedEmail = localStorage.getItem("savedEmail") || "";
-      setEmail(savedEmail);
+      const lastMealId = localStorage.getItem("lastMealId") || "";
+      setEmail(lastMealId);
     }
   }, []);
 
