@@ -32,7 +32,7 @@ export default function Receipt() {
       const savedEmail = localStorage.getItem("LastSavedOrderEmail") || "";
       setEmail(savedEmail);
 
-      // Now, use this email to get the associated data
+      // Use email to get the associated data
       const data = JSON.parse(localStorage.getItem(savedEmail) || "{}");
       setSavedData(data);
     }
