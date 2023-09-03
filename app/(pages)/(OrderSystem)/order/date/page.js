@@ -99,6 +99,9 @@ export default function TimePicker() {
       return;
     }
 
+      // Save email to local storage
+    localStorage.setItem("LastSavedOrderEmail", email);
+
     const oldEmail = localStorage.getItem("lastMealId");
     let savedData = localStorage.getItem(oldEmail)
       ? JSON.parse(localStorage.getItem(oldEmail))
