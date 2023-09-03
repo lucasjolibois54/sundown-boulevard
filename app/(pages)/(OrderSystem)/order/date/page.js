@@ -45,14 +45,13 @@ export default function TimePicker() {
     },
   };
 
-  // Load email and data on mount
+  // load data on mount
   useEffect(() => {
     Aos.init({ duration: 1000 });
-    if (typeof window !== "undefined") {
-      const lastMealId = localStorage.getItem("lastMealId") || "";
+    if (typeof window !== "undefined") { //block window object
+      const lastMealId = localStorage.getItem("lastMealId") || ""; //Retrieve Email/ id from Local Storage
       setEmail(lastMealId);
 
-      // Take the saved data with email
       const savedData = JSON.parse(localStorage.getItem(lastMealId) || "{}");
       if (savedData.date) {
         setSelectedDate(new Date(savedData.date)); // Convert string to Date object
@@ -64,13 +63,14 @@ export default function TimePicker() {
     }
   }, []);
 
-  // NO Saturdays and Sundays
+    // Handle the selection of a date on the calendar
   const handleDateSelect = ({ start }) => {
     const currentDate = moment();
     if (moment(start).isBefore(currentDate, "day")) {
       return; // Exit the function if it's a past date
     }
 
+    // NO Saturdays and Sundays
     const dayOfWeek = moment(start).day();
     if (dayOfWeek !== 0 && dayOfWeek !== 6) {
       setSelectedDate(start);
@@ -78,43 +78,47 @@ export default function TimePicker() {
     }
   };
 
-  // Handle time selection from the modal
+    // Handle the selection of a time slot
   const handleTimeSelect = (time) => {
-    const dateTime = moment(
-      //Moment.js object
-      `${selectedDate.toISOString().split("T")[0]} ${time}` //presentation
-    );
+    const dateTime = moment(`${selectedDate.toISOString().split("T")[0]} ${time}`);
     setSelectedTime(dateTime);
-    setShowTimeModal(false); //close modal
+    setShowTimeModal(false);
   };
 
-
-// Save selected date, time, and customer count to local storage
-const handleSaveDateTime = (e) => {
-  if (!selectedDate || !selectedTime) {
-    alert("Please choose a pickup time!");
-    e.preventDefault(); // prevent navigation
-    return;
-  }
-
-  // Fetch the saved data (if any) associated with the email
-  let savedData = localStorage.getItem(email)
-    ? JSON.parse(localStorage.getItem(email))
-    : {};
-
-  // Overwrite previous values (or set new ones)
-  savedData = {
-    ...savedData,
-    date: moment(selectedDate).format("YYYY-MM-DD"),
-    time: selectedTime.format("HH:mm"),
-    customer: customerCount,  
+    // Update email state when it changes
+  const handleEmailChange = (e) => {
+    const newEmail = e.target.value;
+    setEmail(newEmail);
   };
 
-  // Save the updated data back to local storage
-  localStorage.setItem(email, JSON.stringify(savedData));
-};
+  // Save the date and time
+  const handleSaveDateTime = (e) => { // if no date or time is selected => alert
+    if (!selectedDate || !selectedTime) {
+      alert("Please choose a pickup time!");
+      e.preventDefault();
+      return;
+    }
 
+    const oldEmail = localStorage.getItem("lastMealId");
+    let savedData = localStorage.getItem(oldEmail)
+      ? JSON.parse(localStorage.getItem(oldEmail))
+      : {};
 
+      // Update the Saved Data:
+    savedData = {
+      ...savedData,
+      date: moment(selectedDate).format("YYYY-MM-DD"),
+      time: selectedTime.format("HH:mm"),
+      customer: customerCount,  
+    };
+
+    //if current email different from old email, remove it and add enw email
+    if (oldEmail && oldEmail !== email) {
+      localStorage.removeItem(oldEmail);
+    }
+
+    localStorage.setItem(email, JSON.stringify(savedData));
+  };
 
   return (
     <main
@@ -128,6 +132,13 @@ const handleSaveDateTime = (e) => {
       </h1>
 
       <div className="p-8 rounded-xl shadow-2xl space-y-8 w-full bg-white bg-opacity-10 backdrop-blur-md">
+        <input
+          type="email"
+          placeholder="Enter your email"
+          value={email}
+          onChange={handleEmailChange}
+          className="p-2 rounded border"
+        />
         <div className="react-calendar shadow-lg rounded-lg overflow-hidden">
           <Calendar
             localizer={localizer}
