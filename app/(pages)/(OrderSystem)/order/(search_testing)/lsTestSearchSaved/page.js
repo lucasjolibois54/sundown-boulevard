@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Receipt() {
   const [email, setEmail] = useState("");
@@ -60,6 +61,7 @@ export default function Receipt() {
             </div>
         </div>
       </div>
+      <Link href="/order">Update Order</Link>
     </main>
   );
 }
