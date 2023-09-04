@@ -5,6 +5,9 @@ import { motion } from "framer-motion";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import Link from "next/link";
+import { useRouter } from 'next/router';
+
+
 
 export default function Search() {
   const [email, setEmail] = useState("");
@@ -77,7 +80,7 @@ export default function Search() {
             >
               Clear
             </button> */}
-            <Link href="/order" >
+            <Link href={`/order?email=${email}`} >
               <button className="ml-2 -mb-1 px-4 py-2 bg-gray-300 text-black rounded decoration-8">
                 <b>Update Order</b>
               </button></Link>
