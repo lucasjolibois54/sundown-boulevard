@@ -249,7 +249,8 @@ export default function Drink() {
     setCursorText("");
     setCursorVariant("default");
   }}
-  href={`/order/date?email=${encodeURIComponent(email)}`}
+  //href={`/order/date?email=${encodeURIComponent(email)}`}
+  href={`/order/date${email ? `?email=${encodeURIComponent(email)}` : ''}`}
   onClick={handleSaveToLocalStorage}
   className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:border-bgColorDark rounded-lg group"
 >
