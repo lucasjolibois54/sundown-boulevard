@@ -74,6 +74,8 @@ export default function FoodGenerator() {
     }
   };
 
+  const emailParam = new URL(window.location.href).searchParams.get('email');
+
   useEffect(() => {
     Aos.init({ duration: 1000 });
     let isMounted = true;
@@ -273,7 +275,7 @@ const handleSaveData = () => {
                   setCursorText("");
                   setCursorVariant("default");
                 }}
-                href="/order/drinks"
+                href={`/order/drinks${emailParam ? `?email=${emailParam}` : ""}`}
                 onClick={handleSaveData}
                 className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
               >
