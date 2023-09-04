@@ -8,29 +8,25 @@ import "aos/dist/aos.css";
 import { useCursor } from "@/cursor/CursorContext";
 import SelectedDrink from "@/app/components/order/SelectedDrink";
 
-const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-
+// Get the next unique ID for a meal
 const getNextId = () => {
-  // Fetch the last used ID from localStorage
+    // Fetch the last used ID from localStorage
   const lastId = parseInt(localStorage.getItem("lastMealId") || "0", 10);
-  // Increment the ID
+    // Increment the ID by one
   const nextId = lastId + 1;
-  // Save the new ID to localStorage for future use
+    // Save the new ID to localStorage for future use
   localStorage.setItem("lastMealId", nextId.toString());
-  return nextId;
+  return nextId;   // Return the generated ID
 };
 
+// Fetch meal data from API
 async function getData() {
   const meals = [];
-  // Fetch data (loop) as long as there are less than 9
+    // Fetch data (loop) as long as there are less than 9
   for (let i = 0; i < 9; i++) {
-    const res = await fetch(
-      "https://www.themealdb.com/API/JSON/V1/1/RANDOM.PHP/"
-    );
-    if (!res.ok) {
-      throw new Error("Failed to fetch data");
-    }
-    const data = await res.json();
+    const res = await fetch("https://www.themealdb.com/API/JSON/V1/1/RANDOM.PHP/");
+    if (!res.ok) throw new Error("Failed to fetch data");
+    const data = await res.json();    // Parse the JSON response
     meals.push(data.meals[0]); // take first meal from api and store in meals array
   }
   return meals;
@@ -43,30 +39,12 @@ export default function FoodGenerator() {
   const { setCursorText, setCursorVariant } = useCursor();
   const [isEmailSaved, setIsEmailSaved] = useState(false);
   const [generatedId, setGeneratedId] = useState(null);
-
-
-  /* const handleResetMouse = (e) => {
-    setCursorText("");
-    setCursorVariant("default");
-  };*/
-
-  //if email fetch meal
-  const handleEmailChange = (e) => {
-    const newEmail = e.target.value;
-    setEmail(newEmail);
-
-    const savedMeal = fetchSavedMeal(newEmail);
-    if (savedMeal) {
-      setMealData((prevMeals) => [savedMeal, ...prevMeals.slice(0, 8)]);
-      setSelectedMeal(savedMeal);
-    } else {
-      setSelectedMeal(null); // Clear the selected meal if no meal is associated with the email
-    }
-  };
-
-  // Function to fetch saved meal data from localStorage
+  
+    // Fetch a saved meal from local storage
   const fetchSavedMeal = (id) => {
+        // Retrieve the saved meal data using the provided ID
     const savedData = JSON.parse(localStorage.getItem(id));
+        // If data exists and has a mealId, return a formatted object
     if (savedData && savedData.mealId) {
       return {
         idMeal: savedData.mealId,
@@ -78,86 +56,47 @@ export default function FoodGenerator() {
     return null;
   };
 
-  // Function to fetch meals data and handle loading state
+    // Fetch meal data and set it in the state
   const fetchMeals = async () => {
-    let isMounted = true;
-
+    let isMounted = true; 
     setIsLoading(true);
     try {
-      const meals = await getData(); // Fetch meal data
-
+      const meals = await getData();
       if (isMounted) {
-        setMealData(meals); // Update meal data state
-
-        // Delay loading
+        setMealData(meals);
         setTimeout(() => {
           setIsLoading(false);
         }, 2000);
       }
     } catch (error) {
       console.error(error);
-      if (isMounted) {
-        setIsLoading(false);
-      }
+      if (isMounted) setIsLoading(false);
     }
   };
 
-  // useEffect to fetch meals data on component mount
   useEffect(() => {
     Aos.init({ duration: 1000 });
-
     let isMounted = true;
-
-    // Function to fetch meals data and update state
-    const fetchMeals = async () => {
-      setIsLoading(true);
-      try {
-        const meals = await getData(); // Fetch meal data
-
-        if (isMounted) {
-          setMealData(meals); // Update meal data state
-
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 2000);
-        }
-      } catch (error) {
-        console.error(error);
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    // Initialize meal data
     fetchMeals();
+        // Cleanup for component unmount
+    return () => { isMounted = false; };
+  }, []);
 
-    // Clean up function
-    return () => {
-      isMounted = false;
-    };
-  }, []); // Empty array (useEffect runs only on mount)
-
-  // useEffect to update the email saved status
-  /*useEffect(() => {
-    const savedData = JSON.parse(localStorage.getItem(email));
-    setIsEmailSaved(savedData ? true : false);
-}, [email]);*/
-
-  // Save selected meal to localStorage
+    // Save selected meal data in local storage
   const handleSaveData = () => {
     if (selectedMeal) {
-        const id = getNextId().toString(); // Get a new unique ID
+        const emailParam = new URL(window.location.href).searchParams.get('email');
+        const storageKey = emailParam || getNextId().toString();
         const updatedData = {
             mealId: selectedMeal.idMeal,
             mealName: selectedMeal.strMeal,
             strMealThumb: selectedMeal.strMealThumb,
             strInstructions: selectedMeal.strInstructions,
         };
-        localStorage.setItem(id, JSON.stringify(updatedData));
-        setGeneratedId(id);
+        localStorage.setItem(storageKey, JSON.stringify(updatedData));
+        setGeneratedId(storageKey);
     }
-};
+  };
 
 
   return (
@@ -342,3 +281,4 @@ export default function FoodGenerator() {
     </>
   );
 }
+
