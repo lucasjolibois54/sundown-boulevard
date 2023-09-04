@@ -22,7 +22,8 @@ export default function Search() {
       localStorage.setItem("LatestSearchedEmail", email);
 
       const data = JSON.parse(localStorage.getItem(email) || "{}");
-      if (data && data.mealName) {  // check if data exists
+      if (data && data.mealName) {
+        // check if data exists
         setSavedData(data);
       } else {
         alert("No data found for this email!");
@@ -37,7 +38,6 @@ export default function Search() {
     }
   };
 
-
   const listItemVariants = {
     hidden: { opacity: 0, y: 10 },
     visible: (index) => ({
@@ -51,37 +51,45 @@ export default function Search() {
 
   useEffect(() => {
     Aos.init({ duration: 1000 });
-}, []);
-
+  }, []);
 
   return (
     <>
-    <main data-aos="fade-up" data-aos-delay="250" data-aos-duration="500" className="!bg-white h-screen w-screen">
-      <div className="max-w-6xl mx-auto absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-screen">
-        <div className="w-4/6 mx-auto">
-          <div className="flex items-center border-b-2 border-gray-500">
-            <input         
-            type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="border-none outline-none flex-grow p-2  text-lg md:text-6xl font-semibold input-search italic"
-            />
-            {/* <button
+      <main
+        data-aos="fade-up"
+        data-aos-delay="250"
+        data-aos-duration="500"
+        className="!bg-white h-screen w-screen"
+      >
+        <div className="max-w-6xl mx-auto absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-screen">
+          <div className="w-4/6 mx-auto">
+            <div className="flex items-center border-b-2 border-gray-500">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="border-none outline-none flex-grow p-2  text-lg md:text-6xl font-semibold input-search italic"
+              />
+              {/* <button
               onClick={handleClearData}
               className="ml-2 -mb-1 px-4 py-2 hidden sm:block bg-red-500 text-white rounded decoration-8"
             >
               Clear
             </button> */}
-            <button
-              onClick={fetchData}
-              className="ml-2 -mb-1 px-4 py-2 bg-gray-300 text-black rounded decoration-8"
-            >
-              <b>→</b>
-            </button>
-          </div>
+            <Link href="/order" >
+              <button className="ml-2 -mb-1 px-4 py-2 bg-gray-300 text-black rounded decoration-8">
+                <b>Update Order</b>
+              </button></Link>
+              <button
+                onClick={fetchData}
+                className="ml-2 -mb-1 px-4 py-2 bg-gray-300 text-black rounded decoration-8"
+              >
+                <b>→</b>
+              </button>
+            </div>
 
-          <div className="">
+            <div className="">
               <motion.div
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
@@ -129,7 +137,11 @@ export default function Search() {
                   variants={listItemVariants}
                   custom={3}
                 >
-                  {savedData.customer ? <p> Number of Customers: {savedData.customer} </p> : ""}
+                  {savedData.customer ? (
+                    <p> Number of Customers: {savedData.customer} </p>
+                  ) : (
+                    ""
+                  )}
                 </motion.p>
                 {savedData.drinks && savedData.drinks.length > 0 && (
                   <motion.div
@@ -153,9 +165,9 @@ export default function Search() {
                   </motion.div>
                 )}
               </motion.div>
+            </div>
           </div>
         </div>
-      </div>
       </main>
     </>
   );
