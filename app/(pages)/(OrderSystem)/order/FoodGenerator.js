@@ -82,21 +82,29 @@ export default function FoodGenerator() {
     return () => { isMounted = false; };
   }, []);
 
-    // Save selected meal data in local storage
-  const handleSaveData = () => {
-    if (selectedMeal) {
-        const emailParam = new URL(window.location.href).searchParams.get('email');
-        const storageKey = emailParam || getNextId().toString();
-        const updatedData = {
-            mealId: selectedMeal.idMeal,
-            mealName: selectedMeal.strMeal,
-            strMealThumb: selectedMeal.strMealThumb,
-            strInstructions: selectedMeal.strInstructions,
-        };
-        localStorage.setItem(storageKey, JSON.stringify(updatedData));
-        setGeneratedId(storageKey);
-    }
-  };
+// Save selected meal data in local storage
+const handleSaveData = () => {
+  if (selectedMeal) {
+    const emailParam = new URL(window.location.href).searchParams.get('email');
+    const storageKey = emailParam || getNextId().toString();
+
+    // Get existing data from local storage
+    const existingData = JSON.parse(localStorage.getItem(storageKey)) || {};
+
+    // Merge the new meal data with the existing data
+    const updatedData = {
+      ...existingData, // spread existing data first
+      mealId: selectedMeal.idMeal,
+      mealName: selectedMeal.strMeal,
+      strMealThumb: selectedMeal.strMealThumb,
+      strInstructions: selectedMeal.strInstructions,
+    };
+
+    localStorage.setItem(storageKey, JSON.stringify(updatedData));
+    setGeneratedId(storageKey);
+  }
+};
+
 
 
   return (
