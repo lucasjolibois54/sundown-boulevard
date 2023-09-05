@@ -258,7 +258,6 @@ export default function Drink() {
               setCursorText("");
               setCursorVariant("default");
             }}
-            //href={`/order/date?email=${encodeURIComponent(email)}`}
             /*href={`/order/date${
               email ? `?email=${encodeURIComponent(email)}` : ""
             }`}*/
