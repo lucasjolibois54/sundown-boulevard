@@ -35,6 +35,12 @@ export default function Drink() {
   const [email, setEmail] = useState("");
   const [visibleDrinks, setVisibleDrinks] = useState(9);
   const [isLoading, setIsLoading] = useState(true);
+    const [emailParam, setEmailParam] = useState(null);
+
+  useEffect(() => {
+    const param = new URL(window.location.href).searchParams.get("email");
+    setEmailParam(param);
+  }, []);
 
   useEffect(() => {
     Aos.init({ duration: 1000 });
@@ -253,9 +259,10 @@ export default function Drink() {
               setCursorVariant("default");
             }}
             //href={`/order/date?email=${encodeURIComponent(email)}`}
-            href={`/order/date${
+            /*href={`/order/date${
               email ? `?email=${encodeURIComponent(email)}` : ""
-            }`}
+            }`}*/
+            href={`/order/date${emailParam ? `?email=${emailParam}` : ""}`}
             onClick={handleSaveToLocalStorage}
             className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:border-bgColorDark rounded-lg group"
           >
