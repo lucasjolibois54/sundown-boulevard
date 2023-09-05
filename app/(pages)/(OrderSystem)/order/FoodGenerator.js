@@ -20,19 +20,22 @@ const getNextId = () => {
 };
 
 // Fetch meal data from API
-async function getData() {
+async function getData(savedMeal) {
   const meals = [];
-  // Fetch data (loop) as long as there are less than 9
-  for (let i = 0; i < 9; i++) {
-    const res = await fetch(
-      "https://www.themealdb.com/API/JSON/V1/1/RANDOM.PHP/"
-    );
+  if (savedMeal) {
+    meals.push(savedMeal);
+  }
+  
+  // Fetch data to fill up the remaining slots
+  for (let i = meals.length; i < 9; i++) {
+    const res = await fetch("https://www.themealdb.com/API/JSON/V1/1/RANDOM.PHP/");
     if (!res.ok) throw new Error("Failed to fetch data");
-    const data = await res.json(); // Parse the JSON response
-    meals.push(data.meals[0]); // take first meal from api and store in meals array
+    const data = await res.json(); 
+    meals.push(data.meals[0]);
   }
   return meals;
 }
+
 
 export default function FoodGenerator() {
   const [mealData, setMealData] = useState([]);
@@ -83,14 +86,44 @@ export default function FoodGenerator() {
   };
 
   useEffect(() => {
+    // Initialize the Aos (Animate on scroll)
     Aos.init({ duration: 1000 });
-    let isMounted = true;
-    fetchMeals();
+    let isMounted = true; // To avoid setting state on an unmounted component
+  
+    const fetchAndSetMeals = async () => {
+      try {
+        // If there's an email param, attempt to fetch the saved meal
+        let savedMeal = null;
+        if (emailParam) {
+          savedMeal = fetchSavedMeal(emailParam);
+          if(savedMeal && isMounted) {
+            setSelectedMeal(savedMeal);
+          }
+        }
+        
+        // Fetch meals, including the saved one if it exists
+        const meals = await getData(savedMeal);
+        if (isMounted) {
+          setMealData(meals);  // Set the meal data state
+          setTimeout(() => {
+            setIsLoading(false);  // Set the loading state to false after 2 seconds
+          }, 2000);
+        }
+      } catch (error) {
+        console.error(error);
+        if (isMounted) setIsLoading(false); // If there's an error, set loading to false
+      }
+    };
+  
+    fetchAndSetMeals();  // Call the fetch and set meals function
+  
     // Cleanup for component unmount
     return () => {
-      isMounted = false;
+      isMounted = false;  // When the component is unmounted, set isMounted to false
     };
-  }, []);
+  }, [emailParam]);  // This useEffect runs when the emailParam state changes
+
+  
 
   // Save selected meal data in local storage
   const handleSaveData = () => {
