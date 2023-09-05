@@ -48,7 +48,8 @@ export default function TimePicker() {
   // load data on mount
   useEffect(() => {
     Aos.init({ duration: 1000 });
-    if (typeof window !== "undefined") { //block window object
+    if (typeof window !== "undefined") {
+      //block window object
       const lastMealId = localStorage.getItem("lastMealId") || ""; //Retrieve Email/ id from Local Storage
       setEmail(lastMealId);
 
@@ -63,7 +64,7 @@ export default function TimePicker() {
     }
   }, []);
 
-    // Handle the selection of a date on the calendar
+  // Handle the selection of a date on the calendar
   const handleDateSelect = ({ start }) => {
     const currentDate = moment();
     if (moment(start).isBefore(currentDate, "day")) {
@@ -78,28 +79,31 @@ export default function TimePicker() {
     }
   };
 
-    // Handle the selection of a time slot
+  // Handle the selection of a time slot
   const handleTimeSelect = (time) => {
-    const dateTime = moment(`${selectedDate.toISOString().split("T")[0]} ${time}`);
+    const dateTime = moment(
+      `${selectedDate.toISOString().split("T")[0]} ${time}`
+    );
     setSelectedTime(dateTime);
     setShowTimeModal(false);
   };
 
-    // Update email state when it changes
+  // Update email state when it changes
   const handleEmailChange = (e) => {
     const newEmail = e.target.value;
     setEmail(newEmail);
   };
 
   // Save the date and time
-  const handleSaveDateTime = (e) => { // if no date or time is selected => alert
+  const handleSaveDateTime = (e) => {
+    // if no date or time is selected => alert
     if (!selectedDate || !selectedTime) {
       alert("Please choose a pickup time!");
       e.preventDefault();
       return;
     }
 
-      // Save email to local storage
+    // Save email to local storage
     localStorage.setItem("LastSavedOrderEmail", email);
 
     const oldEmail = localStorage.getItem("lastMealId");
@@ -107,12 +111,12 @@ export default function TimePicker() {
       ? JSON.parse(localStorage.getItem(oldEmail))
       : {};
 
-      // Update the Saved Data:
+    // Update the Saved Data:
     savedData = {
       ...savedData,
       date: moment(selectedDate).format("YYYY-MM-DD"),
       time: selectedTime.format("HH:mm"),
-      customer: customerCount,  
+      customer: customerCount,
     };
 
     //if current email different from old email, remove it and add enw email
