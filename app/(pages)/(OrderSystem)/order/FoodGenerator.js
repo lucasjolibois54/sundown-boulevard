@@ -39,6 +39,13 @@ export default function FoodGenerator() {
   const { setCursorText, setCursorVariant } = useCursor();
   const [isEmailSaved, setIsEmailSaved] = useState(false);
   const [generatedId, setGeneratedId] = useState(null);
+  const [emailParam, setEmailParam] = useState(null);
+
+useEffect(() => {
+    const param = new URL(window.location.href).searchParams.get('email');
+    setEmailParam(param);
+}, []);
+
   
     // Fetch a saved meal from local storage
   const fetchSavedMeal = (id) => {
@@ -74,7 +81,7 @@ export default function FoodGenerator() {
     }
   };
 
-  const emailParam = new URL(window.location.href).searchParams.get('email');
+
 
   useEffect(() => {
     Aos.init({ duration: 1000 });
