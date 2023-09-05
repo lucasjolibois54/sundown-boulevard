@@ -38,17 +38,17 @@ export default function Drink() {
 
   useEffect(() => {
     Aos.init({ duration: 1000 });
-
+  
     let isMounted = true;
-
+  
     // Fetch drinks data
     (async () => {
       try {
         const drinks = await getDrinks();
-
+  
         if (isMounted) {
           setDrinksData(drinks);
-
+  
           // After setting the drinks data, wait for 2 seconds before setting isLoading to false
           setTimeout(() => {
             setIsLoading(false);
@@ -61,22 +61,26 @@ export default function Drink() {
         }
       }
     })();
-
-    // If in localstorage, retrieve saved email and selected drinks
-    if (typeof window !== "undefined") {
+  
+    const emailParam = new URL(window.location.href).searchParams.get("email");
+    if (emailParam) {
+      setEmail(emailParam);
+      const savedDrinks = JSON.parse(localStorage.getItem(emailParam))?.drinks || [];
+      setSelectedDrinks(savedDrinks);
+    } else {
+      // If in localstorage, retrieve saved email and selected drinks
       const lastMealId = localStorage.getItem("lastMealId") || "";
       setEmail(lastMealId);
-
-      // Check for saved drinks for the email and set them to the selectedDrinks state
-      const savedDrinks =
-        JSON.parse(localStorage.getItem(lastMealId))?.drinks || [];
+  
+      const savedDrinks = JSON.parse(localStorage.getItem(lastMealId))?.drinks || [];
       setSelectedDrinks(savedDrinks);
     }
-
+  
     return () => {
       isMounted = false;
     };
   }, []);
+  
 
   const handleDrinkSelection = (drink) => {
     setSelectedDrinks((prevDrinks) => {
@@ -89,10 +93,8 @@ export default function Drink() {
   };
 
   const handleSaveToLocalStorage = () => {
-    if (typeof window !== "undefined") {
-      let savedData = localStorage.getItem(email)
-        ? JSON.parse(localStorage.getItem(email))
-        : {};
+    if (email) {
+      let savedData = localStorage.getItem(email) ? JSON.parse(localStorage.getItem(email)) : {};
 
       savedData = {
         ...savedData,
@@ -238,23 +240,25 @@ export default function Drink() {
                     Choose Delivery Time
                 </button>
             </Link> */}
-          <Link
-            onMouseEnter={() => {
-              setCursorText("");
-              setCursorVariant("time");
-            }}
-            onMouseLeave={() => {
-              setCursorText("");
-              setCursorVariant("default");
-            }}
-            href="/order/date"
-            onClick={handleSaveToLocalStorage}
-            className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
-          >
-            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
-            <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-            <span className="relative">Choose Delivery Time</span>
-          </Link>
+<Link
+  onMouseEnter={() => {
+    setCursorText("");
+    setCursorVariant("time");
+  }}
+  onMouseLeave={() => {
+    setCursorText("");
+    setCursorVariant("default");
+  }}
+  //href={`/order/date?email=${encodeURIComponent(email)}`}
+  href={`/order/date${email ? `?email=${encodeURIComponent(email)}` : ''}`}
+  onClick={handleSaveToLocalStorage}
+  className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:border-bgColorDark rounded-lg group"
+>
+  <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
+  <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+  <span className="relative">Choose Delivery Time</span>
+</Link>
+
         </div>
       </div>
     </main>
