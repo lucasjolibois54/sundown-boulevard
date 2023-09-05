@@ -10,23 +10,25 @@ import SelectedDrink from "@/app/components/order/SelectedDrink";
 
 // Get the next unique ID for a meal
 const getNextId = () => {
-    // Fetch the last used ID from localStorage
+  // Fetch the last used ID from localStorage
   const lastId = parseInt(localStorage.getItem("lastMealId") || "0", 10);
-    // Increment the ID by one
+  // Increment the ID by one
   const nextId = lastId + 1;
-    // Save the new ID to localStorage for future use
+  // Save the new ID to localStorage for future use
   localStorage.setItem("lastMealId", nextId.toString());
-  return nextId;   // Return the generated ID
+  return nextId; // Return the generated ID
 };
 
 // Fetch meal data from API
 async function getData() {
   const meals = [];
-    // Fetch data (loop) as long as there are less than 9
+  // Fetch data (loop) as long as there are less than 9
   for (let i = 0; i < 9; i++) {
-    const res = await fetch("https://www.themealdb.com/API/JSON/V1/1/RANDOM.PHP/");
+    const res = await fetch(
+      "https://www.themealdb.com/API/JSON/V1/1/RANDOM.PHP/"
+    );
     if (!res.ok) throw new Error("Failed to fetch data");
-    const data = await res.json();    // Parse the JSON response
+    const data = await res.json(); // Parse the JSON response
     meals.push(data.meals[0]); // take first meal from api and store in meals array
   }
   return meals;
@@ -41,17 +43,16 @@ export default function FoodGenerator() {
   const [generatedId, setGeneratedId] = useState(null);
   const [emailParam, setEmailParam] = useState(null);
 
-useEffect(() => {
-    const param = new URL(window.location.href).searchParams.get('email');
+  useEffect(() => {
+    const param = new URL(window.location.href).searchParams.get("email");
     setEmailParam(param);
-}, []);
+  }, []);
 
-  
-    // Fetch a saved meal from local storage
+  // Fetch a saved meal from local storage
   const fetchSavedMeal = (id) => {
-        // Retrieve the saved meal data using the provided ID
+    // Retrieve the saved meal data using the provided ID
     const savedData = JSON.parse(localStorage.getItem(id));
-        // If data exists and has a mealId, return a formatted object
+    // If data exists and has a mealId, return a formatted object
     if (savedData && savedData.mealId) {
       return {
         idMeal: savedData.mealId,
@@ -63,9 +64,9 @@ useEffect(() => {
     return null;
   };
 
-    // Fetch meal data and set it in the state
+  // Fetch meal data and set it in the state
   const fetchMeals = async () => {
-    let isMounted = true; 
+    let isMounted = true;
     setIsLoading(true);
     try {
       const meals = await getData();
@@ -81,40 +82,40 @@ useEffect(() => {
     }
   };
 
-
-
   useEffect(() => {
     Aos.init({ duration: 1000 });
     let isMounted = true;
     fetchMeals();
-        // Cleanup for component unmount
-    return () => { isMounted = false; };
+    // Cleanup for component unmount
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-// Save selected meal data in local storage
-const handleSaveData = () => {
-  if (selectedMeal) {
-    const emailParam = new URL(window.location.href).searchParams.get('email');
-    const storageKey = emailParam || getNextId().toString();
+  // Save selected meal data in local storage
+  const handleSaveData = () => {
+    if (selectedMeal) {
+      const emailParam = new URL(window.location.href).searchParams.get(
+        "email"
+      );
+      const storageKey = emailParam || getNextId().toString();
 
-    // Get existing data from local storage
-    const existingData = JSON.parse(localStorage.getItem(storageKey)) || {};
+      // Get existing data from local storage
+      const existingData = JSON.parse(localStorage.getItem(storageKey)) || {};
 
-    // Merge the new meal data with the existing data
-    const updatedData = {
-      ...existingData, // spread existing data first
-      mealId: selectedMeal.idMeal,
-      mealName: selectedMeal.strMeal,
-      strMealThumb: selectedMeal.strMealThumb,
-      strInstructions: selectedMeal.strInstructions,
-    };
+      // Merge the new meal data with the existing data
+      const updatedData = {
+        ...existingData, // spread existing data first
+        mealId: selectedMeal.idMeal,
+        mealName: selectedMeal.strMeal,
+        strMealThumb: selectedMeal.strMealThumb,
+        strInstructions: selectedMeal.strInstructions,
+      };
 
-    localStorage.setItem(storageKey, JSON.stringify(updatedData));
-    setGeneratedId(storageKey);
-  }
-};
-
-
+      localStorage.setItem(storageKey, JSON.stringify(updatedData));
+      setGeneratedId(storageKey);
+    }
+  };
 
   return (
     <>
@@ -274,28 +275,27 @@ const handleSaveData = () => {
               <span className="relative">Generate New Meals</span>
             </button>
             <Link
-                onMouseEnter={() => {
-                  setCursorText("");
-                  setCursorVariant("time");
-                }}
-                onMouseLeave={() => {
-                  setCursorText("");
-                  setCursorVariant("default");
-                }}
-                href={`/order/drinks${emailParam ? `?email=${emailParam}` : ""}`}
-                onClick={handleSaveData}
-                className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
-              >
-                <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
-                <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-                <span className="relative">
-                  {isEmailSaved ? "Update Order" : "Choose Drinks"}
-                </span>
-              </Link>
+              onMouseEnter={() => {
+                setCursorText("");
+                setCursorVariant("time");
+              }}
+              onMouseLeave={() => {
+                setCursorText("");
+                setCursorVariant("default");
+              }}
+              href={`/order/drinks${emailParam ? `?email=${emailParam}` : ""}`}
+              onClick={handleSaveData}
+              className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
+            >
+              <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
+              <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+              <span className="relative">
+                {isEmailSaved ? "Update Order" : "Choose Drinks"}
+              </span>
+            </Link>
           </div>
         </div>
       </main>
     </>
   );
 }
-
