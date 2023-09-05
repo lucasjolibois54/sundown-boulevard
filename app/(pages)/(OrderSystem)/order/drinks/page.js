@@ -79,7 +79,7 @@ export default function Drink() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, []); 
   
 
   const handleDrinkSelection = (drink) => {
