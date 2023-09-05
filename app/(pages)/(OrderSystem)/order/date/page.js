@@ -12,6 +12,13 @@ import "aos/dist/aos.css";
 // Moment.js settings
 const localizer = momentLocalizer(moment);
 
+// Function to extract email from the URL
+function getEmailFromURL() {
+  if (typeof window === "undefined") return null;
+  const params = new URLSearchParams(window.location.search);
+  return params.get("email");
+}
+
 export default function TimePicker() {
   const [email, setEmail] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
@@ -48,18 +55,31 @@ export default function TimePicker() {
   // load data on mount
   useEffect(() => {
     Aos.init({ duration: 1000 });
+
     if (typeof window !== "undefined") {
-      //block window object
-      const lastMealId = localStorage.getItem("lastMealId") || ""; //Retrieve Email/ id from Local Storage
-      setEmail(lastMealId);
+      const urlEmail = getEmailFromURL();
 
-      const savedData = JSON.parse(localStorage.getItem(lastMealId) || "{}");
-      if (savedData.date) {
-        setSelectedDate(new Date(savedData.date)); // Convert string to Date object
-      }
+      if (urlEmail) {
+        setEmail(urlEmail);
+        const savedData = JSON.parse(localStorage.getItem(urlEmail) || "{}");
+        if (savedData.date) {
+          setSelectedDate(new Date(savedData.date)); // Convert string to Date object
+        }
+        if (savedData.customer) {
+          setCustomerCount(savedData.customer); // Set the customer count
+        }
+      } else {
+        // Fallback to lastMealId if no email found in the URL
+        const lastMealId = localStorage.getItem("lastMealId") || ""; //Retrieve Email/ id from Local Storage
+        setEmail(lastMealId);
 
-      if (savedData.customer) {
-        setCustomerCount(savedData.customer); // Set the customer count
+        const savedData = JSON.parse(localStorage.getItem(lastMealId) || "{}");
+        if (savedData.date) {
+          setSelectedDate(new Date(savedData.date));
+        }
+        if (savedData.customer) {
+          setCustomerCount(savedData.customer);
+        }
       }
     }
   }, []);
@@ -94,37 +114,51 @@ export default function TimePicker() {
     setEmail(newEmail);
   };
 
-  // Save the date and time
   const handleSaveDateTime = (e) => {
-    // if no date or time is selected => alert
     if (!selectedDate || !selectedTime) {
       alert("Please choose a pickup time!");
       e.preventDefault();
       return;
     }
-
-    // Save email to local storage
+  
+    // Save the current email as the last saved order email
     localStorage.setItem("LastSavedOrderEmail", email);
-
+  
     const oldEmail = localStorage.getItem("lastMealId");
-    let savedData = localStorage.getItem(oldEmail)
-      ? JSON.parse(localStorage.getItem(oldEmail))
-      : {};
-
-    // Update the Saved Data:
-    savedData = {
-      ...savedData,
+  
+    // If no old email and no new email provided, return
+    if (!oldEmail && !email) {
+      console.warn("No identifier (email or lastMealId) available");
+      return;
+    }
+  
+    // Get existing data from the old email or default to an empty object
+    let oldSavedData = oldEmail ? JSON.parse(localStorage.getItem(oldEmail)) : {};
+  
+    // If there's a new email provided, fetch its existing data or default to an empty object
+    let newSavedData = email ? JSON.parse(localStorage.getItem(email) || "{}") : {};
+  
+    // Update the data with the new values
+    let updatedData = {
+      ...newSavedData,
+      ...oldSavedData,
       date: moment(selectedDate).format("YYYY-MM-DD"),
       time: selectedTime.format("HH:mm"),
       customer: customerCount,
     };
-
-    //if current email different from old email, remove it and add enw email
-    if (oldEmail && oldEmail !== email) {
-      localStorage.removeItem(oldEmail);
+  
+    if (email) {
+      // Save updated data to the new email
+      localStorage.setItem(email, JSON.stringify(updatedData));
+  
+      // Remove the old data if the old email is different from the new email
+      if (oldEmail !== email) {
+        localStorage.removeItem(oldEmail);
+      }
+    } else {
+      // If there's no new email, just save the data back under the old email (from lastMealId)
+      localStorage.setItem(oldEmail, JSON.stringify(updatedData));
     }
-
-    localStorage.setItem(email, JSON.stringify(savedData));
   };
 
   return (
@@ -297,8 +331,14 @@ export default function TimePicker() {
             Customer:
           </label>
           <button
-            onClick={() => setCustomerCount((prev) => prev - 1)}
-            className="bg-gray-700 text-white rounded px-3 py-2 hover:bg-gray-600 active:bg-gray-800 focus:outline-none focus:ring focus:ring-gray-200 transition-shadow shadow-md"
+            onClick={() =>
+              customerCount > 1 && setCustomerCount((prev) => prev - 1)
+            }
+            className={`!text-white !rounded !px-3 !py-2 !hover:bg-gray-600 !active:bg-gray-800 !focus:outline-none !focus:ring !focus:ring-gray-200 !transition-shadow !shadow-md ${
+              customerCount <= 1
+                ? "!bg-gray-900 cursor-not-allowed !border-black"
+                : "!bg-gray-700"
+            }`}
           >
             -
           </button>
@@ -309,8 +349,14 @@ export default function TimePicker() {
             className="border rounded px-3 py-2 w-16 text-center shadow-md"
           />
           <button
-            onClick={() => setCustomerCount((prev) => prev + 1)}
-            className="bg-gray-700 text-white rounded px-3 py-2 hover:bg-gray-600 active:bg-gray-800 focus:outline-none focus:ring focus:ring-gray-200 transition-shadow shadow-md"
+            onClick={() =>
+              customerCount < 10 && setCustomerCount((prev) => prev + 1)
+            }
+            className={`!text-white !rounded !px-3 !py-2 !hover:bg-gray-600 !active:bg-gray-800 !focus:outline-none !focus:ring !focus:ring-gray-200 !transition-shadow !shadow-md ${
+              customerCount >= 10
+                ? "!bg-gray-900 cursor-not-allowed !border-black"
+                : "!bg-gray-700"
+            }`}
           >
             +
           </button>
