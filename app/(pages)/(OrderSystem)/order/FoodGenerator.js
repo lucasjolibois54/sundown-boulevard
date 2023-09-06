@@ -8,9 +8,9 @@ import "aos/dist/aos.css";
 import { useCursor } from "@/cursor/CursorContext";
 import SelectedDrink from "@/app/components/order/SelectedDrink";
 
-// Get the next unique ID for a meal
+// Generate the next unique ID for a meal
 const getNextId = () => {
-  // Fetch the last used ID from localStorage
+  // Fetch the last used ID from localStorage (return string as integer)
   const lastId = parseInt(localStorage.getItem("lastMealId") || "0", 10);
   // Increment the ID by one
   const nextId = lastId + 1;
@@ -26,7 +26,7 @@ async function getData(savedMeal) {
     meals.push(savedMeal);
   }
   
-  // Fetch data to fill up the remaining slots
+  // Fetch data to fill up the util we have 9 meals
   for (let i = meals.length; i < 9; i++) {
     const res = await fetch("https://www.themealdb.com/API/JSON/V1/1/RANDOM.PHP/");
     if (!res.ok) throw new Error("Failed to fetch data");
