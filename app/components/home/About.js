@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
 import React from "react";
 import Link from "next/link";
 
-import { useCursor } from '@/cursor/CursorContext';
+import { useCursor } from "@/cursor/CursorContext";
 
 export default function About() {
   const { setCursorText, setCursorVariant } = useCursor();
@@ -12,27 +12,40 @@ export default function About() {
     <>
       <div className="pt-10 sm:pt-20 flex flex-col w-full lg:flex-row mb-4">
         {/* Max width container, center aligned, with some padding */}
-        <div id="about" className="max-w-6xl mx-auto lg:px-0 sm:px-6 sm:py-8">
+        <div id="about" className="max-w-6xl mx-auto lg:px-0 sm:py-8">
           {/* <!-- Grid columns + some font styles for the children elements to inherit --> */}
-          <div className="font-medium leading-7 space-y-2 sm:grid md:grid-cols-2 md:grid-rows-1 grid-rows-2 lg:grid-cols-2 sm:gap-4 sm:space-y-0">
+          <div className="font-medium leading-7 space-y-2 sm:grid md:grid-rows-1 grid-rows-2 lg:grid-cols-2 sm:gap-4 sm:space-y-0">
             {/* <!-- Grid cell #1 --> */}
-            <div className="py-3 pt-20 sm:pt-5 sm:p-5 float-left rounded">
+            <div className="py-3 pt-20 sm:pt-5 lg:p-0 float-left rounded">
               <img
-                className="w-screen md:w-full  xl:w-6/6 sm:float-left mb-5 sm:mb-0"
+                className="lg:block hidden w-screen md:w-full  xl:w-6/6 sm:float-left mb-5 sm:mb-0"
                 src={
                   "https://res.cloudinary.com/debkwdctz/image/upload/v1692702894/image_101_q1dkdg.png"
+                }
+                alt="Restaurant Image"
+              />
+              <img
+                className="lg:hidden w-screen md:w-full  xl:w-6/6 sm:float-left mb-5 sm:mb-0"
+                src={
+                  "https://res.cloudinary.com/debkwdctz/image/upload/v1693998344/image_102_gov4jx.png"
                 }
                 alt="Restaurant Image"
               />
             </div>
 
             {/* <!-- Grid cell #2 --> */}
-            <div className=" py-3 sm:px-6 md-lg:ml-0 xl:ml-0 md-lg:mt-10 xl:mt-10 rounded">
+            <div className=" py-3 lg:px-6 md-lg:ml-0 xl:ml-0 md-lg:mt-10 xl:mt-10 rounded">
               <h1 className=" sm:!leading-tight pt-4 sm:mt-5 text-6xl xsm:text-5xl sm:text-6xl md-lg:text-5xl lg:text-6xl font- stroke-title">
-              Where Culinary Artistry Meets Timeless Tradition
+                Where Culinary Artistry Meets Timeless Tradition
               </h1>
               <p className="text-base md:text-lg text-dark-text py-5 lg:px-24 lg:pl-0 lg:pr-20 max-w-2xl font-light mt-2">
-              At LeFaim, we blend the charm of timeless traditions with the innovation of modern culinary artistry. Our dishes, crafted with passion and precision, speak to the heart of gourmet dining. Every ingredient is handpicked, ensuring that our guests savor nothing but the best. Experience a symphony of flavors, textures, and aromas with every visit. Ready for a gastronomic journey? Order now and let your palate be the judge.
+                At LeFaim, we blend the charm of timeless traditions with the
+                innovation of modern culinary artistry. Our dishes, crafted with
+                passion and precision, speak to the heart of gourmet dining.
+                Every ingredient is handpicked, ensuring that our guests savor
+                nothing but the best. Experience a symphony of flavors,
+                textures, and aromas with every visit. Ready for a gastronomic
+                journey? Order now and let your palate be the judge.
               </p>
 
               <div className="absolute  mt-0">
@@ -46,22 +59,22 @@ export default function About() {
                       </span>
                     </div>
                   </Link> */}
-                            <Link
-            onMouseEnter={() => {
-              setCursorText("");
-              setCursorVariant("time");
-            }}
-            onMouseLeave={() => {
-              setCursorText("");
-              setCursorVariant("default");
-            }}
-            href="/order"
-            className="hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
-          >
-            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
-            <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-            <span className="relative">Order Now!</span>
-          </Link>
+                  <Link
+                    onMouseEnter={() => {
+                      setCursorText("");
+                      setCursorVariant("time");
+                    }}
+                    onMouseLeave={() => {
+                      setCursorText("");
+                      setCursorVariant("default");
+                    }}
+                    href="/order"
+                    className="hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
+                  >
+                    <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
+                    <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+                    <span className="relative">Order Now!</span>
+                  </Link>
                 </div>
               </div>
             </div>
