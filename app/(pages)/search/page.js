@@ -74,10 +74,10 @@ export default function Search() {
                 placeholder="Enter your email"
                 className="border-none outline-none flex-grow p-2  text-lg md:text-6xl font-semibold input-search italic"
               />
-            <Link href={`/order?email=${email}`} >
+            {/* <Link href={`/order?email=${email}`} >
               <button className="ml-2 -mb-1 px-4 py-2 bg-gray-300 text-black rounded decoration-8">
                 <b>Update Order</b>
-              </button></Link>
+              </button></Link> */}
               <button
                 onClick={fetchData}
                 className="ml-2 -mb-1 px-4 py-2 bg-gray-300 text-black rounded decoration-8"
@@ -148,6 +148,17 @@ export default function Search() {
                         </motion.li>
                       ))}
                     </ul>
+                    <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  variants={listItemVariants}
+                  custom={2}
+                >
+                              <Link href={`/order?email=${email}`} >
+              <button className="ml-0 mt-3 -mb-1 px-4 py-2 bg-gray-300 text-black rounded decoration-8">
+                <b>Update Order</b>
+              </button></Link>
+                </motion.div>
                   </motion.div>
                 )}
               </motion.div>
