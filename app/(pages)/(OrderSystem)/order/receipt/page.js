@@ -15,18 +15,14 @@ export default function Receipt() {
   });
 
   const [confettiCount, setConfettiCount] = useState(300); // 300 pieces of confetti
-  
+
   useEffect(() => {
     Aos.init({ duration: 1000 });
     
     const timer = setTimeout(() => {
       setConfettiCount(0); // After 2 seconds, set to 0
     }, 2000);
-    
-    return () => clearTimeout(timer);
-  }, []);
 
-  useEffect(() => {
     if (typeof window !== "undefined") {
       // First, get the email stored under 'LastSavedOrderEmail'
       const savedEmail = localStorage.getItem("LastSavedOrderEmail") || "";
@@ -36,6 +32,8 @@ export default function Receipt() {
       const data = JSON.parse(localStorage.getItem(savedEmail) || "{}");
       setSavedData(data);
     }
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
