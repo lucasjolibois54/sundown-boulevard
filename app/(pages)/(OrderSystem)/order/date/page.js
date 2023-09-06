@@ -27,6 +27,7 @@ function isValidEmail(email) {
 export default function TimePicker() {
   const [email, setEmail] = useState("");
   const [displayEmail, setDisplayEmail] = useState("");
+  const [emailInUrl, setEmailInUrl] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [customerCount, setCustomerCount] = useState(1);
@@ -64,6 +65,10 @@ export default function TimePicker() {
 
     if (typeof window !== "undefined") {
       const urlEmail = getEmailFromURL();
+
+      if (urlEmail && isValidEmail(urlEmail)) {
+        setEmailInUrl(true);
+      }
 
       if (urlEmail) {
         setEmail(urlEmail);
@@ -184,13 +189,22 @@ export default function TimePicker() {
       </h1>
 
       <div className="p-8 rounded-xl shadow-2xl space-y-8 w-full bg-white bg-opacity-10 backdrop-blur-md">
-      <input
+      {/* <input
           type="email"
           placeholder="Enter your email"
           value={displayEmail}
           onChange={handleEmailChange}
           className="p-2 rounded border"
-        />
+        /> */}
+        {!emailInUrl && (
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={displayEmail}
+            onChange={handleEmailChange}
+            className="p-2 rounded border"
+          />
+        )}
         <div className="react-calendar shadow-lg rounded-lg overflow-hidden">
           <Calendar
             localizer={localizer}
