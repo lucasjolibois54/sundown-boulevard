@@ -68,13 +68,15 @@ export default function Drink() {
     })();
 
     const emailParam = new URL(window.location.href).searchParams.get("email");
+    // If an emailparam present, retrieve the saved drinks from local storage
     if (emailParam) {
       setEmail(emailParam);
       const savedDrinks =
+      // retrieve drinks accosiated with email
         JSON.parse(localStorage.getItem(emailParam))?.drinks || [];
       setSelectedDrinks(savedDrinks);
     } else {
-      // If in localstorage, retrieve saved email and selected drinks
+      // If no email param, use lastMealId
       const lastMealId = localStorage.getItem("lastMealId") || "";
       setEmail(lastMealId);
 
@@ -90,25 +92,30 @@ export default function Drink() {
 
   const handleDrinkSelection = (drink) => {
     setSelectedDrinks((prevDrinks) => {
+      // If the drink is already in the list, remove it (deselect)
       if (prevDrinks.some((d) => d.id === drink.id)) {
         return prevDrinks.filter((d) => d.id !== drink.id);
       } else {
+        // If not, add the drink to the list (select)
         return [...prevDrinks, { id: drink.id, name: drink.name }];
       }
     });
   };
 
+  // save selected drinks to local storage
   const handleSaveToLocalStorage = () => {
     if (email) {
+      // Fetch any existing saved data using email
       let savedData = localStorage.getItem(email)
         ? JSON.parse(localStorage.getItem(email))
         : {};
 
+        //update
       savedData = {
         ...savedData,
         drinks: selectedDrinks,
       };
-
+      //save to LS
       localStorage.setItem(email, JSON.stringify(savedData));
     }
   };
