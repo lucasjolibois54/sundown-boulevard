@@ -24,7 +24,6 @@ function isValidEmail(email) {
   return re.test(email);
 }
 
-
 export default function TimePicker() {
   const [email, setEmail] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
@@ -126,24 +125,28 @@ export default function TimePicker() {
       e.preventDefault();
       return;
     }
-  
+
     // Save the current email as the last saved order email
     localStorage.setItem("LastSavedOrderEmail", email);
-  
+
     const oldEmail = localStorage.getItem("lastMealId");
-  
+
     // If no old email and no new email provided, return
     if (!oldEmail && !email) {
       console.warn("No identifier (email or lastMealId) available");
       return;
     }
-  
+
     // Get existing data from the old email or default to an empty object
-    let oldSavedData = oldEmail ? JSON.parse(localStorage.getItem(oldEmail)) : {};
-  
+    let oldSavedData = oldEmail
+      ? JSON.parse(localStorage.getItem(oldEmail))
+      : {};
+
     // If there's a new email provided, fetch its existing data or default to an empty object
-    let newSavedData = email ? JSON.parse(localStorage.getItem(email) || "{}") : {};
-  
+    let newSavedData = email
+      ? JSON.parse(localStorage.getItem(email) || "{}")
+      : {};
+
     // Update the data with the new values
     let updatedData = {
       ...newSavedData,
@@ -152,11 +155,11 @@ export default function TimePicker() {
       time: selectedTime.format("HH:mm"),
       customer: customerCount,
     };
-  
+
     if (email) {
       // Save updated data to the new email
       localStorage.setItem(email, JSON.stringify(updatedData));
-  
+
       // Remove the old data if the old email is different from the new email
       if (oldEmail !== email) {
         localStorage.removeItem(oldEmail);
@@ -286,25 +289,22 @@ export default function TimePicker() {
                           </button>
                         </div>
                         {isValidEmail(email) ? (
-  <Link
-    href="/order/receipt"
-    onClick={handleSaveDateTime}
-    className="hidden hover:cursor-none relative sm:inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
-  >
-    <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
-    <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-    <span className="relative">Complete Order</span>
-  </Link>
-) : (
-  <div
-  className="hidden hover:cursor-none relative sm:inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
->
-  <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-red-500 rounded-full group-hover:w-72 group-hover:h-72"></span>
-  <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-  <span className="relative">Add Valid Email</span>
-</div>
-)}
-
+                          <Link
+                            href="/order/receipt"
+                            onClick={handleSaveDateTime}
+                            className="hidden hover:cursor-none relative sm:inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
+                          >
+                            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
+                            <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+                            <span className="relative">Complete Order</span>
+                          </Link>
+                        ) : (
+                          <div className="hidden hover:cursor-none relative sm:inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group">
+                            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-red-500 rounded-full group-hover:w-72 group-hover:h-72"></span>
+                            <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+                            <span className="relative">Add Valid Email</span>
+                          </div>
+                        )}
                       </div>
                     </span>
                   </div>
