@@ -37,15 +37,14 @@ export default function Drink() {
   const [isLoading, setIsLoading] = useState(true);
   const [emailParam, setEmailParam] = useState(null);
 
-  useEffect(() => {
-    const param = new URL(window.location.href).searchParams.get("email");
-    setEmailParam(param);
-  }, []);
 
   useEffect(() => {
     Aos.init({ duration: 1000 });
 
     let isMounted = true;
+
+    const param = new URL(window.location.href).searchParams.get("email");
+    setEmailParam(param);
 
     // Fetch drinks data
     (async () => {

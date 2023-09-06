@@ -22,7 +22,7 @@ const getNextId = () => {
 // Fetch meal data from API
 async function getData(savedMeal) {
   const meals = [];
-  if (savedMeal) {
+  if (savedMeal) { // if saved meal add first
     meals.push(savedMeal);
   }
   
@@ -46,10 +46,6 @@ export default function FoodGenerator() {
   const [generatedId, setGeneratedId] = useState(null);
   const [emailParam, setEmailParam] = useState(null);
 
-  useEffect(() => {
-    const param = new URL(window.location.href).searchParams.get("email");
-    setEmailParam(param);
-  }, []);
 
   // Fetch a saved meal from local storage
   const fetchSavedMeal = (id) => {
@@ -89,6 +85,9 @@ export default function FoodGenerator() {
     // Initialize the Aos (Animate on scroll)
     Aos.init({ duration: 1000 });
     let isMounted = true; // To avoid setting state on an unmounted component
+
+    const param = new URL(window.location.href).searchParams.get("email");
+    setEmailParam(param);
   
     const fetchAndSetMeals = async () => {
       try {
