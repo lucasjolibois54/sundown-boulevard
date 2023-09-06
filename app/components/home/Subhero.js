@@ -33,7 +33,7 @@ export default function Subhero() {
               onMouseLeave={() => {
                 setCursorText("");
                 setCursorVariant("default");
-              }}><img src={item.imageUrl} alt={item.title} className="absolute inset-0 w-full h-full object-cover z-10" /></Link>
+              }}><img src={item.imageUrl} alt={item.title} className="rounded-lg absolute inset-0 w-full h-full object-cover z-10" /></Link>
                   <div className="z-20 text-white"><p className='text-white text-center font-bold text-3xl'>{item.title}</p></div>
               </div>
             ))}

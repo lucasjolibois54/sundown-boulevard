@@ -18,14 +18,14 @@ export default function About() {
             {/* <!-- Grid cell #1 --> */}
             <div className="py-3 pt-20 sm:pt-5 lg:p-0 float-left rounded">
               <img
-                className="lg:block hidden w-screen md:w-full  xl:w-6/6 sm:float-left mb-5 sm:mb-0"
+                className="lg:block hidden w-screen md:w-full  xl:w-6/6 sm:float-left mb-5 sm:mb-0 rounded-lg"
                 src={
                   "https://res.cloudinary.com/debkwdctz/image/upload/v1692702894/image_101_q1dkdg.png"
                 }
                 alt="Restaurant Image"
               />
               <img
-                className="lg:hidden w-screen md:w-full  xl:w-6/6 sm:float-left mb-5 sm:mb-0"
+                className="lg:hidden w-screen md:w-full  xl:w-6/6 sm:float-left mb-5 sm:mb-0 rounded-lg"
                 src={
                   "https://res.cloudinary.com/debkwdctz/image/upload/v1693998344/image_102_gov4jx.png"
                 }
