@@ -26,6 +26,7 @@ function isValidEmail(email) {
 
 export default function TimePicker() {
   const [email, setEmail] = useState("");
+  const [displayEmail, setDisplayEmail] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [customerCount, setCustomerCount] = useState(1);
@@ -113,10 +114,11 @@ export default function TimePicker() {
     setShowTimeModal(false);
   };
 
-  // Update email state when it changes
+  // Update email state and displayEmail state when input value changes
   const handleEmailChange = (e) => {
     const newEmail = e.target.value;
     setEmail(newEmail);
+    setDisplayEmail(newEmail);
   };
 
   const handleSaveDateTime = (e) => {
@@ -182,10 +184,10 @@ export default function TimePicker() {
       </h1>
 
       <div className="p-8 rounded-xl shadow-2xl space-y-8 w-full bg-white bg-opacity-10 backdrop-blur-md">
-        <input
+      <input
           type="email"
           placeholder="Enter your email"
-          value={email}
+          value={displayEmail}
           onChange={handleEmailChange}
           className="p-2 rounded border"
         />
