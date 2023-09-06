@@ -35,7 +35,7 @@ export default function Drink() {
   const [email, setEmail] = useState("");
   const [visibleDrinks, setVisibleDrinks] = useState(9);
   const [isLoading, setIsLoading] = useState(true);
-    const [emailParam, setEmailParam] = useState(null);
+  const [emailParam, setEmailParam] = useState(null);
 
   useEffect(() => {
     const param = new URL(window.location.href).searchParams.get("email");
