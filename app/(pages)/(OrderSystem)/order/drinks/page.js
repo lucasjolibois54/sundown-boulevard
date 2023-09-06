@@ -215,12 +215,6 @@ export default function Drink() {
       <div className="flex gap-3 absolute left-1/2 transform -translate-x-1/2 mt-10 pb-20">
         {drinksData.length > visibleDrinks && (
           <div className="text-center mt-6">
-            {/* <button
-            onClick={() => setVisibleDrinks((prev) => prev + 6)}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            View More
-          </button> */}
             <button
               onMouseEnter={() => {
                 setCursorText("");
@@ -241,14 +235,6 @@ export default function Drink() {
         )}
 
         <div className="text-center mt-6">
-          {/* <Link href="/order/date">
-                <button
-                    onClick={handleSaveToLocalStorage}
-                    className="bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                    Choose Delivery Time
-                </button>
-            </Link> */}
           <Link
             onMouseEnter={() => {
               setCursorText("");
@@ -258,9 +244,6 @@ export default function Drink() {
               setCursorText("");
               setCursorVariant("default");
             }}
-            /*href={`/order/date${
-              email ? `?email=${encodeURIComponent(email)}` : ""
-            }`}*/
             href={`/order/date${emailParam ? `?email=${emailParam}` : ""}`}
             onClick={handleSaveToLocalStorage}
             className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:border-bgColorDark rounded-lg group"
