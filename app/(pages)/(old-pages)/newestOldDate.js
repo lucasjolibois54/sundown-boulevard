@@ -12,22 +12,8 @@ import "aos/dist/aos.css";
 // Moment.js settings
 const localizer = momentLocalizer(moment);
 
-// Function to extract email from the URL
-function getEmailFromURL() {
-  if (typeof window === "undefined") return null;
-  const params = new URLSearchParams(window.location.search);
-  return params.get("email");
-}
-
-function isValidEmail(email) {
-  var re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-  return re.test(email);
-}
-
 export default function TimePicker() {
   const [email, setEmail] = useState("");
-  const [displayEmail, setDisplayEmail] = useState("");
-  const [emailInUrl, setEmailInUrl] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [customerCount, setCustomerCount] = useState(1);
@@ -59,50 +45,32 @@ export default function TimePicker() {
     },
   };
 
-  // load data on mount
+  // Load email and data on mount
   useEffect(() => {
     Aos.init({ duration: 1000 });
-
     if (typeof window !== "undefined") {
-      const urlEmail = getEmailFromURL();
+      const lastMealId = localStorage.getItem("lastMealId") || "";
+      setEmail(lastMealId);
 
-      if (urlEmail && isValidEmail(urlEmail)) {
-        setEmailInUrl(true);
+      // Take the saved data with email
+      const savedData = JSON.parse(localStorage.getItem(lastMealId) || "{}");
+      if (savedData.date) {
+        setSelectedDate(new Date(savedData.date)); // Convert string to Date object
       }
 
-      if (urlEmail) {
-        setEmail(urlEmail);
-        const savedData = JSON.parse(localStorage.getItem(urlEmail) || "{}");
-        if (savedData.date) {
-          setSelectedDate(new Date(savedData.date)); // Convert string to Date object
-        }
-        if (savedData.customer) {
-          setCustomerCount(savedData.customer); // Set the customer count
-        }
-      } else {
-        // Fallback to lastMealId if no email found in the URL
-        const lastMealId = localStorage.getItem("lastMealId") || ""; //Retrieve Email/ id from Local Storage
-        setEmail(lastMealId);
-
-        const savedData = JSON.parse(localStorage.getItem(lastMealId) || "{}");
-        if (savedData.date) {
-          setSelectedDate(new Date(savedData.date));
-        }
-        if (savedData.customer) {
-          setCustomerCount(savedData.customer);
-        }
+      if (savedData.customer) {
+        setCustomerCount(savedData.customer); // Set the customer count
       }
     }
   }, []);
 
-  // Handle the selection of a date on the calendar
+  // NO Saturdays and Sundays
   const handleDateSelect = ({ start }) => {
     const currentDate = moment();
     if (moment(start).isBefore(currentDate, "day")) {
       return; // Exit the function if it's a past date
     }
 
-    // NO Saturdays and Sundays
     const dayOfWeek = moment(start).day();
     if (dayOfWeek !== 0 && dayOfWeek !== 6) {
       setSelectedDate(start);
@@ -110,72 +78,42 @@ export default function TimePicker() {
     }
   };
 
-  // Handle the selection of a time slot
+  // Handle time selection from the modal
   const handleTimeSelect = (time) => {
     const dateTime = moment(
-      `${selectedDate.toISOString().split("T")[0]} ${time}`
+      //Moment.js object
+      `${selectedDate.toISOString().split("T")[0]} ${time}` //presentation
     );
     setSelectedTime(dateTime);
-    setShowTimeModal(false);
+    setShowTimeModal(false); //close modal
   };
 
-  // Update email state and displayEmail state when input value changes
-  const handleEmailChange = (e) => {
-    const newEmail = e.target.value;
-    setEmail(newEmail);
-    setDisplayEmail(newEmail);
+
+// Save selected date, time, and customer count to local storage
+const handleSaveDateTime = (e) => {
+  if (!selectedDate || !selectedTime) {
+    alert("Please choose a pickup time!");
+    e.preventDefault(); // prevent navigation
+    return;
+  }
+
+  // Fetch the saved data (if any) associated with the email
+  let savedData = localStorage.getItem(email)
+    ? JSON.parse(localStorage.getItem(email))
+    : {};
+
+  // Overwrite previous values (or set new ones)
+  savedData = {
+    ...savedData,
+    date: moment(selectedDate).format("YYYY-MM-DD"),
+    time: selectedTime.format("HH:mm"),
+    customer: customerCount,  
   };
 
-  const handleSaveDateTime = (e) => {
-    if (!selectedDate || !selectedTime) {
-      alert("Please choose a pickup time!");
-      e.preventDefault();
-      return;
-    }
+  // Save the updated data back to local storage
+  localStorage.setItem(email, JSON.stringify(savedData));
+};
 
-    // Save the current email as the last saved order email
-    localStorage.setItem("LastSavedOrderEmail", email);
-
-    const oldEmail = localStorage.getItem("lastMealId");
-
-    // If no old email and no new email provided, return
-    if (!oldEmail && !email) {
-      console.warn("No identifier (email or lastMealId) available");
-      return;
-    }
-
-    // Get existing data from the old email or default to an empty object
-    let oldSavedData = oldEmail
-      ? JSON.parse(localStorage.getItem(oldEmail))
-      : {};
-
-    // If there's a new email provided, fetch its existing data or default to an empty object
-    let newSavedData = email
-      ? JSON.parse(localStorage.getItem(email) || "{}")
-      : {};
-
-    // Update the data with the new values
-    let updatedData = {
-      ...newSavedData,
-      ...oldSavedData,
-      date: moment(selectedDate).format("YYYY-MM-DD"),
-      time: selectedTime.format("HH:mm"),
-      customer: customerCount,
-    };
-
-    if (email) {
-      // Save updated data to the new email
-      localStorage.setItem(email, JSON.stringify(updatedData));
-
-      // Remove the old data if the old email is different from the new email
-      if (oldEmail !== email) {
-        localStorage.removeItem(oldEmail);
-      }
-    } else {
-      // If there's no new email, just save the data back under the old email (from lastMealId)
-      localStorage.setItem(oldEmail, JSON.stringify(updatedData));
-    }
-  };
 
 
   return (
@@ -190,22 +128,6 @@ export default function TimePicker() {
       </h1>
 
       <div className="p-8 rounded-xl shadow-2xl space-y-8 w-full bg-white bg-opacity-10 backdrop-blur-md">
-      {/* <input
-          type="email"
-          placeholder="Enter your email"
-          value={displayEmail}
-          onChange={handleEmailChange}
-          className="p-2 rounded border"
-        /> */}
-        {!emailInUrl && (
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={displayEmail}
-            onChange={handleEmailChange}
-            className="p-2 rounded border"
-          />
-        )}
         <div className="react-calendar shadow-lg rounded-lg overflow-hidden">
           <Calendar
             localizer={localizer}
@@ -305,23 +227,15 @@ export default function TimePicker() {
                             +
                           </button>
                         </div>
-                        {isValidEmail(email) ? (
-                          <Link
-                            href="/order/receipt"
-                            onClick={handleSaveDateTime}
-                            className="hidden hover:cursor-none relative sm:inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
-                          >
-                            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
-                            <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-                            <span className="relative">Complete Order</span>
-                          </Link>
-                        ) : (
-                          <div className="hidden hover:cursor-none relative sm:inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group">
-                            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-red-500 rounded-full group-hover:w-72 group-hover:h-72"></span>
-                            <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-                            <span className="relative">Add Valid Email</span>
-                          </div>
-                        )}
+                        <Link
+                          href="/order/receipt"
+                          onClick={handleSaveDateTime}
+                          class="hidden hover:cursor-none relative sm:inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
+                        >
+                          <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
+                          <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+                          <span class="relative">Complete Order</span>
+                        </Link>
                       </div>
                     </span>
                   </div>
@@ -349,11 +263,11 @@ export default function TimePicker() {
                 <button
                   key={index}
                   onClick={() => handleTimeSelect(time)}
-                  className="hover:cursor-none relative w-full inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:border-gray-400 rounded-lg group"
+                  class="hover:cursor-none relative w-full inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:border-gray-400 rounded-lg group"
                 >
-                  <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-full group-hover:h-72"></span>
-                  <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-                  <span className="relative">{time}</span>
+                  <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-full group-hover:h-72"></span>
+                  <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+                  <span class="relative">{time}</span>
                 </button>
               ))}
             </div>
@@ -365,14 +279,8 @@ export default function TimePicker() {
             Customer:
           </label>
           <button
-            onClick={() =>
-              customerCount > 1 && setCustomerCount((prev) => prev - 1)
-            }
-            className={`!text-white !rounded !px-3 !py-2 !hover:bg-gray-600 !active:bg-gray-800 !focus:outline-none !focus:ring !focus:ring-gray-200 !transition-shadow !shadow-md ${
-              customerCount <= 1
-                ? "!bg-gray-900 cursor-not-allowed !border-black"
-                : "!bg-gray-700"
-            }`}
+            onClick={() => setCustomerCount((prev) => prev - 1)}
+            className="bg-gray-700 text-white rounded px-3 py-2 hover:bg-gray-600 active:bg-gray-800 focus:outline-none focus:ring focus:ring-gray-200 transition-shadow shadow-md"
           >
             -
           </button>
@@ -383,36 +291,22 @@ export default function TimePicker() {
             className="border rounded px-3 py-2 w-16 text-center shadow-md"
           />
           <button
-            onClick={() =>
-              customerCount < 10 && setCustomerCount((prev) => prev + 1)
-            }
-            className={`!text-white !rounded !px-3 !py-2 !hover:bg-gray-600 !active:bg-gray-800 !focus:outline-none !focus:ring !focus:ring-gray-200 !transition-shadow !shadow-md ${
-              customerCount >= 10
-                ? "!bg-gray-900 cursor-not-allowed !border-black"
-                : "!bg-gray-700"
-            }`}
+            onClick={() => setCustomerCount((prev) => prev + 1)}
+            className="bg-gray-700 text-white rounded px-3 py-2 hover:bg-gray-600 active:bg-gray-800 focus:outline-none focus:ring focus:ring-gray-200 transition-shadow shadow-md"
           >
             +
           </button>
         </div>
 
-        {isValidEmail(email) ? (
-          <Link
-            href="/order/receipt"
-            onClick={handleSaveDateTime}
-            className="sm:hidden hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
-          >
-            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
-            <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-            <span className="relative">Complete Order</span>
-          </Link>
-        ) : (
-          <div className="sm:hidden hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-red-600 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group">
-            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-red-500 rounded-full group-hover:w-72 group-hover:h-72"></span>
-            <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-red-400"></span>
-            <span className="relative">Add Valid Email</span>
-          </div>
-        )}
+        <Link
+          href="/order/receipt"
+          onClick={handleSaveDateTime}
+          class="sm:hidden hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
+        >
+          <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
+          <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+          <span class="relative">Complete Order</span>
+        </Link>
 
         {/* <button
           onClick={handleSaveDateTime}

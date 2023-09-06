@@ -19,15 +19,8 @@ function getEmailFromURL() {
   return params.get("email");
 }
 
-function isValidEmail(email) {
-  var re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-  return re.test(email);
-}
-
 export default function TimePicker() {
   const [email, setEmail] = useState("");
-  const [displayEmail, setDisplayEmail] = useState("");
-  const [emailInUrl, setEmailInUrl] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [customerCount, setCustomerCount] = useState(1);
@@ -65,10 +58,6 @@ export default function TimePicker() {
 
     if (typeof window !== "undefined") {
       const urlEmail = getEmailFromURL();
-
-      if (urlEmail && isValidEmail(urlEmail)) {
-        setEmailInUrl(true);
-      }
 
       if (urlEmail) {
         setEmail(urlEmail);
@@ -119,11 +108,10 @@ export default function TimePicker() {
     setShowTimeModal(false);
   };
 
-  // Update email state and displayEmail state when input value changes
+  // Update email state when it changes
   const handleEmailChange = (e) => {
     const newEmail = e.target.value;
     setEmail(newEmail);
-    setDisplayEmail(newEmail);
   };
 
   const handleSaveDateTime = (e) => {
@@ -132,51 +120,106 @@ export default function TimePicker() {
       e.preventDefault();
       return;
     }
-
+  
     // Save the current email as the last saved order email
     localStorage.setItem("LastSavedOrderEmail", email);
-
+  
     const oldEmail = localStorage.getItem("lastMealId");
-
+  
     // If no old email and no new email provided, return
     if (!oldEmail && !email) {
       console.warn("No identifier (email or lastMealId) available");
       return;
     }
+  
+    // If an old email exists (from lastMealId), get its data.
+    // If not, default to an empty object
+    let savedData = oldEmail ? JSON.parse(localStorage.getItem(oldEmail)) : {};
+  
+    // Update the Saved Data with new date, time and customer
+    savedData = {
+      ...savedData,
+      date: moment(selectedDate).format("YYYY-MM-DD"),
+      time: selectedTime.format("HH:mm"),
+      customer: customerCount,
+    };
+  
+    if (email) {
+      // Save updated data to the new email
+      localStorage.setItem(email, JSON.stringify(savedData));
+  
+      // Update the lastMealId to the new email
+      localStorage.setItem("lastMealId", email);
+  
+      // If desired, you can remove the old data. Uncomment the line below if you want this behavior.
+      // localStorage.removeItem(oldEmail);
+    } else {
+      // If there's no new email, just save the data back under the old email (from lastMealId)
+      localStorage.setItem(oldEmail, JSON.stringify(savedData));
+    }
+  };
+  
 
-    // Get existing data from the old email or default to an empty object
-    let oldSavedData = oldEmail
+  /*
+  // Save the date and time
+  const handleSaveDateTime = (e) => {
+    if (!selectedDate || !selectedTime) {
+      alert("Please choose a pickup time!");
+      e.preventDefault();
+      return;
+    }
+
+    let savedData = JSON.parse(localStorage.getItem(email) || "{}");
+
+    // Update only the date, time, and customer without overwriting any other data
+    savedData.date = moment(selectedDate).format("YYYY-MM-DD");
+    savedData.time = selectedTime.format("HH:mm");
+    savedData.customer = customerCount;
+
+    localStorage.setItem(email, JSON.stringify(savedData));
+
+    if (
+      !localStorage.getItem("lastMealId") ||
+      localStorage.getItem("lastMealId") !== email
+    ) {
+      localStorage.setItem("lastMealId", email);
+    }
+  };*/
+
+  /*
+    // Save the date and time
+  const handleSaveDateTime = (e) => {
+    // if no date or time is selected => alert
+    if (!selectedDate || !selectedTime) {
+      alert("Please choose a pickup time!");
+      e.preventDefault();
+      return;
+    }
+
+    // Save email to local storage
+    localStorage.setItem("LastSavedOrderEmail", email);
+
+    const oldEmail = localStorage.getItem("lastMealId");
+    let savedData = localStorage.getItem(oldEmail)
       ? JSON.parse(localStorage.getItem(oldEmail))
       : {};
 
-    // If there's a new email provided, fetch its existing data or default to an empty object
-    let newSavedData = email
-      ? JSON.parse(localStorage.getItem(email) || "{}")
-      : {};
-
-    // Update the data with the new values
-    let updatedData = {
-      ...newSavedData,
-      ...oldSavedData,
+    // Update the Saved Data:
+    savedData = {
+      ...savedData,
       date: moment(selectedDate).format("YYYY-MM-DD"),
       time: selectedTime.format("HH:mm"),
       customer: customerCount,
     };
 
-    if (email) {
-      // Save updated data to the new email
-      localStorage.setItem(email, JSON.stringify(updatedData));
-
-      // Remove the old data if the old email is different from the new email
-      if (oldEmail !== email) {
-        localStorage.removeItem(oldEmail);
-      }
-    } else {
-      // If there's no new email, just save the data back under the old email (from lastMealId)
-      localStorage.setItem(oldEmail, JSON.stringify(updatedData));
+    //if current email different from old email, remove it and add enw email
+    if (oldEmail && oldEmail !== email) {
+      localStorage.removeItem(oldEmail);
     }
-  };
 
+    localStorage.setItem(email, JSON.stringify(savedData));
+  };
+  */
 
   return (
     <main
@@ -190,22 +233,13 @@ export default function TimePicker() {
       </h1>
 
       <div className="p-8 rounded-xl shadow-2xl space-y-8 w-full bg-white bg-opacity-10 backdrop-blur-md">
-      {/* <input
+        <input
           type="email"
           placeholder="Enter your email"
-          value={displayEmail}
+          value={email}
           onChange={handleEmailChange}
           className="p-2 rounded border"
-        /> */}
-        {!emailInUrl && (
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={displayEmail}
-            onChange={handleEmailChange}
-            className="p-2 rounded border"
-          />
-        )}
+        />
         <div className="react-calendar shadow-lg rounded-lg overflow-hidden">
           <Calendar
             localizer={localizer}
@@ -305,23 +339,15 @@ export default function TimePicker() {
                             +
                           </button>
                         </div>
-                        {isValidEmail(email) ? (
-                          <Link
-                            href="/order/receipt"
-                            onClick={handleSaveDateTime}
-                            className="hidden hover:cursor-none relative sm:inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
-                          >
-                            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
-                            <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-                            <span className="relative">Complete Order</span>
-                          </Link>
-                        ) : (
-                          <div className="hidden hover:cursor-none relative sm:inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group">
-                            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-red-500 rounded-full group-hover:w-72 group-hover:h-72"></span>
-                            <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-                            <span className="relative">Add Valid Email</span>
-                          </div>
-                        )}
+                        <Link
+                          href="/order/receipt"
+                          onClick={handleSaveDateTime}
+                          className="hidden hover:cursor-none relative sm:inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
+                        >
+                          <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
+                          <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+                          <span className="relative">Complete Order</span>
+                        </Link>
                       </div>
                     </span>
                   </div>
@@ -396,23 +422,15 @@ export default function TimePicker() {
           </button>
         </div>
 
-        {isValidEmail(email) ? (
-          <Link
-            href="/order/receipt"
-            onClick={handleSaveDateTime}
-            className="sm:hidden hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
-          >
-            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
-            <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-            <span className="relative">Complete Order</span>
-          </Link>
-        ) : (
-          <div className="sm:hidden hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-red-600 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group">
-            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-red-500 rounded-full group-hover:w-72 group-hover:h-72"></span>
-            <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-red-400"></span>
-            <span className="relative">Add Valid Email</span>
-          </div>
-        )}
+        <Link
+          href="/order/receipt"
+          onClick={handleSaveDateTime}
+          className="sm:hidden hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
+        >
+          <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
+          <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+          <span className="relative">Complete Order</span>
+        </Link>
 
         {/* <button
           onClick={handleSaveDateTime}

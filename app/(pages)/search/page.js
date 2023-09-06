@@ -4,26 +4,39 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Search() {
   const [email, setEmail] = useState("");
-  const [savedData, setSavedData] = useState({});
-  const [buttonClicked, setButtonClicked] = useState(false); // Track button click
+  const [savedData, setSavedData] = useState({
+    mealName: "",
+    drinks: [],
+    date: "",
+    time: "",
+    customer: 0,
+  });
 
-  const handleGetData = () => {
-    const data = localStorage.getItem(email);
-    if (data) {
-      setSavedData(JSON.parse(data));
-    } else {
-      setSavedData({});
+  const fetchData = () => {
+    if (typeof window !== "undefined" && email) {
+      // Save the email to the localStorage with the key LatestSearchedEmail
+      localStorage.setItem("LatestSearchedEmail", email);
+
+      const data = JSON.parse(localStorage.getItem(email) || "{}");
+      if (data && data.mealName) {
+        // check if data exists
+        setSavedData(data);
+      } else {
+        alert("No data found for this email!");
+        setSavedData({
+          mealName: "",
+          drinks: [],
+          date: "",
+          time: "",
+          customer: 0,
+        });
+      }
     }
-    setButtonClicked(true); // Set button clicked to true
-  };
-
-  const handleClearData = () => {
-    setEmail("");
-    setSavedData({});
-    setButtonClicked(false); // Reset button click state
   };
 
   const listItemVariants = {
@@ -39,58 +52,45 @@ export default function Search() {
 
   useEffect(() => {
     Aos.init({ duration: 1000 });
-}, []);
-
+  }, []);
 
   return (
     <>
-    <main data-aos="fade-up" data-aos-delay="250" data-aos-duration="500" className="!bg-white h-screen w-screen">
-      <div className="max-w-6xl mx-auto absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-screen">
-        <div className="w-4/6 mx-auto">
-          <div className="flex items-center border-b-2 border-gray-500">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="border-none outline-none flex-grow p-2  text-lg md:text-6xl font-semibold input-search italic"
-            />
-            <button
-              onClick={handleClearData}
-              className="ml-2 -mb-1 px-4 py-2 hidden sm:block bg-red-500 text-white rounded decoration-8"
-            >
-              Clear
-            </button>
-            <button
-              onClick={handleGetData}
-              className="ml-2 -mb-1 px-4 py-2 bg-gray-300 text-black rounded decoration-8"
-            >
-              <b>→</b>
-            </button>
-          </div>
+      <main
+        data-aos="fade-up"
+        data-aos-delay="250"
+        data-aos-duration="500"
+        className="!bg-white h-screen w-screen"
+      >
+        <div className="max-w-6xl mx-auto absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-screen">
+          <div className="w-4/6 mx-auto">
+            <div className="flex items-center border-b-2 border-gray-500">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="border-none outline-none flex-grow p-2  text-lg md:text-6xl font-semibold input-search italic"
+              />
+              {/* <Link href={`/order?email=${email}`} >
+              <button className="ml-2 -mb-1 px-4 py-2 bg-gray-300 text-black rounded decoration-8">
+                <b>Update Order</b>
+              </button></Link> */}
+              <button
+                onClick={fetchData}
+                className="ml-2 -mb-1 px-4 py-2 bg-gray-300 text-black rounded decoration-8"
+              >
+                <b>→</b>
+              </button>
+            </div>
 
-          <div className="">
-            {buttonClicked && !savedData.email && (
-              <p className="mt-20 absolute">No data found for this email.</p>
-            )}
-            {savedData.email && (
+            <div className="">
               <motion.div
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 className="bg-gray-200 py-5 px-5 rounded-br-xl rounded-bl-xl absolute w-4/6"
               >
-                <h2 className="text-4xl font-semibold input-search mb-10">
-                  {savedData.email ? <p>Order Overview</p> : "Not available"}
-                </h2>
-                <motion.p
-                  initial="hidden"
-                  animate="visible"
-                  variants={listItemVariants}
-                  custom={0}
-                >
-                  {savedData.email ? <p>Email: {savedData.email}</p> : "Not available"}
-                </motion.p>
                 <motion.p
                   initial="hidden"
                   animate="visible"
@@ -105,7 +105,7 @@ export default function Search() {
                   variants={listItemVariants}
                   custom={2}
                 >
-                  {savedData.date ? <p> Date {savedData.date.toString()}</p> : ""}
+                  {savedData.date ? <p> Date {savedData.date}</p> : ""}
                 </motion.p>
                 <motion.p
                   initial="hidden"
@@ -121,7 +121,11 @@ export default function Search() {
                   variants={listItemVariants}
                   custom={3}
                 >
-                  {savedData.customer ? <p> Number of Customers: {savedData.customer} </p> : ""}
+                  {savedData.customer ? (
+                    <p> Number of Customers: {savedData.customer} </p>
+                  ) : (
+                    ""
+                  )}
                 </motion.p>
                 {savedData.drinks && savedData.drinks.length > 0 && (
                   <motion.div
@@ -142,13 +146,24 @@ export default function Search() {
                         </motion.li>
                       ))}
                     </ul>
+                    <motion.div
+                      initial="hidden"
+                      animate="visible"
+                      variants={listItemVariants}
+                      custom={2}
+                    >
+                      <Link href={`/order?email=${email}`}>
+                        <button className="ml-0 mt-3 -mb-1 px-4 py-2 bg-gray-300 text-black rounded decoration-8">
+                          <b>Update Order</b>
+                        </button>
+                      </Link>
+                    </motion.div>
                   </motion.div>
                 )}
               </motion.div>
-            )}
+            </div>
           </div>
         </div>
-      </div>
       </main>
     </>
   );

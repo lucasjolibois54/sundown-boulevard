@@ -35,11 +35,16 @@ export default function Drink() {
   const [email, setEmail] = useState("");
   const [visibleDrinks, setVisibleDrinks] = useState(9);
   const [isLoading, setIsLoading] = useState(true);
+  const [emailParam, setEmailParam] = useState(null);
+
 
   useEffect(() => {
     Aos.init({ duration: 1000 });
 
     let isMounted = true;
+
+    const param = new URL(window.location.href).searchParams.get("email");
+    setEmailParam(param);
 
     // Fetch drinks data
     (async () => {
@@ -62,14 +67,21 @@ export default function Drink() {
       }
     })();
 
-    // If in localstorage, retrieve saved email and selected drinks
-    if (typeof window !== "undefined") {
-      const savedEmail = localStorage.getItem("savedEmail") || "";
-      setEmail(savedEmail);
-
-      // Check for saved drinks for the email and set them to the selectedDrinks state
+    const emailParam = new URL(window.location.href).searchParams.get("email");
+    // If an emailparam present, retrieve the saved drinks from local storage
+    if (emailParam) {
+      setEmail(emailParam);
       const savedDrinks =
-        JSON.parse(localStorage.getItem(savedEmail))?.drinks || [];
+      // retrieve drinks accosiated with email
+        JSON.parse(localStorage.getItem(emailParam))?.drinks || [];
+      setSelectedDrinks(savedDrinks);
+    } else {
+      // If no email param, use lastMealId
+      const lastMealId = localStorage.getItem("lastMealId") || "";
+      setEmail(lastMealId);
+
+      const savedDrinks =
+        JSON.parse(localStorage.getItem(lastMealId))?.drinks || [];
       setSelectedDrinks(savedDrinks);
     }
 
@@ -80,25 +92,30 @@ export default function Drink() {
 
   const handleDrinkSelection = (drink) => {
     setSelectedDrinks((prevDrinks) => {
+      // If the drink is already in the list, remove it (deselect)
       if (prevDrinks.some((d) => d.id === drink.id)) {
         return prevDrinks.filter((d) => d.id !== drink.id);
       } else {
+        // If not, add the drink to the list (select)
         return [...prevDrinks, { id: drink.id, name: drink.name }];
       }
     });
   };
 
+  // save selected drinks to local storage
   const handleSaveToLocalStorage = () => {
-    if (typeof window !== "undefined") {
+    if (email) {
+      // Fetch any existing saved data using email
       let savedData = localStorage.getItem(email)
         ? JSON.parse(localStorage.getItem(email))
         : {};
 
+        //update
       savedData = {
         ...savedData,
         drinks: selectedDrinks,
       };
-
+      //save to LS
       localStorage.setItem(email, JSON.stringify(savedData));
     }
   };
@@ -204,12 +221,6 @@ export default function Drink() {
       <div className="flex gap-3 absolute left-1/2 transform -translate-x-1/2 mt-10 pb-20">
         {drinksData.length > visibleDrinks && (
           <div className="text-center mt-6">
-            {/* <button
-            onClick={() => setVisibleDrinks((prev) => prev + 6)}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            View More
-          </button> */}
             <button
               onMouseEnter={() => {
                 setCursorText("");
@@ -230,14 +241,6 @@ export default function Drink() {
         )}
 
         <div className="text-center mt-6">
-          {/* <Link href="/order/date">
-                <button
-                    onClick={handleSaveToLocalStorage}
-                    className="bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                    Choose Delivery Time
-                </button>
-            </Link> */}
           <Link
             onMouseEnter={() => {
               setCursorText("");
@@ -247,9 +250,9 @@ export default function Drink() {
               setCursorText("");
               setCursorVariant("default");
             }}
-            href="/order/date"
+            href={`/order/date${emailParam ? `?email=${emailParam}` : ""}`}
             onClick={handleSaveToLocalStorage}
-            className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
+            className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:border-bgColorDark rounded-lg group"
           >
             <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
             <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
@@ -259,113 +262,4 @@ export default function Drink() {
       </div>
     </main>
   );
-}
-{
-  /*
-"use client";
-import { useState, useEffect } from "react";
-import Link from "next/link";
-
-async function getDrinks() {
-  const res = await fetch("https://api.punkapi.com/V2/BEERS");
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return res.json();
-}
-
-export default function Drink() {
-  const [drinksData, setDrinksData] = useState([]);
-  const [selectedDrinks, setSelectedDrinks] = useState([]);
-  const [email, setEmail] = useState("");
-
-  useEffect(() => {
-    (async () => {
-      const drinks = await getDrinks();
-      setDrinksData(drinks);
-    })();
-
-    if (typeof window !== "undefined") {
-      const savedEmail = localStorage.getItem("savedEmail") || "";
-      setEmail(savedEmail);
-    }
-  }, []);
-
-  const handleDrinkSelection = (drink) => {
-    // argument
-    setSelectedDrinks((prevDrinks) => {
-      if (prevDrinks.some((d) => d.id === drink.id)) {
-        return prevDrinks.filter((d) => d.id !== drink.id);
-      } else {
-        return [...prevDrinks, { id: drink.id, name: drink.name }];
-      }
-    });
-  };
-
-  const handleSaveToLocalStorage = () => {
-    if (typeof window !== "undefined") {
-      let savedData = localStorage.getItem(email)
-        ? JSON.parse(localStorage.getItem(email))
-        : {};
-
-      // Preserve existing data (only update/add the drinks key)
-      savedData = {
-        ...savedData,
-        drinks: selectedDrinks,
-      };
-
-      localStorage.setItem(email, JSON.stringify(savedData));
-    }
-  };
-
-  return (
-    <main className="bg-gray-100 min-h-screen py-12 px-4 sm:px-8">
-      <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {drinksData.map((drink) => (
-          <div
-            key={drink.id}
-            className="bg-white rounded-lg transition transform hover:scale-105"
-          >
-            <img
-              src={drink.image_url}
-              alt={drink.tagline}
-              className="w-full h-48 object-cover rounded-t-lg"
-            />
-            <div className="p-6">
-              <h2 className="text-lg sm:text-xl font-semibold mb-2">
-                {drink.name}
-              </h2>
-              <input
-                type="checkbox"
-                onChange={() => handleDrinkSelection(drink)}
-                className="mr-2"
-              />
-              Select
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {drinksData.length === 0 && (
-        <p className="text-center text-gray-600 font-semibold text-xl mt-6">
-          There are no drinks available.
-        </p>
-      )}
-
-      <div className="text-center mt-6">
-        <Link href="/order/date">
-          <button
-            onClick={handleSaveToLocalStorage}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Choose Delivery Time
-          </button>
-        </Link>
-      </div>
-    </main>
-  );
-}
-*/
 }

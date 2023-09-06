@@ -1,137 +1,343 @@
+
 "use client";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
+import Aos from "aos";
+import "aos/dist/aos.css";
+
+import { useCursor } from "@/cursor/CursorContext";
+import SelectedDrink from "@/app/components/order/SelectedDrink";
+
+const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+const getNextId = () => {
+  // Fetch the last used ID from localStorage
+  const lastId = parseInt(localStorage.getItem("lastMealId") || "0", 10);
+  // Increment the ID
+  const nextId = lastId + 1;
+  // Save the new ID to localStorage for future use
+  localStorage.setItem("lastMealId", nextId.toString());
+  return nextId;
+};
 
 async function getData() {
-  const res = await fetch(
-    "https://www.themealdb.com/API/JSON/V1/1/RANDOM.PHP/",
-    {
-      next: {
-        revalidate: 0,
-      },
+  const meals = [];
+  // Fetch data (loop) as long as there are less than 9
+  for (let i = 0; i < 9; i++) {
+    const res = await fetch(
+      "https://www.themealdb.com/API/JSON/V1/1/RANDOM.PHP/"
+    );
+    if (!res.ok) {
+      throw new Error("Failed to fetch data");
     }
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    const data = await res.json();
+    meals.push(data.meals[0]); // take first meal from api and store in meals array
   }
-
-  return res.json();
+  return meals;
 }
 
 export default function FoodGenerator() {
-  const [mealData, setMealData] = useState(null);
-  const [email, setEmail] = useState("");
+  const [mealData, setMealData] = useState([]);
+  const [selectedMeal, setSelectedMeal] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const { setCursorText, setCursorVariant } = useCursor();
+  const [isEmailSaved, setIsEmailSaved] = useState(false);
+  const [generatedId, setGeneratedId] = useState(null);
 
-  useEffect(() => {
-    // Fetch initial data when component mounts
-    (async () => {
-      const data = await getData();
-      setMealData(data.meals);
-    })();
-  }, []);
 
-  const handleGenerateNewMeal = async () => {
-    const data = await getData();
-    setMealData(data.meals);
-  };
+  /* const handleResetMouse = (e) => {
+    setCursorText("");
+    setCursorVariant("default");
+  };*/
 
-  const handleSaveData = () => {
-    if (mealData && mealData.length > 0 && email) {
-      const savedData = {
-        email: email,
-        mealName: mealData[0].strMeal,
-      };
-      localStorage.setItem("savedEmail", email); // Store email separately for easier retrieval
-      localStorage.setItem(email, JSON.stringify(savedData));
+  //if email fetch meal
+  const handleEmailChange = (e) => {
+    const newEmail = e.target.value;
+    setEmail(newEmail);
+
+    const savedMeal = fetchSavedMeal(newEmail);
+    if (savedMeal) {
+      setMealData((prevMeals) => [savedMeal, ...prevMeals.slice(0, 8)]);
+      setSelectedMeal(savedMeal);
+    } else {
+      setSelectedMeal(null); // Clear the selected meal if no meal is associated with the email
     }
   };
 
+  // Function to fetch saved meal data from localStorage
+  const fetchSavedMeal = (id) => {
+    const savedData = JSON.parse(localStorage.getItem(id));
+    if (savedData && savedData.mealId) {
+      return {
+        idMeal: savedData.mealId,
+        strMeal: savedData.mealName,
+        strMealThumb: savedData.strMealThumb || "",
+        strInstructions: savedData.strInstructions || "",
+      };
+    }
+    return null;
+  };
+
+  // Function to fetch meals data and handle loading state
+  const fetchMeals = async () => {
+    let isMounted = true;
+
+    setIsLoading(true);
+    try {
+      const meals = await getData(); // Fetch meal data
+
+      if (isMounted) {
+        setMealData(meals); // Update meal data state
+
+        // Delay loading
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 2000);
+      }
+    } catch (error) {
+      console.error(error);
+      if (isMounted) {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  // useEffect to fetch meals data on component mount
+  useEffect(() => {
+    Aos.init({ duration: 1000 });
+
+    let isMounted = true;
+
+    // Function to fetch meals data and update state
+    const fetchMeals = async () => {
+      setIsLoading(true);
+      try {
+        const meals = await getData(); // Fetch meal data
+
+        if (isMounted) {
+          setMealData(meals); // Update meal data state
+
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 2000);
+        }
+      } catch (error) {
+        console.error(error);
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    // Initialize meal data
+    fetchMeals();
+
+    // Clean up function
+    return () => {
+      isMounted = false;
+    };
+  }, []); // Empty array (useEffect runs only on mount)
+
+  // useEffect to update the email saved status
+  /*useEffect(() => {
+    const savedData = JSON.parse(localStorage.getItem(email));
+    setIsEmailSaved(savedData ? true : false);
+}, [email]);*/
+
+  // Save selected meal to localStorage
+  const handleSaveData = () => {
+    if (selectedMeal) {
+        const id = getNextId().toString(); // Get a new unique ID
+        const updatedData = {
+            mealId: selectedMeal.idMeal,
+            mealName: selectedMeal.strMeal,
+            strMealThumb: selectedMeal.strMealThumb,
+            strInstructions: selectedMeal.strInstructions,
+        };
+        localStorage.setItem(id, JSON.stringify(updatedData));
+        setGeneratedId(id);
+    }
+};
+
+
   return (
     <>
-      <main className="min-h-screen">
-        <div className="pt-28 sm:pt-20 flex flex-col w-full lg:flex-row mb-4">
-          {/* Max width container, center aligned, with some padding */}
-          <div className="max-w-6xl mx-auto lg:px-0 sm:px-6 sm:py-8">
-            {/* <!-- Grid columns + some font styles for the children elements to inherit --> */}
-            <div className="font-medium leading-7 space-y-2 sm:grid sm:grid-cols-2 lg:grid-cols-2 sm:gap-4 sm:space-y-0">
-              {/* <!-- Grid cell #1 --> */}
-              <div className="mt-0 space-y-4">
-                {mealData ? (
-                  mealData.map((meal) => (
-                    <div
-                      key={meal.idMeal}
-                      className="bg-white rounded-lg p-4 relative"
-                    >
-                      <img
-                        src={meal.strMealThumb}
-                        alt={meal.strMeal}
-                        className="w-screen !h-[100%] object-cover rounded"
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-center">Fetching data...</p>
-                )}
-                {mealData && mealData.length === 0 && (
-                  <p className="text-center">There are no dishes available.</p>
-                )}
-              </div>
-
-              {/* <!-- Grid cell #2 --> */}
-              <div className=" py-3 sm:px-6 md-lg:ml-0 xl:ml-0 md-lg:mt-10 xl:mt-10 rounded">
-                <div className="mt-0 space-y-0">
-                  {mealData ? (
-                    mealData.map((meal) => (
-                      <div key={meal.idMeal} className=" p-4 relative">
-                        <h2 className="sm:!leading-tight pt-4 sm:mt-5 text-6xl xsm:text-5xl sm:text-6xl md-lg:text-5xl lg:text-6xl font- stroke-title">
-                          {meal.strMeal.substring(0, 12)}...
-                        </h2>
-                        <p className="text-base md:text-lg text-dark-text pt-5 lg:px-24 lg:pl-0 lg:pr-20 max-w-2xl font-light mt-2">
-                          {meal.strInstructions.substring(0, 400)}...
-                        </p>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-center">Fetching data...</p>
-                  )}
-                  {mealData && mealData.length === 0 && (
-                    <p className="text-center">
-                      There are no dishes available.
-                    </p>
-                  )}
-                  <div className="flex">
-                    <button
-                      onClick={handleGenerateNewMeal}
-                      className="ml-2 -mb-1 px-4 py-2 bg-gray-300 text-black rounded decoration-8"
-                    >
-                      Generate New Meal
-                    </button>
-                    <Link href="/order/drinks">
-                      <button
-                        onClick={handleSaveData}
-                        className="ml-2 -mb-1 px-4 py-2 bg-blue-300 text-black rounded decoration-8"
-                      >
-                        Choose Drinks
-                      </button>
-                    </Link>
-                  </div>
-                </div>
-                <div className="border-b-2 border-gray-500 w-4/6 flex mt-5">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter order email"
-                    className="border-none outline-none flex-grow p-2 text-xl font-semibold input-search italic"
-                  />
-                </div>
-              </div>
+      <main
+        data-aos="fade-up"
+        data-aos-delay="250"
+        data-aos-duration="500"
+        onMouseEnter={() => {
+          setCursorText("");
+          setCursorVariant("default");
+        }}
+        onMouseLeave={() => {
+          setCursorText("");
+          setCursorVariant("default");
+        }}
+        className="min-h-screen py-12 px-4 sm:px-8 max-w-5xl mx-auto"
+      >
+        <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-main-text">
+          Choose Your Meal
+        </h1>
+        <div className="flex flex-col md:flex-row items-center justify-between mb-5">
+          {/* <div className="border-b-2 border-gray-500 flex-grow mb-5 md:mb-0 md:mr-5">
+            <input
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
+              placeholder="Enter order email"
+              className="border-none outline-none bg-transparent text-gray-300 flex-grow p-2 text-xl font-semibold input-search italic"
+            />
+          </div> */}
+          {/* <div className="right-0 absolute py-5 pb-20">
+            <div className="flex space-x-2">
+              <button
+                onMouseEnter={() => {
+                  setCursorText("");
+                  setCursorVariant("time");
+                }}
+                onMouseLeave={() => {
+                  setCursorText("");
+                  setCursorVariant("default");
+                }}
+                onClick={fetchMeals}
+                className="hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-transparent border-gray-400 border-2 hover:border-bgColorDark rounded-lg group"
+              >
+                <span className="absolute w-0 h-0 transition-all duration-1000 ease-out bg-gray-500 rounded-full group-hover:w-72 group-hover:h-72"></span>
+                <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+                <span className="relative">Generate New Meals</span>
+              </button>
+              <Link
+                onMouseEnter={() => {
+                  setCursorText("");
+                  setCursorVariant("time");
+                }}
+                onMouseLeave={() => {
+                  setCursorText("");
+                  setCursorVariant("default");
+                }}
+                href="/order/drinks"
+                onClick={handleSaveData}
+                className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
+              >
+                <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
+                <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+                <span className="relative">
+                  {isEmailSaved ? "Update Order" : "Choose Drinks"}
+                </span>
+              </Link>
             </div>
-          </div>
+          </div> */}
         </div>
-        <div className="relative flex py-5 px-10 max-w-6xl mx-auto items-center">
-          <div className="flex-grow border-t h-6 border-gray-400"></div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {isLoading
+            ? Array(9)
+                .fill()
+                .map((_, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="rounded-lg transition transform hover:scale-105 h-96 relative bg-gray-200 animate-pulse"
+                  >
+                    <div className="w-full h-2/3 bg-gray-300 rounded-t-lg"></div>
+                    <div className="w-3/4 h-6 bg-gray-300 my-2 mx-auto"></div>
+                    <div className="w-1/2 h-4 bg-gray-300 mx-auto"></div>
+                  </motion.div>
+                ))
+            : mealData.map((meal) => (
+                <div
+                  onMouseEnter={() => {
+                    setCursorText("Add");
+                    setCursorVariant("addCart");
+                  }}
+                  onMouseLeave={() => {
+                    setCursorText("");
+                    setCursorVariant("default");
+                  }}
+                  key={meal.idMeal}
+                  className={`rounded-lg transition transform hover:scale-105 h-96 relative cursor-pointer`}
+                  onClick={() =>
+                    setSelectedMeal(
+                      selectedMeal && selectedMeal.idMeal === meal.idMeal
+                        ? null
+                        : meal
+                    )
+                  }
+                >
+                  <img
+                    src={meal.strMealThumb}
+                    alt={meal.strMeal}
+                    className="w-full h-96 object-cover rounded-md"
+                  />
+                  {selectedMeal && selectedMeal.idMeal === meal.idMeal && (
+                    <div
+                      style={{
+                        backgroundColor: "rgba(0, 0, 0, 0.4)",
+                        transition: "opacity 10.5s",
+                      }}
+                      className="absolute top-0 left-0 w-full h-full"
+                    ></div>
+                  )}
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
+                  <div className="p-6 !z-10 absolute text-white bottom-0">
+                    <h2 className="text-lg sm:text-xl font-semibold mb-0">
+                      {meal.strMeal.substring(0, 22)}
+                    </h2>
+                    <p className="text-sm">
+                      {meal.strInstructions.substring(0, 30)}...
+                    </p>
+                  </div>
+                  {selectedMeal && selectedMeal.idMeal === meal.idMeal && (
+                    <div className="checked-drink-body absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                      <SelectedDrink text="MEAL CHOSEN - MEAL CHOSEN -" />
+                    </div>
+                  )}
+                </div>
+              ))}
+        </div>
+        <div className="mt-5">
+          <div className="flex gap-3 absolute left-1/2 transform -translate-x-1/2 mt-10 pb-20">
+            <button
+              onMouseEnter={() => {
+                setCursorText("");
+                setCursorVariant("time");
+              }}
+              onMouseLeave={() => {
+                setCursorText("");
+                setCursorVariant("default");
+              }}
+              onClick={fetchMeals}
+              className="hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-transparent border-gray-400 border-2 hover:border-bgColorDark rounded-lg group"
+            >
+              <span className="absolute w-0 h-0 transition-all duration-1000 ease-out bg-gray-500 rounded-full group-hover:w-72 group-hover:h-72"></span>
+              <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+              <span className="relative">Generate New Meals</span>
+            </button>
+            <Link
+                onMouseEnter={() => {
+                  setCursorText("");
+                  setCursorVariant("time");
+                }}
+                onMouseLeave={() => {
+                  setCursorText("");
+                  setCursorVariant("default");
+                }}
+                href="/order/drinks"
+                onClick={handleSaveData}
+                className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
+              >
+                <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
+                <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+                <span className="relative">
+                  {isEmailSaved ? "Update Order" : "Choose Drinks"}
+                </span>
+              </Link>
+          </div>
         </div>
       </main>
     </>
