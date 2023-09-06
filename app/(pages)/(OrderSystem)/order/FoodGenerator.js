@@ -170,54 +170,6 @@ export default function FoodGenerator() {
           Choose Your Meal
         </h1>
         <div className="flex flex-col md:flex-row items-center justify-between mb-5">
-          {/* <div className="border-b-2 border-gray-500 flex-grow mb-5 md:mb-0 md:mr-5">
-            <input
-              type="email"
-              value={email}
-              onChange={handleEmailChange}
-              placeholder="Enter order email"
-              className="border-none outline-none bg-transparent text-gray-300 flex-grow p-2 text-xl font-semibold input-search italic"
-            />
-          </div> */}
-          {/* <div className="right-0 absolute py-5 pb-20">
-            <div className="flex space-x-2">
-              <button
-                onMouseEnter={() => {
-                  setCursorText("");
-                  setCursorVariant("time");
-                }}
-                onMouseLeave={() => {
-                  setCursorText("");
-                  setCursorVariant("default");
-                }}
-                onClick={fetchMeals}
-                className="hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-transparent border-gray-400 border-2 hover:border-bgColorDark rounded-lg group"
-              >
-                <span className="absolute w-0 h-0 transition-all duration-1000 ease-out bg-gray-500 rounded-full group-hover:w-72 group-hover:h-72"></span>
-                <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-                <span className="relative">Generate New Meals</span>
-              </button>
-              <Link
-                onMouseEnter={() => {
-                  setCursorText("");
-                  setCursorVariant("time");
-                }}
-                onMouseLeave={() => {
-                  setCursorText("");
-                  setCursorVariant("default");
-                }}
-                href="/order/drinks"
-                onClick={handleSaveData}
-                className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
-              >
-                <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
-                <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-                <span className="relative">
-                  {isEmailSaved ? "Update Order" : "Choose Drinks"}
-                </span>
-              </Link>
-            </div>
-          </div> */}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
