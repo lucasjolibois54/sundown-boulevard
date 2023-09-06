@@ -19,6 +19,12 @@ function getEmailFromURL() {
   return params.get("email");
 }
 
+function isValidEmail(email) {
+  var re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  return re.test(email);
+}
+
+
 export default function TimePicker() {
   const [email, setEmail] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
@@ -279,15 +285,26 @@ export default function TimePicker() {
                             +
                           </button>
                         </div>
-                        <Link
-                          href="/order/receipt"
-                          onClick={handleSaveDateTime}
-                          className="hidden hover:cursor-none relative sm:inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
-                        >
-                          <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
-                          <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-                          <span className="relative">Complete Order</span>
-                        </Link>
+                        {isValidEmail(email) ? (
+  <Link
+    href="/order/receipt"
+    onClick={handleSaveDateTime}
+    className="hidden hover:cursor-none relative sm:inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
+  >
+    <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
+    <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+    <span className="relative">Complete Order</span>
+  </Link>
+) : (
+  <div
+  className="hidden hover:cursor-none relative sm:inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
+>
+  <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-red-500 rounded-full group-hover:w-72 group-hover:h-72"></span>
+  <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+  <span className="relative">Add Valid Email</span>
+</div>
+)}
+
                       </div>
                     </span>
                   </div>
