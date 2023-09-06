@@ -74,12 +74,6 @@ export default function Search() {
                 placeholder="Enter your email"
                 className="border-none outline-none flex-grow p-2  text-lg md:text-6xl font-semibold input-search italic"
               />
-              {/* <button
-              onClick={handleClearData}
-              className="ml-2 -mb-1 px-4 py-2 hidden sm:block bg-red-500 text-white rounded decoration-8"
-            >
-              Clear
-            </button> */}
             <Link href={`/order?email=${email}`} >
               <button className="ml-2 -mb-1 px-4 py-2 bg-gray-300 text-black rounded decoration-8">
                 <b>Update Order</b>
@@ -99,17 +93,6 @@ export default function Search() {
                 exit={{ height: 0, opacity: 0 }}
                 className="bg-gray-200 py-5 px-5 rounded-br-xl rounded-bl-xl absolute w-4/6"
               >
-                {/* <h2 className="text-4xl font-semibold input-search mb-10">
-                  {savedData.saved ? <p>Order Overview</p> : "Not available"}
-                </h2> */}
-                {/* <motion.p
-                  initial="hidden"
-                  animate="visible"
-                  variants={listItemVariants}
-                  custom={0}
-                >
-                  {savedData.email ? <p>Email: {savedData.email}</p> : "Not available"}
-                </motion.p> */}
                 <motion.p
                   initial="hidden"
                   animate="visible"
