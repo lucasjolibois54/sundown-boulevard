@@ -22,30 +22,31 @@ const getNextId = () => {
 // Fetch meal data from API
 async function getData(savedMeal) {
   const meals = [];
-  if (savedMeal) { // if saved meal add first
+  if (savedMeal) {
+    // if saved meal add first
     meals.push(savedMeal);
   }
-  
+
   // Fetch data to fill up the util we have 9 meals
   for (let i = meals.length; i < 9; i++) {
-    const res = await fetch("https://www.themealdb.com/API/JSON/V1/1/RANDOM.PHP/");
+    const res = await fetch(
+      "https://www.themealdb.com/API/JSON/V1/1/RANDOM.PHP/"
+    );
     if (!res.ok) throw new Error("Failed to fetch data");
-    const data = await res.json(); 
+    const data = await res.json();
     meals.push(data.meals[0]);
   }
   return meals;
 }
 
-
 export default function FoodGenerator() {
   const [mealData, setMealData] = useState([]);
-  const [selectedMeal, setSelectedMeal] = useState(null);
+  const [selectedMeal, setSelectedMeal] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { setCursorText, setCursorVariant } = useCursor();
   const [isEmailSaved, setIsEmailSaved] = useState(false);
   const [generatedId, setGeneratedId] = useState(null);
   const [emailParam, setEmailParam] = useState(null);
-
 
   // Fetch a saved meal from local storage
   const fetchSavedMeal = (id) => {
@@ -88,24 +89,24 @@ export default function FoodGenerator() {
 
     const param = new URL(window.location.href).searchParams.get("email");
     setEmailParam(param);
-  
+
     const fetchAndSetMeals = async () => {
       try {
         // If there's an email param, attempt to fetch the saved meal
         let savedMeal = null;
         if (emailParam) {
           savedMeal = fetchSavedMeal(emailParam);
-          if(savedMeal && isMounted) {
+          if (savedMeal && isMounted) {
             setSelectedMeal(savedMeal);
           }
         }
-        
+
         // Fetch meals, including the saved one if it exists
         const meals = await getData(savedMeal);
         if (isMounted) {
-          setMealData(meals);  // Set the meal data state
+          setMealData(meals); // Set the meal data state
           setTimeout(() => {
-            setIsLoading(false);  // Set the loading state to false after 2 seconds
+            setIsLoading(false); // Set the loading state to false after 2 seconds
           }, 2000);
         }
       } catch (error) {
@@ -113,16 +114,14 @@ export default function FoodGenerator() {
         if (isMounted) setIsLoading(false); // If there's an error, set loading to false
       }
     };
-  
-    fetchAndSetMeals();  // Call the fetch and set meals function
-  
+
+    fetchAndSetMeals(); // Call the fetch and set meals function
+
     // Cleanup for component unmount
     return () => {
-      isMounted = false;  // When the component is unmounted, set isMounted to false
+      isMounted = false; // When the component is unmounted, set isMounted to false
     };
-  }, [emailParam]);  // This useEffect runs when the emailParam state changes
-
-  
+  }, [emailParam]); // This useEffect runs when the emailParam state changes
 
   // Save selected meal data in local storage
   const handleSaveData = () => {
@@ -149,6 +148,24 @@ export default function FoodGenerator() {
     }
   };
 
+  const handleToggleMeal = (meal) => {
+    setSelectedMeal((prevSelectedMeals) => {
+      const mealIndex = prevSelectedMeals.findIndex(
+        (m) => m.idMeal === meal.idMeal
+      );
+
+      if (mealIndex === -1) {
+        // Meal not selected, add it to the selected meals
+        return [...prevSelectedMeals, meal];
+      } else {
+        // Meal already selected, remove it from the selected meals
+        const updatedSelectedMeals = [...prevSelectedMeals];
+        updatedSelectedMeals.splice(mealIndex, 1);
+        return updatedSelectedMeals;
+      }
+    });
+  };
+
   return (
     <>
       <main
@@ -168,8 +185,7 @@ export default function FoodGenerator() {
         <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-main-text">
           Choose Your Meal
         </h1>
-        <div className="flex flex-col md:flex-row items-center justify-between mb-5">
-        </div>
+        <div className="flex flex-col md:flex-row items-center justify-between mb-5"></div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {isLoading
@@ -200,20 +216,25 @@ export default function FoodGenerator() {
                   }}
                   key={meal.idMeal}
                   className={`rounded-lg transition transform hover:scale-105 h-96 relative cursor-pointer`}
-                  onClick={() =>
-                    setSelectedMeal(
-                      selectedMeal && selectedMeal.idMeal === meal.idMeal
-                        ? null
-                        : meal
-                    )
-                  }
+                  onClick={() => handleToggleMeal(meal)}
                 >
                   <img
                     src={meal.strMealThumb}
                     alt={meal.strMeal}
                     className="w-full h-96 object-cover rounded-md"
                   />
-                  {selectedMeal && selectedMeal.idMeal === meal.idMeal && (
+                  {/* {selectedMeal && selectedMeal.idMeal === meal.idMeal && (
+                    <div
+                      style={{
+                        backgroundColor: "rgba(0, 0, 0, 0.4)",
+                        transition: "opacity 10.5s",
+                      }}
+                      className="absolute top-0 left-0 w-full h-full"
+                    ></div>
+                  )} */}
+                  {selectedMeal.some(
+                    (selected) => selected.idMeal === meal.idMeal
+                  ) && (
                     <div
                       style={{
                         backgroundColor: "rgba(0, 0, 0, 0.4)",
@@ -232,7 +253,14 @@ export default function FoodGenerator() {
                       {meal.strInstructions.substring(0, 30)}...
                     </p>
                   </div>
-                  {selectedMeal && selectedMeal.idMeal === meal.idMeal && (
+                  {/* {selectedMeal && selectedMeal.idMeal === meal.idMeal && (
+                    <div className="checked-drink-body absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                      <SelectedDrink text="MEAL CHOSEN - MEAL CHOSEN -" />
+                    </div>
+                  )} */}
+                  {selectedMeal.some(
+                    (selected) => selected.idMeal === meal.idMeal
+                  ) && (
                     <div className="checked-drink-body absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                       <SelectedDrink text="MEAL CHOSEN - MEAL CHOSEN -" />
                     </div>
