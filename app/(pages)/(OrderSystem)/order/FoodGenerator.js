@@ -10,6 +10,7 @@ import SelectedDrink from "@/app/components/order/SelectedDrink";
 
 // Generate the next unique ID for a meal
 const getNextId = () => {
+  console.log("getNextId");
   // Fetch the last used ID from localStorage (return string as integer)
   const lastId = parseInt(localStorage.getItem("lastMealId") || "0", 10);
   // Increment the ID by one
@@ -21,6 +22,7 @@ const getNextId = () => {
 
 // Fetch meal data from API
 async function getData(savedMeal) {
+  console.log("getData");
   const meals = [];
   if (savedMeal) {
     // if saved meal add first
@@ -50,6 +52,7 @@ export default function FoodGenerator() {
 
   // Fetch a saved meal from local storage
   const fetchSavedMeal = (id) => {
+    console.log("fetchSavedMeal");
     // Retrieve the saved meal data using the provided ID
     const savedData = JSON.parse(localStorage.getItem(id));
     // If data exists and has a mealId, return a formatted object
@@ -66,6 +69,7 @@ export default function FoodGenerator() {
 
   // Fetch meal data and set it in the state
   const fetchMeals = async () => {
+    console.log("fetchMeals");
     let isMounted = true;
     setIsLoading(true);
     try {
@@ -83,6 +87,7 @@ export default function FoodGenerator() {
   };
 
   useEffect(() => {
+    console.log("useEffect");
     // Initialize the Aos (Animate on scroll)
     Aos.init({ duration: 1000 });
     let isMounted = true; // To avoid setting state on an unmounted component
@@ -91,6 +96,7 @@ export default function FoodGenerator() {
     setEmailParam(param);
 
     const fetchAndSetMeals = async () => {
+      console.log("fetchAndSetMeals");
       try {
         // If there's an email param, attempt to fetch the saved meal
         let savedMeal = null;
@@ -123,24 +129,28 @@ export default function FoodGenerator() {
     };
   }, [emailParam]); // This useEffect runs when the emailParam state changes
 
-  // Save selected meal data in local storage
   const handleSaveData = () => {
-    if (selectedMeal) {
+    console.log("handleSaveData");
+    if (selectedMeal.length > 0) {
       const emailParam = new URL(window.location.href).searchParams.get(
         "email"
       );
       const storageKey = emailParam || getNextId().toString();
 
-      // Get existing data from local storage
-      const existingData = JSON.parse(localStorage.getItem(storageKey)) || {};
+      // Get existing data from local storage or initialize as an empty array
+      const existingData = JSON.parse(localStorage.getItem(storageKey)) || [];
 
       // Merge the new meal data with the existing data
       const updatedData = {
-        ...existingData, // spread existing data first
-        mealId: selectedMeal.idMeal,
-        mealName: selectedMeal.strMeal,
-        strMealThumb: selectedMeal.strMealThumb,
-        strInstructions: selectedMeal.strInstructions,
+        ...existingData,
+        meals: [
+          ...selectedMeal.map((meal) => ({
+            mealId: meal.idMeal,
+            mealName: meal.strMeal,
+            strMealThumb: meal.strMealThumb,
+            strInstructions: meal.strInstructions,
+          })),
+        ],
       };
 
       localStorage.setItem(storageKey, JSON.stringify(updatedData));
@@ -149,9 +159,10 @@ export default function FoodGenerator() {
   };
 
   const handleToggleMeal = (meal) => {
+    console.log("handleToggleMeal");
     setSelectedMeal((prevSelectedMeals) => {
       const mealIndex = prevSelectedMeals.findIndex(
-        (m) => m.idMeal === meal.idMeal
+        (index) => index.idMeal === meal.idMeal
       );
 
       if (mealIndex === -1) {
@@ -207,7 +218,7 @@ export default function FoodGenerator() {
             : mealData.map((meal) => (
                 <div
                   onMouseEnter={() => {
-                    setCursorText("Add");
+                    setCursorText("+");
                     setCursorVariant("addCart");
                   }}
                   onMouseLeave={() => {
@@ -223,15 +234,7 @@ export default function FoodGenerator() {
                     alt={meal.strMeal}
                     className="w-full h-96 object-cover rounded-md"
                   />
-                  {/* {selectedMeal && selectedMeal.idMeal === meal.idMeal && (
-                    <div
-                      style={{
-                        backgroundColor: "rgba(0, 0, 0, 0.4)",
-                        transition: "opacity 10.5s",
-                      }}
-                      className="absolute top-0 left-0 w-full h-full"
-                    ></div>
-                  )} */}
+
                   {selectedMeal.some(
                     (selected) => selected.idMeal === meal.idMeal
                   ) && (
@@ -253,11 +256,7 @@ export default function FoodGenerator() {
                       {meal.strInstructions.substring(0, 30)}...
                     </p>
                   </div>
-                  {/* {selectedMeal && selectedMeal.idMeal === meal.idMeal && (
-                    <div className="checked-drink-body absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                      <SelectedDrink text="MEAL CHOSEN - MEAL CHOSEN -" />
-                    </div>
-                  )} */}
+
                   {selectedMeal.some(
                     (selected) => selected.idMeal === meal.idMeal
                   ) && (

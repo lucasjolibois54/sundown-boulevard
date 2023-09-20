@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import OrderDetails from "@/app/components/main/OrderDetails";
 
 import { useCursor } from "@/cursor/CursorContext";
 
@@ -36,7 +37,6 @@ export default function Drink() {
   const [visibleDrinks, setVisibleDrinks] = useState(9);
   const [isLoading, setIsLoading] = useState(true);
   const [emailParam, setEmailParam] = useState(null);
-
 
   useEffect(() => {
     Aos.init({ duration: 1000 });
@@ -72,7 +72,7 @@ export default function Drink() {
     if (emailParam) {
       setEmail(emailParam);
       const savedDrinks =
-      // retrieve drinks accosiated with email
+        // retrieve drinks accosiated with email
         JSON.parse(localStorage.getItem(emailParam))?.drinks || [];
       setSelectedDrinks(savedDrinks);
     } else {
@@ -105,18 +105,20 @@ export default function Drink() {
   // save selected drinks to local storage
   const handleSaveToLocalStorage = () => {
     if (email) {
+      console.log(email);
       // Fetch any existing saved data using email
       let savedData = localStorage.getItem(email)
         ? JSON.parse(localStorage.getItem(email))
         : {};
 
-        //update
+      //update
       savedData = {
         ...savedData,
         drinks: selectedDrinks,
       };
       //save to LS
       localStorage.setItem(email, JSON.stringify(savedData));
+      console.log(savedData);
     }
   };
 
@@ -259,6 +261,9 @@ export default function Drink() {
             <span className="relative">Choose Delivery Time</span>
           </Link>
         </div>
+      </div>
+      <div className="mt-20">
+        <OrderDetails />
       </div>
     </main>
   );
