@@ -7,7 +7,7 @@ import "aos/dist/aos.css";
 export default function Receipt() {
   const [email, setEmail] = useState("");
   const [savedData, setSavedData] = useState({
-    mealName: "",
+    meals: [],
     drinks: [],
     date: "",
     time: "",
@@ -79,11 +79,13 @@ export default function Receipt() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td className="pt-4">x 1</td>
-                    <td className="pt-4">{savedData.mealName}</td>
-                    <td className="pt-4 text-right">{""}</td>
-                  </tr>
+                  {savedData.meals.map((meal, idx) => (
+                    <tr key={idx}>
+                      <td className="pt-4">x 1</td>
+                      <td className="pt-4">{meal.mealName}</td>
+                      <td className="pt-4 text-right">{""}</td>
+                    </tr>
+                  ))}
                   {savedData.drinks.map((drink, idx) => (
                     <tr key={idx}>
                       <td className="pt-4">x 1</td>

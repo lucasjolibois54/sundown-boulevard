@@ -262,7 +262,7 @@ export default function Drink() {
           </Link>
         </div>
       </div>
-      <div className="mt-20">
+      <div id="basket" className="mt-20">
         <OrderDetails />
       </div>
     </main>

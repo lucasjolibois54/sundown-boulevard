@@ -8,6 +8,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { motion, AnimatePresence } from "framer-motion";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import OrderDetails from "@/app/components/main/OrderDetails";
 
 // Moment.js settings
 const localizer = momentLocalizer(moment);
@@ -162,6 +163,9 @@ export default function TimePicker() {
       time: selectedTime.format("HH:mm"),
       customer: customerCount,
     };
+    console.log("oldSavedData", oldSavedData);
+    console.log("newSavedData", newSavedData);
+    console.log("updated data", updatedData);
 
     if (email) {
       // Save updated data to the new email
@@ -174,9 +178,9 @@ export default function TimePicker() {
     } else {
       // If there's no new email, just save the data back under the old email (from lastMealId)
       localStorage.setItem(oldEmail, JSON.stringify(updatedData));
+      console.log("updated data", updatedData);
     }
   };
-
 
   return (
     <main
@@ -190,7 +194,7 @@ export default function TimePicker() {
       </h1>
 
       <div className="p-8 rounded-xl shadow-2xl space-y-8 w-full bg-white bg-opacity-10 backdrop-blur-md">
-      {/* <input
+        {/* <input
           type="email"
           placeholder="Enter your email"
           value={displayEmail}
@@ -430,6 +434,9 @@ export default function TimePicker() {
         <Link className="text-blue-400 mt-4 hover:underline focus:outline-none" href="/order/receipt" passHref>
           Receipt
         </Link> */}
+      </div>
+      <div id="basket" className="mt-20 w-full ">
+        <OrderDetails />
       </div>
     </main>
   );

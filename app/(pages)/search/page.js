@@ -22,14 +22,17 @@ export default function Search() {
       // Save the email to the localStorage with the key LatestSearchedEmail
       localStorage.setItem("LatestSearchedEmail", email);
 
+      console.log("fetchData in search with email", email);
       const data = JSON.parse(localStorage.getItem(email) || "{}");
-      if (data && data.mealName) {
+      if (data && data.meals) {
         // check if data exists
         setSavedData(data);
+        console.log("fetchData in search data", data);
+        console.log("fetchData in search data.meals", data.meals);
       } else {
         alert("No data found for this email!");
         setSavedData({
-          mealName: "",
+          meals: [],
           drinks: [],
           date: "",
           time: "",
@@ -91,13 +94,34 @@ export default function Search() {
                 exit={{ height: 0, opacity: 0 }}
                 className="bg-gray-200 py-5 px-5 rounded-br-xl rounded-bl-xl absolute w-4/6"
               >
+                {savedData.meals && savedData.meals.length > 0 && (
+                  <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    variants={listItemVariants}
+                    custom={4}
+                  >
+                    <p>Selected Meals:</p>
+                    <ul>
+                      {savedData.meals.map((meal, index) => (
+                        <motion.li
+                          key={meal.mealId}
+                          variants={listItemVariants}
+                          custom={index + 5}
+                        >
+                          {meal.mealName ? meal.mealName : ""}
+                        </motion.li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                )}
                 <motion.p
                   initial="hidden"
                   animate="visible"
                   variants={listItemVariants}
-                  custom={1}
+                  custom={2}
                 >
-                  {savedData.mealName ? <p>Meal: {savedData.mealName}</p> : ""}
+                  {savedData.date ? <span> Date {savedData.date}</span> : ""}
                 </motion.p>
                 <motion.p
                   initial="hidden"
@@ -105,15 +129,7 @@ export default function Search() {
                   variants={listItemVariants}
                   custom={2}
                 >
-                  {savedData.date ? <p> Date {savedData.date}</p> : ""}
-                </motion.p>
-                <motion.p
-                  initial="hidden"
-                  animate="visible"
-                  variants={listItemVariants}
-                  custom={2}
-                >
-                  {savedData.date ? <p> Time: {savedData.time}</p> : ""}
+                  {savedData.date ? <span> Time: {savedData.time}</span> : ""}
                 </motion.p>
                 <motion.p
                   initial="hidden"
@@ -122,7 +138,7 @@ export default function Search() {
                   custom={3}
                 >
                   {savedData.customer ? (
-                    <p> Number of Customers: {savedData.customer} </p>
+                    <span> Number of Customers: {savedData.customer} </span>
                   ) : (
                     ""
                   )}

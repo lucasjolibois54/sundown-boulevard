@@ -5,7 +5,7 @@ export default function Order() {
   return (
     <div className='className="max-w-6xl mx-auto"'>
       <FoodGenerator />
-      <div className="mt-20">
+      <div id="basket" className="mt-20 max-w-5xl mx-auto">
         <OrderDetails></OrderDetails>
       </div>
     </div>
