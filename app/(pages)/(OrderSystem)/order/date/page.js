@@ -33,6 +33,8 @@ export default function TimePicker() {
   const [selectedTime, setSelectedTime] = useState(null);
   const [customerCount, setCustomerCount] = useState(1);
   const [showTimeModal, setShowTimeModal] = useState(false);
+  const [disabledTimes, setDisabledTimes] = useState([]);
+  const [disabledDay, setdisabledDay] = useState([]);
 
   const timeSlots = [
     "16:00",
@@ -107,7 +109,9 @@ export default function TimePicker() {
     const dayOfWeek = moment(start).day();
     if (dayOfWeek !== 0 && dayOfWeek !== 6) {
       setSelectedDate(start);
+      // disableDates(start);
       setShowTimeModal(true); // Open modal if not a weekend
+      console.log();
     }
   };
 
@@ -126,6 +130,15 @@ export default function TimePicker() {
     setEmail(newEmail);
     setDisplayEmail(newEmail);
   };
+
+  // function disableDates(day) {
+  //   const date = ("selected date", moment(day).format("YYYY-MM-DD"));
+  //   const LSdata = Object.keys(localStorage).map((key) =>
+  //     JSON.parse(localStorage.getItem(key))
+  //   );
+  //   console.log(LSdata);
+  //   return LSdata.some((data) => data.date === date);
+  // }
 
   const handleSaveDateTime = (e) => {
     if (!selectedDate || !selectedTime) {
@@ -182,6 +195,8 @@ export default function TimePicker() {
     }
   };
 
+  console.log();
+
   return (
     <main
       data-aos="fade-up"
@@ -227,7 +242,7 @@ export default function TimePicker() {
               if (moment(date).isBefore(currentDate, "day")) {
                 return {
                   style: {
-                    backgroundColor: "#FF0000",
+                    backgroundColor: "gray",
                     opacity: 0.5,
                     pointerEvents: "none", // make it unselectable
                   },
@@ -237,7 +252,7 @@ export default function TimePicker() {
               else if (dayOfWeek === 6 || dayOfWeek === 0) {
                 return {
                   style: {
-                    backgroundColor: "#FF0000",
+                    backgroundColor: "gray",
                     opacity: 0.5,
                   },
                 };
@@ -417,23 +432,6 @@ export default function TimePicker() {
             <span className="relative">Add Valid Email</span>
           </div>
         )}
-
-        {/* <button
-          onClick={handleSaveDateTime}
-          className=" w-full mt-4 bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-200 transition-shadow shadow-md"
-        >
-          Save Date & Time
-        </button> */}
-
-        {/* <div className="mt-6 text-white">
-          <p><strong>Selected Date:</strong> {selectedDate?.toDateString()}</p>
-          <p><strong>Selected Time:</strong> {selectedTime?.format('HH:mm')}</p>
-          <p><strong>Customer Count:</strong> {customerCount}</p>
-        </div>
-        
-        <Link className="text-blue-400 mt-4 hover:underline focus:outline-none" href="/order/receipt" passHref>
-          Receipt
-        </Link> */}
       </div>
       <div id="basket" className="mt-20 w-full ">
         <OrderDetails />
