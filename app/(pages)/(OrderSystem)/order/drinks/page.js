@@ -78,6 +78,7 @@ export default function Drink() {
     } else {
       // If no email param, use lastMealId
       const lastMealId = localStorage.getItem("lastMealId") || "";
+      console.log("last meal ID", lastMealId);
       setEmail(lastMealId);
 
       const savedDrinks =

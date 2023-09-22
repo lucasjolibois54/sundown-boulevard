@@ -10,7 +10,6 @@ import SelectedDrink from "@/app/components/order/SelectedDrink";
 
 // Generate the next unique ID for a meal
 const getNextId = () => {
-  console.log("getNextId");
   // Fetch the last used ID from localStorage (return string as integer)
   const lastId = parseInt(localStorage.getItem("lastMealId") || "0", 10);
   // Increment the ID by one
@@ -22,7 +21,6 @@ const getNextId = () => {
 
 // Fetch meal data from API
 async function getData(savedMeal) {
-  console.log("getData");
   const meals = [];
   if (savedMeal) {
     // if saved meal add first
@@ -52,7 +50,6 @@ export default function FoodGenerator() {
 
   // Fetch a saved meal from local storage
   const fetchSavedMeal = (id) => {
-    console.log("fetchSavedMeal");
     // Retrieve the saved meal data using the provided ID
     const savedData = JSON.parse(localStorage.getItem(id));
     // If data exists and has a mealId, return a formatted object
@@ -69,7 +66,6 @@ export default function FoodGenerator() {
 
   // Fetch meal data and set it in the state
   const fetchMeals = async () => {
-    console.log("fetchMeals");
     let isMounted = true;
     setIsLoading(true);
     try {
@@ -87,7 +83,6 @@ export default function FoodGenerator() {
   };
 
   useEffect(() => {
-    console.log("useEffect");
     // Initialize the Aos (Animate on scroll)
     Aos.init({ duration: 1000 });
     let isMounted = true; // To avoid setting state on an unmounted component
@@ -96,7 +91,6 @@ export default function FoodGenerator() {
     setEmailParam(param);
 
     const fetchAndSetMeals = async () => {
-      console.log("fetchAndSetMeals");
       try {
         // If there's an email param, attempt to fetch the saved meal
         let savedMeal = null;
@@ -130,7 +124,6 @@ export default function FoodGenerator() {
   }, [emailParam]); // This useEffect runs when the emailParam state changes
 
   const handleSaveData = () => {
-    console.log("handleSaveData");
     if (selectedMeal.length > 0) {
       const emailParam = new URL(window.location.href).searchParams.get(
         "email"
@@ -159,7 +152,6 @@ export default function FoodGenerator() {
   };
 
   const handleToggleMeal = (meal) => {
-    console.log("handleToggleMeal");
     setSelectedMeal((prevSelectedMeals) => {
       const mealIndex = prevSelectedMeals.findIndex(
         (index) => index.idMeal === meal.idMeal

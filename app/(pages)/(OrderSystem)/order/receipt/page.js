@@ -7,35 +7,32 @@ import "aos/dist/aos.css";
 export default function Receipt() {
   const [email, setEmail] = useState("");
   const [savedData, setSavedData] = useState({
+    email: "",
     meals: [],
     drinks: [],
     date: "",
     time: "",
     customer: 0,
   });
-
   const [confettiCount, setConfettiCount] = useState(300); // 300 pieces of confetti
-
   useEffect(() => {
     Aos.init({ duration: 1000 });
-
     const timer = setTimeout(() => {
       setConfettiCount(0); // After 2 seconds, set to 0
     }, 2000);
-
     if (typeof window !== "undefined") {
       // First, get the email stored under 'LastSavedOrderEmail'
-      const savedEmail = localStorage.getItem("LastSavedOrderEmail") || "";
+      const savedEmail = localStorage.getItem("LastSavedOrderID") || "";
       setEmail(savedEmail);
-
       // Use email to get the associated data
+      console.log(savedEmail);
       const data = JSON.parse(localStorage.getItem(savedEmail) || "{}");
       setSavedData(data);
+      console.log(data);
     }
 
     return () => clearTimeout(timer);
   }, []);
-
   return (
     <main
       data-aos="fade-up"
@@ -61,7 +58,7 @@ export default function Receipt() {
               Receipt of Sale <span className="block text-xl">LeFaim</span>
             </h1>
             <h2 className="text-sm text-gray-600 font-light">
-              Customer e-mail: <span className="block">{email}</span>
+              Customer e-mail: <span className="block">{savedData.email}</span>
             </h2>
           </div>
           <div className="mt-6">

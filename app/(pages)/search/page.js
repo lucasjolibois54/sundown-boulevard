@@ -10,7 +10,8 @@ import { useRouter } from "next/router";
 export default function Search() {
   const [email, setEmail] = useState("");
   const [savedData, setSavedData] = useState({
-    mealName: "",
+    email: "",
+    meals: [],
     drinks: [],
     date: "",
     time: "",
@@ -32,6 +33,7 @@ export default function Search() {
       } else {
         alert("No data found for this email!");
         setSavedData({
+          email: "",
           meals: [],
           drinks: [],
           date: "",

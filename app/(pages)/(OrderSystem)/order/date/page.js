@@ -34,6 +34,7 @@ export default function TimePicker() {
   const [customerCount, setCustomerCount] = useState(1);
   const [showTimeModal, setShowTimeModal] = useState(false);
   const [disabledTimes, setDisabledTimes] = useState([]);
+  const [lastID, setLastID] = useState("");
 
   const timeSlots = [
     "16:00",
@@ -165,21 +166,17 @@ export default function TimePicker() {
       return;
     }
 
-    // Save the current email as the last saved order email
-    localStorage.setItem("LastSavedOrderEmail", email);
-
-    const oldEmail = localStorage.getItem("lastMealId");
+    const ID = localStorage.getItem("lastMealId");
+    console.log(ID);
 
     // If no old email and no new email provided, return
-    if (!oldEmail && !email) {
-      console.warn("No identifier (email or lastMealId) available");
+    if (!ID && !email) {
+      console.warn("No identifier (email or ID) available");
       return;
     }
 
     // Get existing data from the old email or default to an empty object
-    let oldSavedData = oldEmail
-      ? JSON.parse(localStorage.getItem(oldEmail))
-      : {};
+    let oldSavedData = ID ? JSON.parse(localStorage.getItem(ID)) : {};
 
     // If there's a new email provided, fetch its existing data or default to an empty object
     let newSavedData = email
@@ -193,27 +190,33 @@ export default function TimePicker() {
       date: moment(selectedDate).format("YYYY-MM-DD"),
       time: selectedTime.format("HH:mm"),
       customer: customerCount,
+      email: email,
     };
-    console.log("oldSavedData", oldSavedData);
-    console.log("newSavedData", newSavedData);
-    console.log("updated data", updatedData);
 
-    if (email) {
+    if (ID) {
       // Save updated data to the new email
-      localStorage.setItem(email, JSON.stringify(updatedData));
+      console.log("LAST ID ", ID);
+      localStorage.setItem(ID, JSON.stringify(updatedData));
+      localStorage.setItem("LastSavedOrderID", ID);
 
-      // Remove the old data if the old email is different from the new email
-      if (oldEmail !== email) {
-        localStorage.removeItem(oldEmail);
-      }
-    } else {
-      // If there's no new email, just save the data back under the old email (from lastMealId)
-      localStorage.setItem(oldEmail, JSON.stringify(updatedData));
-      console.log("updated data", updatedData);
+      // // Remove the old data if the old email is different from the new email
+      // if (oldEmail !== email) {
+      //   localStorage.removeItem(oldEmail);
+      // }
     }
-  };
+    //  else {
+    //   // If there's no new email, just save the data back under the old email (from lastMealId)
+    //   localStorage.setItem(oldEmail, JSON.stringify(updatedData));
+    // }
 
-  console.log();
+    // Fetch the last used ID from localStorage (return string as integer)
+    const lastId = parseInt(localStorage.getItem("lastMealId") || "0", 10);
+    // Increment the ID by one
+    const nextId = lastId + 1;
+    // Save the new ID to localStorage for future use
+    localStorage.setItem("lastMealId", nextId.toString());
+    return nextId; // Return the generated ID
+  };
 
   return (
     <main
