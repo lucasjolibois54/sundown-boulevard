@@ -34,7 +34,6 @@ export default function TimePicker() {
   const [customerCount, setCustomerCount] = useState(1);
   const [showTimeModal, setShowTimeModal] = useState(false);
   const [disabledTimes, setDisabledTimes] = useState([]);
-  const [disabledDay, setdisabledDay] = useState([]);
 
   const timeSlots = [
     "16:00",
@@ -109,7 +108,7 @@ export default function TimePicker() {
     const dayOfWeek = moment(start).day();
     if (dayOfWeek !== 0 && dayOfWeek !== 6) {
       setSelectedDate(start);
-      // disableDates(start);
+      disableTimes(start);
       setShowTimeModal(true); // Open modal if not a weekend
       console.log();
     }
@@ -122,6 +121,7 @@ export default function TimePicker() {
     );
     setSelectedTime(dateTime);
     setShowTimeModal(false);
+    console.log(disabledTimes);
   };
 
   // Update email state and displayEmail state when input value changes
@@ -131,14 +131,32 @@ export default function TimePicker() {
     setDisplayEmail(newEmail);
   };
 
-  // function disableDates(day) {
-  //   const date = ("selected date", moment(day).format("YYYY-MM-DD"));
-  //   const LSdata = Object.keys(localStorage).map((key) =>
-  //     JSON.parse(localStorage.getItem(key))
-  //   );
-  //   console.log(LSdata);
-  //   return LSdata.some((data) => data.date === date);
-  // }
+  function disableTimes(day) {
+    const date = ("selected date", moment(day).format("YYYY-MM-DD"));
+    // console.log(date);
+
+    const StoredData = Object.keys(localStorage).map((key) => {
+      let parsedData = null;
+      try {
+        parsedData = JSON.parse(localStorage.getItem(key));
+      } catch (error) {
+        console.error(`Error parsing data for key ${key}: ${error}`);
+      }
+      return parsedData;
+    });
+
+    const validStoredData = StoredData.filter((data) => {
+      return data && data.date === date && data.time;
+    });
+
+    console.log("all stored data ", validStoredData);
+    const foundTimes = validStoredData
+      .map((data) => (data.date === date ? data.time : undefined)) // map to time or undefined
+      .filter((time) => time !== undefined); // filter out undefined values
+
+    console.log("found times", foundTimes);
+    setDisabledTimes(foundTimes);
+  }
 
   const handleSaveDateTime = (e) => {
     if (!selectedDate || !selectedTime) {
@@ -368,7 +386,12 @@ export default function TimePicker() {
                 <button
                   key={index}
                   onClick={() => handleTimeSelect(time)}
-                  className="hover:cursor-none relative w-full inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:border-gray-400 rounded-lg group"
+                  disabled={disabledTimes.includes(time)}
+                  className={`hover:cursor-none relative w-full inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white ${
+                    disabledTimes.includes(time)
+                      ? "opacity-30 bg-gray-900 cursor-not-allowed"
+                      : "bg-gray-800"
+                  } border-gray-400 border-2 hover:border-gray-400 rounded-lg group`}
                 >
                   <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-full group-hover:h-72"></span>
                   <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
