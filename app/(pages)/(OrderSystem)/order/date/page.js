@@ -17,7 +17,7 @@ const localizer = momentLocalizer(moment);
 function getEmailFromURL() {
   if (typeof window === "undefined") return null;
   const params = new URLSearchParams(window.location.search);
-  return params.get("email");
+  return params.get("id");
 }
 
 function isValidEmail(email) {
@@ -34,7 +34,7 @@ export default function TimePicker() {
   const [customerCount, setCustomerCount] = useState(1);
   const [showTimeModal, setShowTimeModal] = useState(false);
   const [disabledTimes, setDisabledTimes] = useState([]);
-  const [lastID, setLastID] = useState("");
+  const [ID, setID] = useState();
 
   const timeSlots = [
     "16:00",
@@ -74,8 +74,10 @@ export default function TimePicker() {
       }
 
       if (urlEmail) {
-        setEmail(urlEmail);
+        console.log(urlEmail, "URL EMAIL / ID");
+        setID(urlEmail);
         const savedData = JSON.parse(localStorage.getItem(urlEmail) || "{}");
+        console.log(savedData, "saved data from an id");
         if (savedData.date) {
           setSelectedDate(new Date(savedData.date)); // Convert string to Date object
         }
@@ -166,8 +168,14 @@ export default function TimePicker() {
       return;
     }
 
-    const ID = localStorage.getItem("lastMealId");
-    console.log(ID);
+    if (ID) {
+      console.log(ID, "I AM SAVING DATA WITH THIS ID/PARAMS ");
+      localStorage.setItem("LastSavedOrderID", ID);
+    } else {
+      setID(localStorage.getItem("lastMealId"));
+      console.log(ID, "ID");
+      localStorage.setItem("LastSavedOrderID", ID);
+    }
 
     // If no old email and no new email provided, return
     if (!ID && !email) {
@@ -191,29 +199,22 @@ export default function TimePicker() {
       time: selectedTime.format("HH:mm"),
       customer: customerCount,
       email: email,
+      id: ID,
     };
 
     if (ID) {
       // Save updated data to the new email
       console.log("LAST ID ", ID);
+      console.log("SAVING DATA TO LS WITH THIS ID", ID);
       localStorage.setItem(ID, JSON.stringify(updatedData));
-      localStorage.setItem("LastSavedOrderID", ID);
-
-      // // Remove the old data if the old email is different from the new email
-      // if (oldEmail !== email) {
-      //   localStorage.removeItem(oldEmail);
-      // }
     }
-    //  else {
-    //   // If there's no new email, just save the data back under the old email (from lastMealId)
-    //   localStorage.setItem(oldEmail, JSON.stringify(updatedData));
-    // }
 
     // Fetch the last used ID from localStorage (return string as integer)
     const lastId = parseInt(localStorage.getItem("lastMealId") || "0", 10);
     // Increment the ID by one
     const nextId = lastId + 1;
     // Save the new ID to localStorage for future use
+
     localStorage.setItem("lastMealId", nextId.toString());
     return nextId; // Return the generated ID
   };

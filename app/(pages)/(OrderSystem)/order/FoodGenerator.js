@@ -87,7 +87,8 @@ export default function FoodGenerator() {
     Aos.init({ duration: 1000 });
     let isMounted = true; // To avoid setting state on an unmounted component
 
-    const param = new URL(window.location.href).searchParams.get("email");
+    const param = new URL(window.location.href).searchParams.get("id");
+
     setEmailParam(param);
 
     const fetchAndSetMeals = async () => {
@@ -125,13 +126,13 @@ export default function FoodGenerator() {
 
   const handleSaveData = () => {
     if (selectedMeal.length > 0) {
-      const emailParam = new URL(window.location.href).searchParams.get(
-        "email"
-      );
+      const emailParam = new URL(window.location.href).searchParams.get("id");
+
       const storageKey = emailParam || getNextId().toString();
+      // console.log(storageKey, "storage key");
 
       // Get existing data from local storage or initialize as an empty array
-      const existingData = JSON.parse(localStorage.getItem(storageKey)) || [];
+      const existingData = JSON.parse(localStorage.getItem(emailParam)) || [];
 
       // Merge the new meal data with the existing data
       const updatedData = {
@@ -286,7 +287,7 @@ export default function FoodGenerator() {
                 setCursorText("");
                 setCursorVariant("default");
               }}
-              href={`/order/drinks${emailParam ? `?email=${emailParam}` : ""}`}
+              href={`/order/drinks${emailParam ? `?id=${emailParam}` : ""}`}
               onClick={handleSaveData}
               className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
             >

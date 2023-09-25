@@ -43,7 +43,7 @@ export default function Drink() {
 
     let isMounted = true;
 
-    const param = new URL(window.location.href).searchParams.get("email");
+    const param = new URL(window.location.href).searchParams.get("id");
     setEmailParam(param);
 
     // Fetch drinks data
@@ -67,14 +67,16 @@ export default function Drink() {
       }
     })();
 
-    const emailParam = new URL(window.location.href).searchParams.get("email");
+    const emailParam = new URL(window.location.href).searchParams.get("id");
     // If an emailparam present, retrieve the saved drinks from local storage
     if (emailParam) {
       setEmail(emailParam);
+      console.log(emailParam, "email param");
       const savedDrinks =
         // retrieve drinks accosiated with email
         JSON.parse(localStorage.getItem(emailParam))?.drinks || [];
       setSelectedDrinks(savedDrinks);
+      console.log("saved drinks", savedDrinks);
     } else {
       // If no email param, use lastMealId
       const lastMealId = localStorage.getItem("lastMealId") || "";
@@ -253,7 +255,7 @@ export default function Drink() {
               setCursorText("");
               setCursorVariant("default");
             }}
-            href={`/order/date${emailParam ? `?email=${emailParam}` : ""}`}
+            href={`/order/date${emailParam ? `?id=${emailParam}` : ""}`}
             onClick={handleSaveToLocalStorage}
             className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:border-bgColorDark rounded-lg group"
           >

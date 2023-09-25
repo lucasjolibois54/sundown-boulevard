@@ -11,7 +11,7 @@ export default function OrderDetails() {
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-    const emailParam = new URL(window.location.href).searchParams.get("email");
+    const emailParam = new URL(window.location.href).searchParams.get("id");
     // If an email param is present, retrieve the saved drinks from local storage
     if (emailParam) {
       setEmail(emailParam);

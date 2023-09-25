@@ -5,7 +5,7 @@ import Aos from "aos";
 import "aos/dist/aos.css";
 
 export default function Receipt() {
-  const [email, setEmail] = useState("");
+  const [id, setID] = useState("");
   const [savedData, setSavedData] = useState({
     email: "",
     meals: [],
@@ -13,6 +13,7 @@ export default function Receipt() {
     date: "",
     time: "",
     customer: 0,
+    id: "",
   });
   const [confettiCount, setConfettiCount] = useState(300); // 300 pieces of confetti
   useEffect(() => {
@@ -22,13 +23,13 @@ export default function Receipt() {
     }, 2000);
     if (typeof window !== "undefined") {
       // First, get the email stored under 'LastSavedOrderEmail'
-      const savedEmail = localStorage.getItem("LastSavedOrderID") || "";
-      setEmail(savedEmail);
+      const savedID = localStorage.getItem("LastSavedOrderID") || "";
+      setID(savedID);
       // Use email to get the associated data
-      console.log(savedEmail);
-      const data = JSON.parse(localStorage.getItem(savedEmail) || "{}");
+      console.log(savedID, "SAVED ID");
+      const data = JSON.parse(localStorage.getItem(savedID) || "{}");
       setSavedData(data);
-      console.log(data);
+      console.log(data, "DATA ");
     }
 
     return () => clearTimeout(timer);
