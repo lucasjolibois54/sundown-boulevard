@@ -76,6 +76,11 @@ export default function Search() {
     }),
   };
 
+  function deleteOrder(id) {
+    localStorage.removeItem(id);
+    fetchData();
+  }
+
   useEffect(() => {
     Aos.init({ duration: 1000 });
   }, []);
@@ -160,7 +165,10 @@ export default function Search() {
                     EDIT
                   </Link>
 
-                  <button className="border border-black p-2 rounded w-20 col-start-2 col-end-3 mb-4 mt-4">
+                  <button
+                    onClick={() => deleteOrder(order.id)}
+                    className="border border-black p-2 rounded w-20 col-start-2 col-end-3 mb-4 mt-4"
+                  >
                     DELETE
                   </button>
                 </div>
