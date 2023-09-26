@@ -20,9 +20,9 @@ function getEmailFromURL() {
   return params.get("id");
 }
 
-function isValidEmail(email) {
+function isValidEmail(userEmail) {
   var re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-  return re.test(email);
+  return re.test(userEmail);
 }
 
 export default function TimePicker() {
@@ -35,7 +35,7 @@ export default function TimePicker() {
   const [showTimeModal, setShowTimeModal] = useState(false);
   const [disabledTimes, setDisabledTimes] = useState([]);
   const [ID, setID] = useState();
-
+  const [userEmail, setUserEmail] = useState("");
   const timeSlots = [
     "16:00",
     "17:00",
@@ -77,7 +77,7 @@ export default function TimePicker() {
         console.log(urlEmail, "URL EMAIL / ID");
         setID(urlEmail);
         const savedData = JSON.parse(localStorage.getItem(urlEmail) || "{}");
-        console.log(savedData, "saved data from an id");
+        // console.log(savedData, "saved data from an id");
         if (savedData.date) {
           setSelectedDate(new Date(savedData.date)); // Convert string to Date object
         }
@@ -113,7 +113,6 @@ export default function TimePicker() {
       setSelectedDate(start);
       disableTimes(start);
       setShowTimeModal(true); // Open modal if not a weekend
-      console.log();
     }
   };
 
@@ -130,7 +129,8 @@ export default function TimePicker() {
   // Update email state and displayEmail state when input value changes
   const handleEmailChange = (e) => {
     const newEmail = e.target.value;
-    setEmail(newEmail);
+
+    setUserEmail(newEmail);
     setDisplayEmail(newEmail);
   };
 
@@ -152,14 +152,17 @@ export default function TimePicker() {
       return data && data.date === date && data.time;
     });
 
-    console.log("all stored data ", validStoredData);
+    // console.log("all stored data ", validStoredData);
     const foundTimes = validStoredData
       .map((data) => (data.date === date ? data.time : undefined)) // map to time or undefined
       .filter((time) => time !== undefined); // filter out undefined values
 
-    console.log("found times", foundTimes);
+    // console.log("found times", foundTimes);
     setDisabledTimes(foundTimes);
   }
+
+  // console.log(email, "email");
+  // console.log(userEmail, "userEmail");
 
   const handleSaveDateTime = (e) => {
     if (!selectedDate || !selectedTime) {
@@ -167,14 +170,14 @@ export default function TimePicker() {
       e.preventDefault();
       return;
     }
-
     if (ID) {
       console.log(ID, "I AM SAVING DATA WITH THIS ID/PARAMS ");
       localStorage.setItem("LastSavedOrderID", ID);
     } else {
-      setID(localStorage.getItem("lastMealId"));
-      console.log(ID, "ID");
-      localStorage.setItem("LastSavedOrderID", ID);
+      const newID = localStorage.getItem("lastMealId");
+      setID(newID);
+      localStorage.setItem("LastSavedOrderID", email);
+      console.log("newID", newID);
     }
 
     // If no old email and no new email provided, return
@@ -183,30 +186,38 @@ export default function TimePicker() {
       return;
     }
 
-    // Get existing data from the old email or default to an empty object
     let oldSavedData = ID ? JSON.parse(localStorage.getItem(ID)) : {};
+    console.log(oldSavedData, "OLD SAVED DATA");
 
-    // If there's a new email provided, fetch its existing data or default to an empty object
-    let newSavedData = email
-      ? JSON.parse(localStorage.getItem(email) || "{}")
-      : {};
+    let newSavedData = email ? JSON.parse(localStorage.getItem(email)) : {};
+    console.log(newSavedData, "NEW SAVED DATA");
 
     // Update the data with the new values
     let updatedData = {
-      ...newSavedData,
       ...oldSavedData,
+      ...newSavedData,
       date: moment(selectedDate).format("YYYY-MM-DD"),
       time: selectedTime.format("HH:mm"),
       customer: customerCount,
-      email: email,
-      id: ID,
+      email: userEmail,
+      id: ID ? ID : email,
     };
+
+    // console.log(updatedData, "UPDATED DATA");
+    // console.log(email, "email");
+    // console.log(userEmail, "userEmail");
 
     if (ID) {
       // Save updated data to the new email
-      console.log("LAST ID ", ID);
       console.log("SAVING DATA TO LS WITH THIS ID", ID);
       localStorage.setItem(ID, JSON.stringify(updatedData));
+    }
+
+    if (email) {
+      // Save updated data to the new email
+
+      console.log("SAVING DATA TO LS WITH THIS ID", email);
+      localStorage.setItem(email, JSON.stringify(updatedData));
     }
 
     // Fetch the last used ID from localStorage (return string as integer)
@@ -346,7 +357,7 @@ export default function TimePicker() {
                             +
                           </button>
                         </div>
-                        {isValidEmail(email) ? (
+                        {isValidEmail(userEmail) ? (
                           <Link
                             href="/order/receipt"
                             onClick={handleSaveDateTime}
@@ -442,7 +453,7 @@ export default function TimePicker() {
           </button>
         </div>
 
-        {isValidEmail(email) ? (
+        {isValidEmail(userEmail) ? (
           <Link
             href="/order/receipt"
             onClick={handleSaveDateTime}

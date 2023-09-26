@@ -108,7 +108,6 @@ export default function Drink() {
   // save selected drinks to local storage
   const handleSaveToLocalStorage = () => {
     if (email) {
-      console.log(email);
       // Fetch any existing saved data using email
       let savedData = localStorage.getItem(email)
         ? JSON.parse(localStorage.getItem(email))
