@@ -21,12 +21,13 @@ const getNextId = () => {
 
 // Fetch meal data from API
 async function getData(savedMeal) {
+  console.log("getData with savedMeal", savedMeal);
   const meals = [];
   if (savedMeal) {
     // if saved meal add first
     meals.push(savedMeal);
+    console.log(savedMeal, "SAVED MEAL");
   }
-
   // Fetch data to fill up the util we have 9 meals
   for (let i = meals.length; i < 9; i++) {
     const res = await fetch(
@@ -50,28 +51,44 @@ export default function FoodGenerator() {
 
   // Fetch a saved meal from local storage
   const fetchSavedMeal = (id) => {
-    // Retrieve the saved meal data using the provided ID
+    console.log("fetchSavedMeal");
     const savedData = JSON.parse(localStorage.getItem(id));
-    // If data exists and has a mealId, return a formatted object
-    if (savedData && savedData.mealId) {
-      return {
-        idMeal: savedData.mealId,
-        strMeal: savedData.mealName,
-        strMealThumb: savedData.strMealThumb || "",
-        strInstructions: savedData.strInstructions || "",
-      };
+    console.log("saved data with an id", savedData, id);
+
+    if (savedData.meals) {
+      const savedMealData = savedData.meals.map((meal) => ({
+        idMeal: meal.mealId,
+        strMeal: meal.mealName,
+        strMealThumb: meal.strMealThumb || "",
+        strInstructions: meal.strInstructions || "",
+      }));
+      setMealData(savedMealData);
+      savedData.meals.forEach((meal) => {
+        setSelectedMeal((prevSelectedMeals) => [
+          ...prevSelectedMeals,
+          {
+            idMeal: meal.mealId,
+            strMeal: meal.mealName,
+            strMealThumb: meal.strMealThumb || "",
+            strInstructions: meal.strInstructions || "",
+          },
+        ]);
+      });
     }
-    return null;
   };
 
   // Fetch meal data and set it in the state
   const fetchMeals = async () => {
+    console.log("fetchMeals");
     let isMounted = true;
     setIsLoading(true);
     try {
-      const meals = await getData();
+      const newMeals = await getData(); // Fetch new meals
+
+      // Merge new meals with existing mealData
+      // setMealData((prevMealData) => [...prevMealData, ...newMeals]);
+
       if (isMounted) {
-        setMealData(meals);
         setTimeout(() => {
           setIsLoading(false);
         }, 2000);
@@ -92,20 +109,18 @@ export default function FoodGenerator() {
     setEmailParam(param);
 
     const fetchAndSetMeals = async () => {
+      console.log("fetchAndSetMeals");
       try {
         // If there's an email param, attempt to fetch the saved meal
         let savedMeal = null;
         if (emailParam) {
           savedMeal = fetchSavedMeal(emailParam);
-          if (savedMeal && isMounted) {
-            setSelectedMeal(savedMeal);
-          }
         }
 
         // Fetch meals, including the saved one if it exists
         const meals = await getData(savedMeal);
         if (isMounted) {
-          setMealData(meals); // Set the meal data state
+          setMealData((prevMealData) => [...prevMealData, ...meals]);
           setTimeout(() => {
             setIsLoading(false); // Set the loading state to false after 2 seconds
           }, 2000);
@@ -152,6 +167,9 @@ export default function FoodGenerator() {
     }
   };
 
+  console.log(selectedMeal, "selected meal");
+  console.log("meal data", mealData);
+
   const handleToggleMeal = (meal) => {
     setSelectedMeal((prevSelectedMeals) => {
       const mealIndex = prevSelectedMeals.findIndex(
@@ -192,6 +210,19 @@ export default function FoodGenerator() {
         <div className="flex flex-col md:flex-row items-center justify-between mb-5"></div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* {savedData.meals.map((savedMeal) => (
+            <div
+              key={savedMeal.idMeal}
+              className="rounded-lg transition transform hover:scale-105 h-96 relative cursor-pointer"
+            >
+              <img
+                src={savedMeal.strMealThumb}
+                alt={savedMeal.strMeal}
+                className="w-full h-96 object-cover rounded-md"
+              />
+        
+            </div>
+          ))} */}
           {isLoading
             ? Array(9)
                 .fill()
@@ -218,7 +249,7 @@ export default function FoodGenerator() {
                     setCursorText("");
                     setCursorVariant("default");
                   }}
-                  key={meal.idMeal}
+                  key={meal.mealName}
                   className={`rounded-lg transition transform hover:scale-105 h-96 relative cursor-pointer`}
                   onClick={() => handleToggleMeal(meal)}
                 >
