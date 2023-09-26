@@ -28,7 +28,7 @@ function isValidEmail(userEmail) {
 export default function TimePicker() {
   const [email, setEmail] = useState("");
   const [displayEmail, setDisplayEmail] = useState("");
-  const [emailInUrl, setEmailInUrl] = useState(false);
+  const [IdInUrl, setIdInUrl] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [customerCount, setCustomerCount] = useState(1);
@@ -67,17 +67,18 @@ export default function TimePicker() {
     Aos.init({ duration: 1000 });
 
     if (typeof window !== "undefined") {
-      const urlEmail = getEmailFromURL();
+      const urlId = getEmailFromURL();
 
-      if (urlEmail) {
-        setEmailInUrl(true);
+      if (urlId) {
+        setIdInUrl(true);
       }
 
-      if (urlEmail) {
-        console.log(urlEmail, "URL EMAIL / ID");
-        setID(urlEmail);
-        const savedData = JSON.parse(localStorage.getItem(urlEmail) || "{}");
-        // console.log(savedData, "saved data from an id");
+      if (urlId) {
+        console.log(urlId, "URL ID");
+
+        setID(urlId);
+        const savedData = JSON.parse(localStorage.getItem(urlId) || "{}");
+
         if (savedData.date) {
           setSelectedDate(new Date(savedData.date)); // Convert string to Date object
         }
@@ -88,8 +89,8 @@ export default function TimePicker() {
           setUserEmail(savedData.email);
         }
       } else {
-        // Fallback to lastMealId if no email found in the URL
-        const lastMealId = localStorage.getItem("lastMealId") || ""; //Retrieve Email/ id from Local Storage
+        // Fallback to lastMealId if no id found in the URL
+        const lastMealId = localStorage.getItem("lastMealId") || ""; //Retrieve id from Local Storage
         setEmail(lastMealId);
 
         const savedData = JSON.parse(localStorage.getItem(lastMealId) || "{}");
@@ -132,7 +133,6 @@ export default function TimePicker() {
     console.log(disabledTimes);
   };
 
-  // Update email state and displayEmail state when input value changes
   const handleEmailChange = (e) => {
     const newEmail = e.target.value;
 
@@ -142,7 +142,6 @@ export default function TimePicker() {
 
   function disableTimes(day) {
     const date = ("selected date", moment(day).format("YYYY-MM-DD"));
-    // console.log(date);
 
     const StoredData = Object.keys(localStorage).map((key) => {
       let parsedData = null;
@@ -158,17 +157,12 @@ export default function TimePicker() {
       return data && data.date === date && data.time;
     });
 
-    // console.log("all stored data ", validStoredData);
     const foundTimes = validStoredData
       .map((data) => (data.date === date ? data.time : undefined)) // map to time or undefined
       .filter((time) => time !== undefined); // filter out undefined values
 
-    // console.log("found times", foundTimes);
     setDisabledTimes(foundTimes);
   }
-
-  // console.log(email, "email");
-  // console.log(userEmail, "userEmail");
 
   const handleSaveDateTime = (e) => {
     if (!selectedDate || !selectedTime) {
@@ -209,10 +203,6 @@ export default function TimePicker() {
       id: ID ? ID : email,
     };
 
-    // console.log(updatedData, "UPDATED DATA");
-    // console.log(email, "email");
-    // console.log(userEmail, "userEmail");
-
     if (ID) {
       // Save updated data to the new email
       console.log("SAVING DATA TO LS WITH THIS ID", ID);
@@ -248,14 +238,7 @@ export default function TimePicker() {
       </h1>
 
       <div className="p-8 rounded-xl shadow-2xl space-y-8 w-full bg-white bg-opacity-10 backdrop-blur-md">
-        {/* <input
-          type="email"
-          placeholder="Enter your email"
-          value={displayEmail}
-          onChange={handleEmailChange}
-          className="p-2 rounded border"
-        /> */}
-        {!emailInUrl && (
+        {!IdInUrl && (
           <input
             type="email"
             placeholder="Enter your email"

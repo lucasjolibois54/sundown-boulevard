@@ -12,15 +12,6 @@ export default function Search() {
   const [allSavedData, setAllSavedData] = useState([]);
   const [savedData, setSavedData] = useState([]);
 
-  // const [savedData, setSavedData] = useState({
-  //   email: "",
-  //   meals: [],
-  //   drinks: [],
-  //   date: "",
-  //   time: "",
-  //   customer: 0,
-  // });
-
   const fetchData = () => {
     if (typeof window !== "undefined" && email) {
       // Save the email to the localStorage with the key LatestSearchedEmail
@@ -43,25 +34,6 @@ export default function Search() {
       console.log("filtered data", validStoredData);
 
       setAllSavedData(validStoredData);
-
-      // const data = JSON.parse(localStorage.getItem(ID) || "{}");
-      // if (data && data.meals) {
-      //   // check if data exists
-      //   setSavedData(data);
-
-      //   console.log("fetchData in search data", data);
-      //   console.log("fetchData in search data.meals", data.meals);
-      // } else {
-      //   alert("No data found for this email!");
-      //   setSavedData({
-      //     email: "",
-      //     meals: [],
-      //     drinks: [],
-      //     date: "",
-      //     time: "",
-      //     customer: 0,
-      //   });
-      // }
     }
   };
 

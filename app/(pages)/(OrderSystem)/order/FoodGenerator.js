@@ -21,7 +21,6 @@ const getNextId = () => {
 
 // Fetch meal data from API
 async function getData(savedMeal) {
-  console.log("getData with savedMeal", savedMeal);
   const meals = [];
   if (savedMeal) {
     // if saved meal add first
@@ -51,9 +50,7 @@ export default function FoodGenerator() {
 
   // Fetch a saved meal from local storage
   const fetchSavedMeal = (id) => {
-    console.log("fetchSavedMeal");
     const savedData = JSON.parse(localStorage.getItem(id));
-    console.log("saved data with an id", savedData, id);
 
     if (savedData.meals) {
       const savedMealData = savedData.meals.map((meal) => ({
@@ -79,15 +76,13 @@ export default function FoodGenerator() {
 
   // Fetch meal data and set it in the state
   const fetchMeals = async () => {
-    console.log("fetchMeals");
     let isMounted = true;
     setIsLoading(true);
+    const newMeals = await getData(); // Fetch new meals
+
+    // Merge new meals with existing mealData
+    setMealData((prevMealData) => [...prevMealData, ...newMeals]);
     try {
-      const newMeals = await getData(); // Fetch new meals
-
-      // Merge new meals with existing mealData
-      // setMealData((prevMealData) => [...prevMealData, ...newMeals]);
-
       if (isMounted) {
         setTimeout(() => {
           setIsLoading(false);
@@ -144,7 +139,6 @@ export default function FoodGenerator() {
       const emailParam = new URL(window.location.href).searchParams.get("id");
 
       const storageKey = emailParam || getNextId().toString();
-      // console.log(storageKey, "storage key");
 
       // Get existing data from local storage or initialize as an empty array
       const existingData = JSON.parse(localStorage.getItem(emailParam)) || [];
@@ -166,9 +160,6 @@ export default function FoodGenerator() {
       setGeneratedId(storageKey);
     }
   };
-
-  console.log(selectedMeal, "selected meal");
-  console.log("meal data", mealData);
 
   const handleToggleMeal = (meal) => {
     setSelectedMeal((prevSelectedMeals) => {
@@ -210,19 +201,6 @@ export default function FoodGenerator() {
         <div className="flex flex-col md:flex-row items-center justify-between mb-5"></div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* {savedData.meals.map((savedMeal) => (
-            <div
-              key={savedMeal.idMeal}
-              className="rounded-lg transition transform hover:scale-105 h-96 relative cursor-pointer"
-            >
-              <img
-                src={savedMeal.strMealThumb}
-                alt={savedMeal.strMeal}
-                className="w-full h-96 object-cover rounded-md"
-              />
-        
-            </div>
-          ))} */}
           {isLoading
             ? Array(9)
                 .fill()
