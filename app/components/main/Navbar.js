@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useCursor } from "@/cursor/CursorContext";
-import Basket from "@/app/components/main/Basket";
 
 import Image from "next/image";
 
@@ -187,7 +186,6 @@ function Navbar() {
               </div>
             </nav>
           </header>
-          {modalVisible && <Basket />}
         </div>
       </motion.div>
     </>

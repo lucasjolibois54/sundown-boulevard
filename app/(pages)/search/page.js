@@ -10,7 +10,6 @@ import { useRouter } from "next/router";
 export default function Search() {
   const [email, setEmail] = useState("");
   const [allSavedData, setAllSavedData] = useState([]);
-  const [savedData, setSavedData] = useState([]);
 
   const fetchData = () => {
     if (typeof window !== "undefined" && email) {
@@ -150,96 +149,4 @@ export default function Search() {
       </main>
     </>
   );
-}
-
-{
-  /* <motion.div
-initial={{ height: 0, opacity: 0 }}
-animate={{ height: "auto", opacity: 1 }}
-exit={{ height: 0, opacity: 0 }}
-className="bg-gray-200 py-5 px-5 rounded-br-xl rounded-bl-xl absolute w-4/6"
->
-{order.meals && order.meals.length > 0 && (
-  <motion.div
-    initial="hidden"
-    animate="visible"
-    variants={listItemVariants}
-    custom={4}
-  >
-    <p>Selected Meals:</p>
-    <ul>
-      {order.meals.map((meal, index) => (
-        <motion.li
-          key={meal.mealId}
-          variants={listItemVariants}
-          custom={index + 5}
-        >
-          {meal.mealName ? meal.mealName : ""}
-        </motion.li>
-      ))}
-    </ul>
-  </motion.div>
-)}
-<motion.p
-  initial="hidden"
-  animate="visible"
-  variants={listItemVariants}
-  custom={2}
->
-  {order.date ? <span> Date {order.date}</span> : ""}
-</motion.p>
-<motion.p
-  initial="hidden"
-  animate="visible"
-  variants={listItemVariants}
-  custom={2}
->
-  {order.date ? <span> Time: {order.time}</span> : ""}
-</motion.p>
-<motion.p
-  initial="hidden"
-  animate="visible"
-  variants={listItemVariants}
-  custom={3}
->
-  {order.customer ? (
-    <span> Number of Customers: {order.customer} </span>
-  ) : (
-    ""
-  )}
-</motion.p>
-{order.drinks && order.drinks.length > 0 && (
-  <motion.div
-    initial="hidden"
-    animate="visible"
-    variants={listItemVariants}
-    custom={4}
-  >
-    <p>Selected Drinks:</p>
-    <ul>
-      {order.drinks.map((drink, index) => (
-        <motion.li
-          key={drink.id}
-          variants={listItemVariants}
-          custom={index + 5}
-        >
-          {drink.name ? drink.name : ""}
-        </motion.li>
-      ))}
-    </ul>
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={listItemVariants}
-      custom={2}
-    >
-      <Link href={`/order?email=${email}`}>
-        <button className="ml-0 mt-3 -mb-1 px-4 py-2 bg-gray-300 text-black rounded decoration-8">
-          <b>Update Order</b>
-        </button>
-      </Link>
-    </motion.div>
-  </motion.div>
-)}
-</motion.div> */
 }

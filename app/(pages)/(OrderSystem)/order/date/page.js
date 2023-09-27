@@ -204,7 +204,7 @@ export default function TimePicker() {
     };
 
     if (ID) {
-      // Save updated data to the new email
+      // Save updated data to the new id
       console.log("SAVING DATA TO LS WITH THIS ID", ID);
       localStorage.setItem(ID, JSON.stringify(updatedData));
     }
