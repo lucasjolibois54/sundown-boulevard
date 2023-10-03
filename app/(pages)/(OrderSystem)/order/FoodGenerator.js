@@ -25,7 +25,6 @@ async function getData(savedMeal) {
   if (savedMeal) {
     // if saved meal add first
     meals.push(savedMeal);
-    console.log(savedMeal, "SAVED MEAL");
   }
   // Fetch data to fill up the util we have 9 meals
   for (let i = meals.length; i < 9; i++) {
@@ -104,7 +103,6 @@ export default function FoodGenerator() {
     setEmailParam(param);
 
     const fetchAndSetMeals = async () => {
-      console.log("fetchAndSetMeals");
       try {
         // If there's an email param, attempt to fetch the saved meal
         let savedMeal = null;

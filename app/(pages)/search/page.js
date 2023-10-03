@@ -30,8 +30,6 @@ export default function Search() {
         return data && data.email === email;
       });
 
-      console.log("filtered data", validStoredData);
-
       setAllSavedData(validStoredData);
     }
   };

@@ -1,8 +1,7 @@
 import "../globals.css";
 import { Inter } from "next/font/google";
 
-import Navbar from "../components/main/Navbar";
-import Footer from "../components/main/Footer";
+import Navbar from "@/app/components/main/Navbar";
 
 import CursorComponent from "@/cursor/CursorComponent";
 import { CursorProvider } from "@/cursor/CursorContext";

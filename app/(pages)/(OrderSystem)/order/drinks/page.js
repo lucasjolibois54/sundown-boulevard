@@ -71,16 +71,15 @@ export default function Drink() {
     // If an emailparam present, retrieve the saved drinks from local storage
     if (emailParam) {
       setEmail(emailParam);
-      console.log(emailParam, "email param");
+
       const savedDrinks =
         // retrieve drinks accosiated with email
         JSON.parse(localStorage.getItem(emailParam))?.drinks || [];
       setSelectedDrinks(savedDrinks);
-      console.log("saved drinks", savedDrinks);
     } else {
       // If no email param, use lastMealId
       const lastMealId = localStorage.getItem("lastMealId") || "";
-      console.log("last meal ID", lastMealId);
+
       setEmail(lastMealId);
 
       const savedDrinks =
@@ -120,7 +119,6 @@ export default function Drink() {
       };
       //save to LS
       localStorage.setItem(email, JSON.stringify(savedData));
-      console.log(savedData);
     }
   };
 

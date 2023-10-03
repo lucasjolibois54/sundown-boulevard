@@ -20,9 +20,9 @@ function getEmailFromURL() {
   return params.get("id");
 }
 
-function isValidEmail(userEmail) {
+function isValidEmail(email) {
   var re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-  return re.test(userEmail);
+  return re.test(email);
 }
 
 export default function TimePicker() {
@@ -74,8 +74,6 @@ export default function TimePicker() {
       }
 
       if (urlId) {
-        console.log(urlId, "URL ID");
-
         setID(urlId);
         const savedData = JSON.parse(localStorage.getItem(urlId) || "{}");
 
@@ -130,7 +128,6 @@ export default function TimePicker() {
     );
     setSelectedTime(dateTime);
     setShowTimeModal(false);
-    console.log(disabledTimes);
   };
 
   const handleEmailChange = (e) => {
@@ -171,13 +168,11 @@ export default function TimePicker() {
       return;
     }
     if (ID) {
-      console.log(ID, "I AM SAVING DATA WITH THIS ID/PARAMS ");
       localStorage.setItem("LastSavedOrderID", ID);
     } else {
       const newID = localStorage.getItem("lastMealId");
       setID(newID);
       localStorage.setItem("LastSavedOrderID", email);
-      console.log("newID", newID);
     }
 
     // If no old email and no new email provided, return
@@ -187,10 +182,8 @@ export default function TimePicker() {
     }
 
     let oldSavedData = ID ? JSON.parse(localStorage.getItem(ID)) : {};
-    console.log(oldSavedData, "OLD SAVED DATA");
 
     let newSavedData = email ? JSON.parse(localStorage.getItem(email)) : {};
-    console.log(newSavedData, "NEW SAVED DATA");
 
     // Update the data with the new values
     let updatedData = {
@@ -205,14 +198,13 @@ export default function TimePicker() {
 
     if (ID) {
       // Save updated data to the new id
-      console.log("SAVING DATA TO LS WITH THIS ID", ID);
+
       localStorage.setItem(ID, JSON.stringify(updatedData));
     }
 
     if (email) {
       // Save updated data to the new email
 
-      console.log("SAVING DATA TO LS WITH THIS ID", email);
       localStorage.setItem(email, JSON.stringify(updatedData));
     }
 
