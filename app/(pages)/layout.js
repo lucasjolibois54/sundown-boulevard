@@ -1,30 +1,31 @@
-import '../globals.css'
-import { Inter } from 'next/font/google'
+import "../globals.css";
+import { Inter } from "next/font/google";
 
-import Navbar from '../components/main/Navbar'
-import Footer from '../components/main/Footer'
+import Navbar from "@/app/components/main/Navbar";
 
-import CursorComponent from '@/cursor/CursorComponent';
-import { CursorProvider } from '@/cursor/CursorContext';
+import CursorComponent from "@/cursor/CursorComponent";
+import { CursorProvider } from "@/cursor/CursorContext";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: 'Le Faim  | Restaurant',
-  description: 'Your favorite restaurant in town',
-}
+  title: "Le Faim  | Restaurant",
+  description: "Your favorite restaurant in town",
+};
 
 export default function RootLayout({ children }) {
   return (
     <CursorProvider>
-    <html lang="en">
-      <body className={inter.className}>
-        <Navbar/>
-        <div className='none hidden md:block'>
-        <CursorComponent /></div>
-        {children}
-        {/* <Footer/> */}
+      <html lang="en">
+        <body className={inter.className}>
+          <Navbar />
+          <div className="none hidden md:block">
+            <CursorComponent />
+          </div>
+          {children}
+          {/* <Footer/> */}
         </body>
-    </html></CursorProvider>
-  )
+      </html>
+    </CursorProvider>
+  );
 }

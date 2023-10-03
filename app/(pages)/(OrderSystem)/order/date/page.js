@@ -8,6 +8,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { motion, AnimatePresence } from "framer-motion";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import OrderDetails from "@/app/components/main/OrderDetails";
 
 // Moment.js settings
 const localizer = momentLocalizer(moment);
@@ -16,7 +17,7 @@ const localizer = momentLocalizer(moment);
 function getEmailFromURL() {
   if (typeof window === "undefined") return null;
   const params = new URLSearchParams(window.location.search);
-  return params.get("email");
+  return params.get("id");
 }
 
 function isValidEmail(email) {
@@ -27,12 +28,14 @@ function isValidEmail(email) {
 export default function TimePicker() {
   const [email, setEmail] = useState("");
   const [displayEmail, setDisplayEmail] = useState("");
-  const [emailInUrl, setEmailInUrl] = useState(false);
+  const [IdInUrl, setIdInUrl] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [customerCount, setCustomerCount] = useState(1);
   const [showTimeModal, setShowTimeModal] = useState(false);
-
+  const [disabledTimes, setDisabledTimes] = useState([]);
+  const [ID, setID] = useState();
+  const [userEmail, setUserEmail] = useState("");
   const timeSlots = [
     "16:00",
     "17:00",
@@ -64,24 +67,28 @@ export default function TimePicker() {
     Aos.init({ duration: 1000 });
 
     if (typeof window !== "undefined") {
-      const urlEmail = getEmailFromURL();
+      const urlId = getEmailFromURL();
 
-      if (urlEmail && isValidEmail(urlEmail)) {
-        setEmailInUrl(true);
+      if (urlId) {
+        setIdInUrl(true);
       }
 
-      if (urlEmail) {
-        setEmail(urlEmail);
-        const savedData = JSON.parse(localStorage.getItem(urlEmail) || "{}");
+      if (urlId) {
+        setID(urlId);
+        const savedData = JSON.parse(localStorage.getItem(urlId) || "{}");
+
         if (savedData.date) {
           setSelectedDate(new Date(savedData.date)); // Convert string to Date object
         }
         if (savedData.customer) {
           setCustomerCount(savedData.customer); // Set the customer count
         }
+        if (savedData.email) {
+          setUserEmail(savedData.email);
+        }
       } else {
-        // Fallback to lastMealId if no email found in the URL
-        const lastMealId = localStorage.getItem("lastMealId") || ""; //Retrieve Email/ id from Local Storage
+        // Fallback to lastMealId if no id found in the URL
+        const lastMealId = localStorage.getItem("lastMealId") || ""; //Retrieve id from Local Storage
         setEmail(lastMealId);
 
         const savedData = JSON.parse(localStorage.getItem(lastMealId) || "{}");
@@ -90,6 +97,9 @@ export default function TimePicker() {
         }
         if (savedData.customer) {
           setCustomerCount(savedData.customer);
+        }
+        if (savedData.email) {
+          setUserEmail(savedData.email);
         }
       }
     }
@@ -106,6 +116,7 @@ export default function TimePicker() {
     const dayOfWeek = moment(start).day();
     if (dayOfWeek !== 0 && dayOfWeek !== 6) {
       setSelectedDate(start);
+      disableTimes(start);
       setShowTimeModal(true); // Open modal if not a weekend
     }
   };
@@ -119,12 +130,36 @@ export default function TimePicker() {
     setShowTimeModal(false);
   };
 
-  // Update email state and displayEmail state when input value changes
   const handleEmailChange = (e) => {
     const newEmail = e.target.value;
-    setEmail(newEmail);
+
+    setUserEmail(newEmail);
     setDisplayEmail(newEmail);
   };
+
+  function disableTimes(day) {
+    const date = ("selected date", moment(day).format("YYYY-MM-DD"));
+
+    const StoredData = Object.keys(localStorage).map((key) => {
+      let parsedData = null;
+      try {
+        parsedData = JSON.parse(localStorage.getItem(key));
+      } catch (error) {
+        console.error(`Error parsing data for key ${key}: ${error}`);
+      }
+      return parsedData;
+    });
+
+    const validStoredData = StoredData.filter((data) => {
+      return data && data.date === date && data.time;
+    });
+
+    const foundTimes = validStoredData
+      .map((data) => (data.date === date ? data.time : undefined)) // map to time or undefined
+      .filter((time) => time !== undefined); // filter out undefined values
+
+    setDisabledTimes(foundTimes);
+  }
 
   const handleSaveDateTime = (e) => {
     if (!selectedDate || !selectedTime) {
@@ -132,51 +167,56 @@ export default function TimePicker() {
       e.preventDefault();
       return;
     }
-
-    // Save the current email as the last saved order email
-    localStorage.setItem("LastSavedOrderEmail", email);
-
-    const oldEmail = localStorage.getItem("lastMealId");
+    if (ID) {
+      localStorage.setItem("LastSavedOrderID", ID);
+    } else {
+      const newID = localStorage.getItem("lastMealId");
+      setID(newID);
+      localStorage.setItem("LastSavedOrderID", email);
+    }
 
     // If no old email and no new email provided, return
-    if (!oldEmail && !email) {
-      console.warn("No identifier (email or lastMealId) available");
+    if (!ID && !email) {
+      console.warn("No identifier (email or ID) available");
       return;
     }
 
-    // Get existing data from the old email or default to an empty object
-    let oldSavedData = oldEmail
-      ? JSON.parse(localStorage.getItem(oldEmail))
-      : {};
+    let oldSavedData = ID ? JSON.parse(localStorage.getItem(ID)) : {};
 
-    // If there's a new email provided, fetch its existing data or default to an empty object
-    let newSavedData = email
-      ? JSON.parse(localStorage.getItem(email) || "{}")
-      : {};
+    let newSavedData = email ? JSON.parse(localStorage.getItem(email)) : {};
 
     // Update the data with the new values
     let updatedData = {
-      ...newSavedData,
       ...oldSavedData,
+      ...newSavedData,
       date: moment(selectedDate).format("YYYY-MM-DD"),
       time: selectedTime.format("HH:mm"),
       customer: customerCount,
+      email: userEmail,
+      id: ID ? ID : email,
     };
+
+    if (ID) {
+      // Save updated data to the new id
+
+      localStorage.setItem(ID, JSON.stringify(updatedData));
+    }
 
     if (email) {
       // Save updated data to the new email
+
       localStorage.setItem(email, JSON.stringify(updatedData));
-
-      // Remove the old data if the old email is different from the new email
-      if (oldEmail !== email) {
-        localStorage.removeItem(oldEmail);
-      }
-    } else {
-      // If there's no new email, just save the data back under the old email (from lastMealId)
-      localStorage.setItem(oldEmail, JSON.stringify(updatedData));
     }
-  };
 
+    // Fetch the last used ID from localStorage (return string as integer)
+    const lastId = parseInt(localStorage.getItem("lastMealId") || "0", 10);
+    // Increment the ID by one
+    const nextId = lastId + 1;
+    // Save the new ID to localStorage for future use
+
+    localStorage.setItem("lastMealId", nextId.toString());
+    return nextId; // Return the generated ID
+  };
 
   return (
     <main
@@ -190,14 +230,7 @@ export default function TimePicker() {
       </h1>
 
       <div className="p-8 rounded-xl shadow-2xl space-y-8 w-full bg-white bg-opacity-10 backdrop-blur-md">
-      {/* <input
-          type="email"
-          placeholder="Enter your email"
-          value={displayEmail}
-          onChange={handleEmailChange}
-          className="p-2 rounded border"
-        /> */}
-        {!emailInUrl && (
+        {!IdInUrl && (
           <input
             type="email"
             placeholder="Enter your email"
@@ -223,7 +256,7 @@ export default function TimePicker() {
               if (moment(date).isBefore(currentDate, "day")) {
                 return {
                   style: {
-                    backgroundColor: "#FF0000",
+                    backgroundColor: "gray",
                     opacity: 0.5,
                     pointerEvents: "none", // make it unselectable
                   },
@@ -233,7 +266,7 @@ export default function TimePicker() {
               else if (dayOfWeek === 6 || dayOfWeek === 0) {
                 return {
                   style: {
-                    backgroundColor: "#FF0000",
+                    backgroundColor: "gray",
                     opacity: 0.5,
                   },
                 };
@@ -305,23 +338,16 @@ export default function TimePicker() {
                             +
                           </button>
                         </div>
-                        {isValidEmail(email) ? (
-                          <Link
-                            href="/order/receipt"
-                            onClick={handleSaveDateTime}
-                            className="hidden hover:cursor-none relative sm:inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
-                          >
-                            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
-                            <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-                            <span className="relative">Complete Order</span>
-                          </Link>
-                        ) : (
-                          <div className="hidden hover:cursor-none relative sm:inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group">
-                            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-red-500 rounded-full group-hover:w-72 group-hover:h-72"></span>
-                            <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-                            <span className="relative">Add Valid Email</span>
-                          </div>
-                        )}
+
+                        <Link
+                          href="/order/receipt"
+                          onClick={handleSaveDateTime}
+                          className="hidden hover:cursor-none relative sm:inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:BORDER-bgColorDark rounded-lg group"
+                        >
+                          <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-72 group-hover:h-72"></span>
+                          <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+                          <span className="relative">Complete Order</span>
+                        </Link>
                       </div>
                     </span>
                   </div>
@@ -349,7 +375,12 @@ export default function TimePicker() {
                 <button
                   key={index}
                   onClick={() => handleTimeSelect(time)}
-                  className="hover:cursor-none relative w-full inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-400 border-2 hover:border-gray-400 rounded-lg group"
+                  disabled={disabledTimes.includes(time)}
+                  className={`hover:cursor-none relative w-full inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white ${
+                    disabledTimes.includes(time)
+                      ? "opacity-30 bg-gray-900 cursor-not-allowed"
+                      : "bg-gray-800"
+                  } border-gray-400 border-2 hover:border-gray-400 rounded-lg group`}
                 >
                   <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-main-color rounded-full group-hover:w-full group-hover:h-72"></span>
                   <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
@@ -396,7 +427,7 @@ export default function TimePicker() {
           </button>
         </div>
 
-        {isValidEmail(email) ? (
+        {isValidEmail(userEmail) ? (
           <Link
             href="/order/receipt"
             onClick={handleSaveDateTime}
@@ -413,23 +444,9 @@ export default function TimePicker() {
             <span className="relative">Add Valid Email</span>
           </div>
         )}
-
-        {/* <button
-          onClick={handleSaveDateTime}
-          className=" w-full mt-4 bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-200 transition-shadow shadow-md"
-        >
-          Save Date & Time
-        </button> */}
-
-        {/* <div className="mt-6 text-white">
-          <p><strong>Selected Date:</strong> {selectedDate?.toDateString()}</p>
-          <p><strong>Selected Time:</strong> {selectedTime?.format('HH:mm')}</p>
-          <p><strong>Customer Count:</strong> {customerCount}</p>
-        </div>
-        
-        <Link className="text-blue-400 mt-4 hover:underline focus:outline-none" href="/order/receipt" passHref>
-          Receipt
-        </Link> */}
+      </div>
+      <div id="basket" className="mt-20 w-full ">
+        <OrderDetails />
       </div>
     </main>
   );

@@ -9,33 +9,28 @@ import { useRouter } from "next/router";
 
 export default function Search() {
   const [email, setEmail] = useState("");
-  const [savedData, setSavedData] = useState({
-    mealName: "",
-    drinks: [],
-    date: "",
-    time: "",
-    customer: 0,
-  });
+  const [allSavedData, setAllSavedData] = useState([]);
 
   const fetchData = () => {
     if (typeof window !== "undefined" && email) {
       // Save the email to the localStorage with the key LatestSearchedEmail
       localStorage.setItem("LatestSearchedEmail", email);
 
-      const data = JSON.parse(localStorage.getItem(email) || "{}");
-      if (data && data.mealName) {
-        // check if data exists
-        setSavedData(data);
-      } else {
-        alert("No data found for this email!");
-        setSavedData({
-          mealName: "",
-          drinks: [],
-          date: "",
-          time: "",
-          customer: 0,
-        });
-      }
+      const StoredData = Object.keys(localStorage).map((key) => {
+        let parsedData = null;
+        try {
+          parsedData = JSON.parse(localStorage.getItem(key));
+        } catch (error) {
+          console.error(`Error parsing data for key ${key}: ${error}`);
+        }
+        return parsedData;
+      });
+
+      const validStoredData = StoredData.filter((data) => {
+        return data && data.email === email;
+      });
+
+      setAllSavedData(validStoredData);
     }
   };
 
@@ -50,19 +45,24 @@ export default function Search() {
     }),
   };
 
+  function deleteOrder(id) {
+    localStorage.removeItem(id);
+    fetchData();
+  }
+
   useEffect(() => {
     Aos.init({ duration: 1000 });
   }, []);
 
   return (
-    <>
+    <div className="!bg-white h-screen">
       <main
         data-aos="fade-up"
         data-aos-delay="250"
         data-aos-duration="500"
-        className="!bg-white h-screen w-screen"
+        className="!bg-white  h-max w-screen"
       >
-        <div className="max-w-6xl mx-auto absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-screen">
+        <div className="max-w-6xl mx-auto top-1/3 w-screen">
           <div className="w-4/6 mx-auto">
             <div className="flex items-center border-b-2 border-gray-500">
               <input
@@ -72,10 +72,7 @@ export default function Search() {
                 placeholder="Enter your email"
                 className="border-none outline-none flex-grow p-2  text-lg md:text-6xl font-semibold input-search italic"
               />
-              {/* <Link href={`/order?email=${email}`} >
-              <button className="ml-2 -mb-1 px-4 py-2 bg-gray-300 text-black rounded decoration-8">
-                <b>Update Order</b>
-              </button></Link> */}
+
               <button
                 onClick={fetchData}
                 className="ml-2 -mb-1 px-4 py-2 bg-gray-300 text-black rounded decoration-8"
@@ -84,87 +81,70 @@ export default function Search() {
               </button>
             </div>
 
-            <div className="">
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                className="bg-gray-200 py-5 px-5 rounded-br-xl rounded-bl-xl absolute w-4/6"
-              >
-                <motion.p
-                  initial="hidden"
-                  animate="visible"
-                  variants={listItemVariants}
-                  custom={1}
+            {allSavedData.length > 0 &&
+              allSavedData.map((order, index) => (
+                <div
+                  key={index}
+                  className="text-sm m-6 border-b border-black grid grid-cols-2 w-2/4 justify-between"
                 >
-                  {savedData.mealName ? <p>Meal: {savedData.mealName}</p> : ""}
-                </motion.p>
-                <motion.p
-                  initial="hidden"
-                  animate="visible"
-                  variants={listItemVariants}
-                  custom={2}
-                >
-                  {savedData.date ? <p> Date {savedData.date}</p> : ""}
-                </motion.p>
-                <motion.p
-                  initial="hidden"
-                  animate="visible"
-                  variants={listItemVariants}
-                  custom={2}
-                >
-                  {savedData.date ? <p> Time: {savedData.time}</p> : ""}
-                </motion.p>
-                <motion.p
-                  initial="hidden"
-                  animate="visible"
-                  variants={listItemVariants}
-                  custom={3}
-                >
-                  {savedData.customer ? (
-                    <p> Number of Customers: {savedData.customer} </p>
-                  ) : (
-                    ""
-                  )}
-                </motion.p>
-                {savedData.drinks && savedData.drinks.length > 0 && (
-                  <motion.div
-                    initial="hidden"
-                    animate="visible"
-                    variants={listItemVariants}
-                    custom={4}
-                  >
-                    <p>Selected Drinks:</p>
-                    <ul>
-                      {savedData.drinks.map((drink, index) => (
-                        <motion.li
-                          key={drink.id}
-                          variants={listItemVariants}
-                          custom={index + 5}
-                        >
-                          {drink.name ? drink.name : ""}
-                        </motion.li>
+                  <div className="col-start-1 col-end-2">
+                    <div className="mb-2">
+                      <p>
+                        <b>Meals:</b>
+                      </p>
+                      {order.meals.map((meal, index) => (
+                        <p key={index}>{meal.mealName}</p>
                       ))}
-                    </ul>
-                    <motion.div
-                      initial="hidden"
-                      animate="visible"
-                      variants={listItemVariants}
-                      custom={2}
-                    >
-                      <Link href={`/order?email=${email}`}>
-                        <button className="ml-0 mt-3 -mb-1 px-4 py-2 bg-gray-300 text-black rounded decoration-8">
-                          <b>Update Order</b>
-                        </button>
-                      </Link>
-                    </motion.div>
-                  </motion.div>
-                )}
-              </motion.div>
-            </div>
+                    </div>
+                    <div className="mb-2">
+                      <p>
+                        <b>Date:</b>
+                      </p>
+                      <p>{order.date}</p>
+                    </div>
+                    <div className="mb-2">
+                      <p>
+                        <b>Time:</b>
+                      </p>
+                      <p>{order.time}</p>
+                    </div>
+                  </div>
+                  <div className="col-start-2 col-end-3">
+                    <div className="mb-2">
+                      <p>
+                        <b>Drinks:</b>
+                      </p>
+                      {order.drinks.map((drink, index) => (
+                        <p key={index}>{drink.name}</p>
+                      ))}
+                    </div>
+
+                    <div className="mb-2">
+                      <p>
+                        <b>Guests:</b>
+                      </p>
+                      <p>{order.customer}</p>
+                    </div>
+                  </div>
+
+                  <Link
+                    className=" flex items-center justify-center col-start-1 col-end-2 p-2 bg-black w-20 text-white rounded mb-4 mt-4"
+                    href={`/order?id=${order.id}`}
+                  >
+                    EDIT
+                  </Link>
+
+                  <button
+                    onClick={() => deleteOrder(order.id)}
+                    className="border border-black p-2 rounded w-20 col-start-2 col-end-3 mb-4 mt-4"
+                  >
+                    DELETE
+                  </button>
+                </div>
+              ))}
           </div>
         </div>
       </main>
-    </>
+    </div>
   );
 }

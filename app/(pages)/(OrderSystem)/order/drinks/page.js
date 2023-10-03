@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import OrderDetails from "@/app/components/main/OrderDetails";
 
 import { useCursor } from "@/cursor/CursorContext";
 
@@ -37,13 +38,12 @@ export default function Drink() {
   const [isLoading, setIsLoading] = useState(true);
   const [emailParam, setEmailParam] = useState(null);
 
-
   useEffect(() => {
     Aos.init({ duration: 1000 });
 
     let isMounted = true;
 
-    const param = new URL(window.location.href).searchParams.get("email");
+    const param = new URL(window.location.href).searchParams.get("id");
     setEmailParam(param);
 
     // Fetch drinks data
@@ -67,17 +67,19 @@ export default function Drink() {
       }
     })();
 
-    const emailParam = new URL(window.location.href).searchParams.get("email");
+    const emailParam = new URL(window.location.href).searchParams.get("id");
     // If an emailparam present, retrieve the saved drinks from local storage
     if (emailParam) {
       setEmail(emailParam);
+
       const savedDrinks =
-      // retrieve drinks accosiated with email
+        // retrieve drinks accosiated with email
         JSON.parse(localStorage.getItem(emailParam))?.drinks || [];
       setSelectedDrinks(savedDrinks);
     } else {
       // If no email param, use lastMealId
       const lastMealId = localStorage.getItem("lastMealId") || "";
+
       setEmail(lastMealId);
 
       const savedDrinks =
@@ -110,7 +112,7 @@ export default function Drink() {
         ? JSON.parse(localStorage.getItem(email))
         : {};
 
-        //update
+      //update
       savedData = {
         ...savedData,
         drinks: selectedDrinks,
@@ -250,7 +252,7 @@ export default function Drink() {
               setCursorText("");
               setCursorVariant("default");
             }}
-            href={`/order/date${emailParam ? `?email=${emailParam}` : ""}`}
+            href={`/order/date${emailParam ? `?id=${emailParam}` : ""}`}
             onClick={handleSaveToLocalStorage}
             className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:border-bgColorDark rounded-lg group"
           >
@@ -259,6 +261,9 @@ export default function Drink() {
             <span className="relative">Choose Delivery Time</span>
           </Link>
         </div>
+      </div>
+      <div id="basket" className="mt-20">
+        <OrderDetails />
       </div>
     </main>
   );

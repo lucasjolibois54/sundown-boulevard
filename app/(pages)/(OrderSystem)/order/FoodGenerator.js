@@ -22,55 +22,67 @@ const getNextId = () => {
 // Fetch meal data from API
 async function getData(savedMeal) {
   const meals = [];
-  if (savedMeal) { // if saved meal add first
+  if (savedMeal) {
+    // if saved meal add first
     meals.push(savedMeal);
   }
-  
   // Fetch data to fill up the util we have 9 meals
   for (let i = meals.length; i < 9; i++) {
-    const res = await fetch("https://www.themealdb.com/API/JSON/V1/1/RANDOM.PHP/");
+    const res = await fetch(
+      "https://www.themealdb.com/API/JSON/V1/1/RANDOM.PHP/"
+    );
     if (!res.ok) throw new Error("Failed to fetch data");
-    const data = await res.json(); 
+    const data = await res.json();
     meals.push(data.meals[0]);
   }
   return meals;
 }
 
-
 export default function FoodGenerator() {
   const [mealData, setMealData] = useState([]);
-  const [selectedMeal, setSelectedMeal] = useState(null);
+  const [selectedMeal, setSelectedMeal] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { setCursorText, setCursorVariant } = useCursor();
   const [isEmailSaved, setIsEmailSaved] = useState(false);
   const [generatedId, setGeneratedId] = useState(null);
   const [emailParam, setEmailParam] = useState(null);
 
-
   // Fetch a saved meal from local storage
   const fetchSavedMeal = (id) => {
-    // Retrieve the saved meal data using the provided ID
     const savedData = JSON.parse(localStorage.getItem(id));
-    // If data exists and has a mealId, return a formatted object
-    if (savedData && savedData.mealId) {
-      return {
-        idMeal: savedData.mealId,
-        strMeal: savedData.mealName,
-        strMealThumb: savedData.strMealThumb || "",
-        strInstructions: savedData.strInstructions || "",
-      };
+
+    if (savedData.meals) {
+      const savedMealData = savedData.meals.map((meal) => ({
+        idMeal: meal.mealId,
+        strMeal: meal.mealName,
+        strMealThumb: meal.strMealThumb || "",
+        strInstructions: meal.strInstructions || "",
+      }));
+      setMealData(savedMealData);
+      savedData.meals.forEach((meal) => {
+        setSelectedMeal((prevSelectedMeals) => [
+          ...prevSelectedMeals,
+          {
+            idMeal: meal.mealId,
+            strMeal: meal.mealName,
+            strMealThumb: meal.strMealThumb || "",
+            strInstructions: meal.strInstructions || "",
+          },
+        ]);
+      });
     }
-    return null;
   };
 
   // Fetch meal data and set it in the state
   const fetchMeals = async () => {
     let isMounted = true;
     setIsLoading(true);
+    const newMeals = await getData(); // Fetch new meals
+
+    // Merge new meals with existing mealData
+    setMealData((prevMealData) => [...prevMealData, ...newMeals]);
     try {
-      const meals = await getData();
       if (isMounted) {
-        setMealData(meals);
         setTimeout(() => {
           setIsLoading(false);
         }, 2000);
@@ -86,26 +98,24 @@ export default function FoodGenerator() {
     Aos.init({ duration: 1000 });
     let isMounted = true; // To avoid setting state on an unmounted component
 
-    const param = new URL(window.location.href).searchParams.get("email");
+    const param = new URL(window.location.href).searchParams.get("id");
+
     setEmailParam(param);
-  
+
     const fetchAndSetMeals = async () => {
       try {
         // If there's an email param, attempt to fetch the saved meal
         let savedMeal = null;
         if (emailParam) {
           savedMeal = fetchSavedMeal(emailParam);
-          if(savedMeal && isMounted) {
-            setSelectedMeal(savedMeal);
-          }
         }
-        
+
         // Fetch meals, including the saved one if it exists
         const meals = await getData(savedMeal);
         if (isMounted) {
-          setMealData(meals);  // Set the meal data state
+          setMealData((prevMealData) => [...prevMealData, ...meals]);
           setTimeout(() => {
-            setIsLoading(false);  // Set the loading state to false after 2 seconds
+            setIsLoading(false); // Set the loading state to false after 2 seconds
           }, 2000);
         }
       } catch (error) {
@@ -113,40 +123,58 @@ export default function FoodGenerator() {
         if (isMounted) setIsLoading(false); // If there's an error, set loading to false
       }
     };
-  
-    fetchAndSetMeals();  // Call the fetch and set meals function
-  
+
+    fetchAndSetMeals(); // Call the fetch and set meals function
+
     // Cleanup for component unmount
     return () => {
-      isMounted = false;  // When the component is unmounted, set isMounted to false
+      isMounted = false; // When the component is unmounted, set isMounted to false
     };
-  }, [emailParam]);  // This useEffect runs when the emailParam state changes
+  }, [emailParam]); // This useEffect runs when the emailParam state changes
 
-  
-
-  // Save selected meal data in local storage
   const handleSaveData = () => {
-    if (selectedMeal) {
-      const emailParam = new URL(window.location.href).searchParams.get(
-        "email"
-      );
+    if (selectedMeal.length > 0) {
+      const emailParam = new URL(window.location.href).searchParams.get("id");
+
       const storageKey = emailParam || getNextId().toString();
 
-      // Get existing data from local storage
-      const existingData = JSON.parse(localStorage.getItem(storageKey)) || {};
+      // Get existing data from local storage or initialize as an empty array
+      const existingData = JSON.parse(localStorage.getItem(emailParam)) || [];
 
       // Merge the new meal data with the existing data
       const updatedData = {
-        ...existingData, // spread existing data first
-        mealId: selectedMeal.idMeal,
-        mealName: selectedMeal.strMeal,
-        strMealThumb: selectedMeal.strMealThumb,
-        strInstructions: selectedMeal.strInstructions,
+        ...existingData,
+        meals: [
+          ...selectedMeal.map((meal) => ({
+            mealId: meal.idMeal,
+            mealName: meal.strMeal,
+            strMealThumb: meal.strMealThumb,
+            strInstructions: meal.strInstructions,
+          })),
+        ],
       };
 
       localStorage.setItem(storageKey, JSON.stringify(updatedData));
       setGeneratedId(storageKey);
     }
+  };
+
+  const handleToggleMeal = (meal) => {
+    setSelectedMeal((prevSelectedMeals) => {
+      const mealIndex = prevSelectedMeals.findIndex(
+        (index) => index.idMeal === meal.idMeal
+      );
+
+      if (mealIndex === -1) {
+        // Meal not selected, add it to the selected meals
+        return [...prevSelectedMeals, meal];
+      } else {
+        // Meal already selected, remove it from the selected meals
+        const updatedSelectedMeals = [...prevSelectedMeals];
+        updatedSelectedMeals.splice(mealIndex, 1);
+        return updatedSelectedMeals;
+      }
+    });
   };
 
   return (
@@ -168,8 +196,7 @@ export default function FoodGenerator() {
         <h1 className="text-6xl font-semibold text-center my-10 pb-5 text-main-text">
           Choose Your Meal
         </h1>
-        <div className="flex flex-col md:flex-row items-center justify-between mb-5">
-        </div>
+        <div className="flex flex-col md:flex-row items-center justify-between mb-5"></div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {isLoading
@@ -191,29 +218,26 @@ export default function FoodGenerator() {
             : mealData.map((meal) => (
                 <div
                   onMouseEnter={() => {
-                    setCursorText("Add");
+                    setCursorText("+");
                     setCursorVariant("addCart");
                   }}
                   onMouseLeave={() => {
                     setCursorText("");
                     setCursorVariant("default");
                   }}
-                  key={meal.idMeal}
+                  key={meal.mealName}
                   className={`rounded-lg transition transform hover:scale-105 h-96 relative cursor-pointer`}
-                  onClick={() =>
-                    setSelectedMeal(
-                      selectedMeal && selectedMeal.idMeal === meal.idMeal
-                        ? null
-                        : meal
-                    )
-                  }
+                  onClick={() => handleToggleMeal(meal)}
                 >
                   <img
                     src={meal.strMealThumb}
                     alt={meal.strMeal}
                     className="w-full h-96 object-cover rounded-md"
                   />
-                  {selectedMeal && selectedMeal.idMeal === meal.idMeal && (
+
+                  {selectedMeal.some(
+                    (selected) => selected.idMeal === meal.idMeal
+                  ) && (
                     <div
                       style={{
                         backgroundColor: "rgba(0, 0, 0, 0.4)",
@@ -232,7 +256,10 @@ export default function FoodGenerator() {
                       {meal.strInstructions.substring(0, 30)}...
                     </p>
                   </div>
-                  {selectedMeal && selectedMeal.idMeal === meal.idMeal && (
+
+                  {selectedMeal.some(
+                    (selected) => selected.idMeal === meal.idMeal
+                  ) && (
                     <div className="checked-drink-body absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                       <SelectedDrink text="MEAL CHOSEN - MEAL CHOSEN -" />
                     </div>
@@ -267,7 +294,7 @@ export default function FoodGenerator() {
                 setCursorText("");
                 setCursorVariant("default");
               }}
-              href={`/order/drinks${emailParam ? `?email=${emailParam}` : ""}`}
+              href={`/order/drinks${emailParam ? `?id=${emailParam}` : ""}`}
               onClick={handleSaveData}
               className="text-center hover:cursor-none relative inline-flex items-center justify-center px-7 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 border-gray-800 border-2 hover:BORDER-bgColorDark rounded-lg group"
             >

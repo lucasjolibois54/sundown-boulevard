@@ -1,22 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
 /* body{
   @apply bg-bgColorDark;
 } */
 
-body{
+body {
   background-color: #121212;
 }
 
-.fontordre{
+.fontordre {
   background-image: "https://media.discordapp.net/attachments/1068131427910168670/1144387451993997322/vector-crumbled-paper-texture.png?width=724&height=1038";
 }
-
 
 /* Bg color change on scroll themes*/
 body.dark-theme {
@@ -41,7 +39,7 @@ body.light-theme {
 
 .item {
   flex-grow: 1;
-  height: 400px; 
+  height: 400px;
   position: relative;
   border: 1px solid transparent;
   transition: all 0.3s ease-in-out;
@@ -60,17 +58,15 @@ body.light-theme {
   color: white;
 }
 
-
 /*Search*/
-.input-search::placeholder{
+.input-search::placeholder {
   font-weight: lighter;
 }
-
 
 /* spinner */
 .checked-drink-body {
   -webkit-font-smoothing: antialiased;
-  font-family: 'Helvetica', sans-serif;
+  font-family: "Helvetica", sans-serif;
 }
 
 #circle {
@@ -86,12 +82,13 @@ body.light-theme {
 }
 
 @keyframes rotate-animation {
-  from { transform: rotate(0); }
-  to { transform: rotate(-360deg); }
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
 }
-
-
-
 
 /* Custom Cursor*/
 
@@ -120,8 +117,6 @@ body.light-theme {
   pointer-events: none;
   margin: auto;
 }
-
-
 
 .project {
   display: inline-block;
@@ -175,56 +170,54 @@ body.light-theme {
 
 /* Overriding default styles */
 .rbc-calendar {
-    font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
 }
 
 .rbc-btn-group {
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .rbc-toolbar {
-    padding: 0.5rem;
-    color: white;
+  padding: 0.5rem;
+  color: white;
 }
 
 .rbc-event {
-    background-color: #3498db;
-    color: white;
-    border-radius: 0.25rem;
-    padding: 0.2rem;
-    font-size: 0.8rem;
+  background-color: #3498db;
+  color: white;
+  border-radius: 0.25rem;
+  padding: 0.2rem;
+  font-size: 0.8rem;
 }
 
 .rbc-today {
-    background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
 
 .rbc-month-view .rbc-date-cell {
-    padding: 0.5rem;
-    vertical-align: top;
+  padding: 0.5rem;
+  vertical-align: top;
 }
 
 .rbc-header {
-    padding: 0.5rem;
-    font-weight: 600;
+  padding: 0.5rem;
+  font-weight: 600;
 }
 
 .rbc-today {
   background-color: #3498db !important;
 }
 
-
 .rbc-off-range-bg {
-  background: #54534E !important;
+  background: #54534e !important;
 }
-
 
 /* Date */
 
 /* Overriding default styles */
 .rbc-calendar {
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
 }
 
 .rbc-btn-group {
@@ -261,68 +254,67 @@ body.light-theme {
 }
 
 .rbc-today {
-background-color: #3498db !important;
+  background-color: #3498db !important;
 }
 
-
 .rbc-off-range-bg {
-background: #FF0000 !important;
-opacity: 0.5;
+  background: gray;
+  opacity: 0.5;
 }
 
 .rbc-button-link {
-color: white;
+  color: white;
 }
 
 /* Make day names white */
 .rbc-header {
-color: white !important;
+  color: white !important;
 }
 
 /* Make dates of the current month white */
 .rbc-row > .rbc-date-cell {
-color: white !important;
+  color: white !important;
 }
 
 /* Make dates of other months gray */
 .rbc-off-range .rbc-day-bg {
-background-color: transparent !important; 
+  background-color: transparent !important;
 }
 .rbc-off-range .rbc-date-cell {
-color: gray !important;
+  color: gray !important;
 }
 
 /* Change the color of the Today button */
 .rbc-toolbar .rbc-btn-group > button:first-child {
-color: white !important; /* If you need to change text color */
+  color: white !important; /* If you need to change text color */
 }
 
 /* Change the color of the Back (previous) button */
 .rbc-toolbar .rbc-btn-group > button:nth-child(2) {
-color: white !important; /* If you need to change text color */
+  color: white !important; /* If you need to change text color */
 }
 
 /* Change the color of the Next button */
 .rbc-toolbar .rbc-btn-group > button:nth-child(3) {
-color: white !important; /* If you need to change text color */
+  color: white !important; /* If you need to change text color */
 }
 
 /* Change the color of the Today button on hover */
 .rbc-toolbar .rbc-btn-group > button:first-child:hover {
-color: black !important;
+  color: black !important;
 }
 
 /* Change the color of the Back (previous) button on hover */
 .rbc-toolbar .rbc-btn-group > button:nth-child(2):hover {
-color: black !important;
+  color: black !important;
 }
 
 /* Change the color of the Next button on hover */
 .rbc-toolbar .rbc-btn-group > button:nth-child(3):hover {
-color: black !important;
+  color: black !important;
 }
 
 .rbc-toolbar .rbc-btn-group > button:focus {
-background-color: whitesmoke !important;
-color: black !important;
+  background-color: whitesmoke !important;
+  color: black !important;
 }
